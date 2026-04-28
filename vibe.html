@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibe Coding 项目 | Meiya Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#1f1c19; --muted:#615b53; --bg:#f5efe7; --card:#fffaf1; --line:#d8c7b2; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Noto Serif SC",serif; color:var(--ink); background:var(--bg); }
+    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .home { text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-family:"Space Grotesk",sans-serif; font-size:12px; }
+    .lang button { border:1px solid var(--line); background:#fffdf8; border-radius:999px; padding:6px 10px; margin-left:6px; cursor:pointer; }
+    .hero { margin-top:16px; border:1px solid var(--line); border-radius:18px; padding:22px; background:linear-gradient(120deg, rgba(15,122,135,.12), rgba(222,107,34,.1)); }
+    h1 { margin:0 0 8px; font-size:34px; }
+    p { color:var(--muted); }
+    .proj { margin-top:14px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .item { border:1px solid var(--line); border-radius:14px; padding:14px; background:var(--card); }
+    .item h3 { margin:0 0 8px; }
+    @media (max-width:860px){ .proj{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="home" href="index.html">← 返回首页</a>
+      <div class="lang"><button id="zh">中文</button><button id="fr">FR</button></div>
+    </div>
+    <section class="hero">
+      <h1 id="title">我做的 Vibe Coding 项目</h1>
+      <p id="desc">展示我和 AI 协作完成的工具与网页项目，强调可复用和可迭代。</p>
+    </section>
+    <section class="proj">
+      <article class="item"><h3 id="p1t">字幕处理自动化</h3><p id="p1d">从字幕清洗到文档导出，一次命令完成多步流程。</p></article>
+      <article class="item"><h3 id="p2t">个人站自动部署</h3><p id="p2d">本地提交后自动构建并发布到服务器。</p></article>
+      <article class="item"><h3 id="p3t">法语学习工具页</h3><p id="p3d">把词汇卡片、表达模板与复习计划集中管理。</p></article>
+      <article class="item"><h3 id="p4t">翻译工作流脚本</h3><p id="p4d">批量文档处理与格式一致化，减少重复劳动。</p></article>
+    </section>
+  </div>
+  <script>
+    const text={zh:{title:"我做的 Vibe Coding 项目",desc:"展示我和 AI 协作完成的工具与网页项目，强调可复用和可迭代。",p1t:"字幕处理自动化",p1d:"从字幕清洗到文档导出，一次命令完成多步流程。",p2t:"个人站自动部署",p2d:"本地提交后自动构建并发布到服务器。",p3t:"法语学习工具页",p3d:"把词汇卡片、表达模板与复习计划集中管理。",p4t:"翻译工作流脚本",p4d:"批量文档处理与格式一致化，减少重复劳动。"},fr:{title:"Mes projets Vibe Coding",desc:"Outils et sites créés avec l'IA, orientés réutilisabilité et itération.",p1t:"Automatisation des sous-titres",p1d:"Nettoyage des sous-titres et export doc en une commande.",p2t:"Déploiement auto du site",p2d:"Push local puis build + publication sur le serveur.",p3t:"Outil d'apprentissage du français",p3d:"Cartes, expressions et planning de révision centralisés.",p4t:"Script de traduction",p4d:"Traitement de lots et harmonisation du format."}};
+    function setL(l){Object.keys(text[l]).forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=text[l][k];});document.documentElement.lang=l==='fr'?'fr':'zh-CN';}
+    document.getElementById('zh').onclick=()=>setL('zh');
+    document.getElementById('fr').onclick=()=>setL('fr');
+  </script>
+</body>
+</html>

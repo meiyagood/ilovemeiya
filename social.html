@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>社交媒体 | Meiya Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#1f1c19; --muted:#615b53; --bg:#f7f1e8; --card:#fffaf1; --line:#d8c7b2; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Noto Serif SC",serif; color:var(--ink); background:var(--bg); }
+    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .home { text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-family:"Space Grotesk",sans-serif; font-size:12px; }
+    .lang button { border:1px solid var(--line); background:#fffdf8; border-radius:999px; padding:6px 10px; margin-left:6px; cursor:pointer; }
+    .hero { margin-top:16px; border:1px solid var(--line); border-radius:18px; padding:22px; background:linear-gradient(120deg, rgba(222,107,34,.12), rgba(255,255,255,.6)); }
+    h1 { margin:0 0 8px; font-size:34px; }
+    p { color:var(--muted); }
+    .links { margin-top:16px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .links a { text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:14px; padding:14px; background:var(--card); font-family:"Space Grotesk",sans-serif; }
+    .links a:hover { border-color:#c6b49b; }
+    @media (max-width:860px){ .links{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="home" href="index.html">← 返回首页</a>
+      <div class="lang"><button id="zh">中文</button><button id="fr">FR</button></div>
+    </div>
+    <section class="hero">
+      <h1 id="title">社交媒体</h1>
+      <p id="desc">在不同平台分享我的内容更新和日常灵感。把下方链接改成你的真实账号即可。</p>
+    </section>
+    <section class="links">
+      <a href="https://www.xiaohongshu.com" target="_blank" rel="noreferrer">小红书 / Xiaohongshu</a>
+      <a href="https://www.instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+      <a href="https://space.bilibili.com" target="_blank" rel="noreferrer">Bilibili</a>
+      <a href="https://www.youtube.com" target="_blank" rel="noreferrer">YouTube</a>
+    </section>
+  </div>
+  <script>
+    const text={zh:{title:"社交媒体",desc:"在不同平台分享我的内容更新和日常灵感。把下方链接改成你的真实账号即可。"},fr:{title:"Réseaux sociaux",desc:"Mes mises à jour et inspirations sur différentes plateformes. Remplacez ces liens par vos vrais profils."}};
+    function setL(l){Object.keys(text[l]).forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=text[l][k];});document.documentElement.lang=l==='fr'?'fr':'zh-CN';}
+    document.getElementById('zh').onclick=()=>setL('zh');
+    document.getElementById('fr').onclick=()=>setL('fr');
+  </script>
+</body>
+</html>

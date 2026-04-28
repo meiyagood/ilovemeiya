@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>旅行 | Meiya Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#1f1c19; --muted:#615b53; --bg:#f7f1e8; --card:#fffaf1; --line:#d8c7b2; --accent:#de6b22; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Noto Serif SC",serif; color:var(--ink); background:var(--bg); }
+    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .home { text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-family:"Space Grotesk",sans-serif; font-size:12px; }
+    .lang button { border:1px solid var(--line); background:#fffdf8; border-radius:999px; padding:6px 10px; margin-left:6px; cursor:pointer; }
+    .hero { margin-top:16px; border:1px solid var(--line); border-radius:18px; padding:22px; background:linear-gradient(120deg, rgba(222,107,34,.12), rgba(255,255,255,.5)); }
+    h1 { margin:0 0 8px; font-size:36px; }
+    p { color:var(--muted); }
+    .grid { margin-top:16px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .card { border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--card); }
+    img { width:100%; height:170px; object-fit:cover; display:block; }
+    .txt { padding:10px 12px 14px; }
+    .txt h3 { margin:0 0 8px; font-size:20px; }
+    @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="home" href="index.html">← 返回首页</a>
+      <div class="lang"><button id="zh">中文</button><button id="fr">FR</button></div>
+    </div>
+    <section class="hero">
+      <h1 id="title">旅行</h1>
+      <p id="desc">记录我的路线、预算和风景时刻，把旅行变成可回看的长期记忆。</p>
+    </section>
+    <section class="grid">
+      <article class="card">
+        <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=900&q=80" alt="路线" />
+        <div class="txt"><h3 id="c1t">路线笔记</h3><p id="c1d">每次出发前后的路线优化与交通记录。</p></div>
+      </article>
+      <article class="card">
+        <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=900&q=80" alt="预算" />
+        <div class="txt"><h3 id="c2t">预算清单</h3><p id="c2d">机酒、餐饮、门票及本地交通的拆解模板。</p></div>
+      </article>
+      <article class="card">
+        <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=900&q=80" alt="故事" />
+        <div class="txt"><h3 id="c3t">城市故事</h3><p id="c3d">街道、博物馆和咖啡馆里的瞬间与观察。</p></div>
+      </article>
+    </section>
+  </div>
+  <script>
+    const text={zh:{title:"旅行",desc:"记录我的路线、预算和风景时刻，把旅行变成可回看的长期记忆。",c1t:"路线笔记",c1d:"每次出发前后的路线优化与交通记录。",c2t:"预算清单",c2d:"机酒、餐饮、门票及本地交通的拆解模板。",c3t:"城市故事",c3d:"街道、博物馆和咖啡馆里的瞬间与观察。"},fr:{title:"Voyage",desc:"Mes itinéraires, budgets et paysages, transformés en mémoire durable.",c1t:"Itinéraire",c1d:"Optimisation des trajets et transports avant/après départ.",c2t:"Budget",c2d:"Template pour vols, hôtels, repas, billets et mobilité locale.",c3t:"Chroniques",c3d:"Instants et observations dans les rues, musées et cafés."}};
+    function setL(l){Object.keys(text[l]).forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=text[l][k];});document.documentElement.lang=l==='fr'?'fr':'zh-CN';}
+    document.getElementById('zh').onclick=()=>setL('zh');
+    document.getElementById('fr').onclick=()=>setL('fr');
+  </script>
+</body>
+</html>

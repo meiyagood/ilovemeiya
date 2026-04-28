@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>阅读 | Meiya Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#1f1c19; --muted:#615b53; --bg:#f6f0e7; --card:#fffaf1; --line:#d8c7b2; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Noto Serif SC",serif; color:var(--ink); background:var(--bg); }
+    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .home { text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-family:"Space Grotesk",sans-serif; font-size:12px; }
+    .lang button { border:1px solid var(--line); background:#fffdf8; border-radius:999px; padding:6px 10px; margin-left:6px; cursor:pointer; }
+    .hero { margin-top:16px; border:1px solid var(--line); border-radius:18px; padding:22px; background:linear-gradient(120deg, rgba(15,122,135,.11), rgba(255,255,255,.55)); }
+    h1 { margin:0 0 8px; font-size:36px; }
+    p { color:var(--muted); }
+    .list { margin-top:16px; display:grid; gap:12px; }
+    .item { border:1px solid var(--line); border-radius:14px; padding:14px; background:var(--card); }
+    .item h3 { margin:0 0 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="home" href="index.html">← 返回首页</a>
+      <div class="lang"><button id="zh">中文</button><button id="fr">FR</button></div>
+    </div>
+    <section class="hero">
+      <h1 id="title">阅读</h1>
+      <p id="desc">我的书单、摘录和读后感，帮助我持续整理思考。</p>
+    </section>
+    <section class="list">
+      <article class="item"><h3 id="i1t">年度书单</h3><p id="i1d">每季度维护一次：小说、非虚构和语言学习类。</p></article>
+      <article class="item"><h3 id="i2t">摘录卡片</h3><p id="i2d">按主题整理可复用句子，输出写作素材库。</p></article>
+      <article class="item"><h3 id="i3t">读后总结</h3><p id="i3d">三段式模板：观点、证据、我的应用场景。</p></article>
+    </section>
+  </div>
+  <script>
+    const text={zh:{title:"阅读",desc:"我的书单、摘录和读后感，帮助我持续整理思考。",i1t:"年度书单",i1d:"每季度维护一次：小说、非虚构和语言学习类。",i2t:"摘录卡片",i2d:"按主题整理可复用句子，输出写作素材库。",i3t:"读后总结",i3d:"三段式模板：观点、证据、我的应用场景。"},fr:{title:"Lecture",desc:"Mes livres, citations et notes pour structurer ma pensée.",i1t:"Liste annuelle",i1d:"Mise à jour trimestrielle: roman, essai, langues.",i2t:"Cartes de citations",i2d:"Phrases classées par thème pour nourrir l'écriture.",i3t:"Synthèses",i3d:"Template en trois parties: idée, preuve, application."}};
+    function setL(l){Object.keys(text[l]).forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=text[l][k];});document.documentElement.lang=l==='fr'?'fr':'zh-CN';}
+    document.getElementById('zh').onclick=()=>setL('zh');
+    document.getElementById('fr').onclick=()=>setL('fr');
+  </script>
+</body>
+</html>

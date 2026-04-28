@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>法语及法国文化 | Meiya Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#1f1c19; --muted:#615b53; --bg:#f7f1e8; --card:#fffaf1; --line:#d8c7b2; --a:#0f7a87; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Noto Serif SC",serif; color:var(--ink); background:var(--bg); }
+    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .home { text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-family:"Space Grotesk",sans-serif; font-size:12px; }
+    .lang button { border:1px solid var(--line); background:#fffdf8; border-radius:999px; padding:6px 10px; margin-left:6px; cursor:pointer; }
+    .hero { margin-top:16px; border:1px solid var(--line); border-radius:18px; padding:22px; background:linear-gradient(120deg, rgba(15,122,135,.14), rgba(255,255,255,.55)); }
+    h1 { margin:0 0 8px; font-size:34px; }
+    p { color:var(--muted); }
+    .block { margin-top:14px; border:1px solid var(--line); border-radius:14px; padding:14px; background:var(--card); }
+    .quote { border-left:4px solid var(--a); padding-left:10px; font-style:italic; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="home" href="index.html">← 返回首页</a>
+      <div class="lang"><button id="zh">中文</button><button id="fr">FR</button></div>
+    </div>
+    <section class="hero">
+      <h1 id="title">法语及法国文化</h1>
+      <p id="desc">从语言到电影、音乐与生活方式，记录我持续深入法国文化的过程。</p>
+    </section>
+    <article class="block"><h3 id="b1t">本周表达</h3><p id="b1d">Trois petits tours et puis s'en vont.</p></article>
+    <article class="block"><h3 id="b2t">影音清单</h3><p id="b2d">每月一部法语电影 + 一张法语专辑。</p></article>
+    <article class="block quote" id="q">La langue est la maison de l'être.</article>
+  </div>
+  <script>
+    const text={zh:{title:"法语及法国文化",desc:"从语言到电影、音乐与生活方式，记录我持续深入法国文化的过程。",b1t:"本周表达",b1d:"Trois petits tours et puis s'en vont.",b2t:"影音清单",b2d:"每月一部法语电影 + 一张法语专辑。",q:"La langue est la maison de l'être."},fr:{title:"Français et culture française",desc:"Langue, cinéma, musique et style de vie: un apprentissage en profondeur.",b1t:"Expression de la semaine",b1d:"Trois petits tours et puis s'en vont.",b2t:"Sélection",b2d:"Un film francophone + un album français chaque mois.",q:"La langue est la maison de l'être."}};
+    function setL(l){Object.keys(text[l]).forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=text[l][k];});document.documentElement.lang=l==='fr'?'fr':'zh-CN';}
+    document.getElementById('zh').onclick=()=>setL('zh');
+    document.getElementById('fr').onclick=()=>setL('fr');
+  </script>
+</body>
+</html>
