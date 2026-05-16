@@ -17,8 +17,17 @@ router = APIRouter(prefix="/api/articles", tags=["Articles"])
 
 
 # ──────────────────────────────────────────────────────────
-# 管理员 CRUD 操作
+# 列表（管理员）
 # ──────────────────────────────────────────────────────────
+
+@router.get("", response_model=list[ArticleOut])
+def list_articles(
+    _: str = Depends(verify_admin),
+    db: Session = Depends(get_db),
+):
+    """列出所有文章（管理员）"""
+    return db.query(Article).order_by(Article.created_at.desc()).all()
+
 
 @router.post("", response_model=ArticleOut, status_code=201)
 def create_article(

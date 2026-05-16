@@ -16,6 +16,14 @@ from ..schemas import CategoryCreate, CategoryOut, CategoryUpdate
 router = APIRouter(prefix="/api/categories", tags=["Categories"])
 
 
+@router.get("", response_model=list[CategoryOut])
+def list_categories(
+    db: Session = Depends(get_db),
+):
+    """获取所有分类"""
+    return db.query(Category).order_by(Category.id).all()
+
+
 # ──────────────────────────────────────────────────────────
 # 分类 CRUD
 # ──────────────────────────────────────────────────────────
