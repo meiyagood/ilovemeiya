@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, computed_field
 
 
 # ──────────────────────────────────────────────────────────
@@ -266,9 +266,14 @@ class DailyLogUpdate(BaseModel):
 class DailyLogOut(DailyLogBase):
     id: int
     posted_at: datetime
-    posted_display: str
     created_at: datetime
     updated_at: datetime
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def posted_display(self) -> str:
+        s = self.posted_at.strftime("%Y.%m.%d") if self.posted_at else ""
+        return f"{s} {self.author}" if self.author else s
 
     model_config = ConfigDict(from_attributes=True)
 
