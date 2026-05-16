@@ -1,0 +1,31 @@
+# Web Framework
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+python-multipart==0.0.19
+
+# Database
+sqlalchemy==2.0.36
+
+# Data Validation
+pydantic==2.10.2
+pydantic-settings==2.0.3
+email-validator==2.0.0
+
+# Security & Authentication
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+PyJWT==2.9.0
+bcrypt==4.0.1
+
+# Utilities
+python-dotenv==1.0.0
+Markdown==3.5.1
+eval_type_backport==0.2.0
+
+# Optional: for development
+# pytest==7.4.3
+# pytest-asyncio==0.21.1
+# black==23.12.1
+# flake8==6.1.0
+# mypy==1.7.1
+
