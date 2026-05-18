@@ -10,7 +10,7 @@ WorkingDirectory=/home/deploy/une-vie-backend
 Environment=ADMIN_USERNAME=admin
 Environment=ADMIN_PASSWORD=change-me
 Environment=DATABASE_PATH=/home/deploy/une-vie-backend/data.db
-Environment=CORS_ORIGINS=http://47.98.235.65
+Environment=CORS_ORIGINS=https://www.zaoanmeiya.com,https://zaoanmeiya.com,http://47.98.235.65
 ExecStart=/home/deploy/une-vie-backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
 Restart=always
 RestartSec=3

@@ -17,13 +17,22 @@
       --focus: #8B7355;
     }
     body { background: var(--bg); font-family: 'Crimson Text', Georgia, serif; color: var(--accent); }
-    .sidebar { width: 220px; min-height: 100vh; background: var(--accent); color: #EDE8E0; position: fixed; top: 0; left: 0; padding: 0; z-index: 100; }
-    .sidebar-brand { padding: 1.5rem 1.2rem 1rem; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .sidebar { width: 220px; min-height: 100vh; background: var(--accent); color: #EDE8E0; position: fixed; top: 0; left: 0; padding: 0; z-index: 100; transition: width .25s ease; overflow: hidden; }
+    .sidebar.collapsed { width: 52px; }
+    .sidebar-brand { padding: 1.5rem 1.2rem 1rem; border-bottom: 1px solid rgba(255,255,255,.1); white-space: nowrap; overflow: hidden; }
     .sidebar-brand h6 { font-size: 1rem; letter-spacing: .08em; margin: 0; font-style: italic; color: #EDE8E0; }
     .sidebar-brand small { font-size: .72rem; color: #9E9288; }
-    .nav-link-side { display: block; padding: .65rem 1.2rem; color: #C8C0B4; font-size: .95rem; text-decoration: none; border-left: 3px solid transparent; transition: all .2s; }
+    .sidebar-brand .brand-text { display: inline; transition: opacity .2s; }
+    .sidebar.collapsed .brand-text { opacity: 0; pointer-events: none; }
+    .sidebar-toggle { position: absolute; top: 1.1rem; right: 10px; background: none; border: none; color: #C8C0B4; cursor: pointer; font-size: 1.1rem; padding: 2px 4px; line-height: 1; border-radius: 3px; transition: color .2s; }
+    .sidebar-toggle:hover { color: #EDE8E0; }
+    .nav-link-side { display: flex; align-items: center; gap: .65rem; padding: .65rem 1.2rem; color: #C8C0B4; font-size: .95rem; text-decoration: none; border-left: 3px solid transparent; transition: all .2s; white-space: nowrap; overflow: hidden; }
     .nav-link-side:hover, .nav-link-side.active { color: #EDE8E0; background: rgba(255,255,255,.08); border-left-color: #C8A882; }
-    .main-content { margin-left: 220px; padding: 2rem 2.5rem; }
+    .nav-link-side .nav-icon { flex-shrink: 0; width: 16px; text-align: center; font-style: normal; }
+    .nav-link-side .nav-label { transition: opacity .2s; }
+    .sidebar.collapsed .nav-label { opacity: 0; pointer-events: none; }
+    .main-content { margin-left: 220px; padding: 2rem 2.5rem; transition: margin-left .25s ease; }
+    .main-content.expanded { margin-left: 52px; }
     .page-section { display: none; }
     .page-section.active { display: block; }
     .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1.2rem 1.5rem; text-align: center; }
@@ -61,18 +70,19 @@
 <body>
 
 <!-- Sidebar -->
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <h6>Une vie pensée</h6>
-    <small>管理后台</small>
+    <span class="brand-text"><h6>Une vie pensée</h6><small>管理后台</small></span>
+    <button class="sidebar-toggle" id="sidebar-toggle" title="收起/展开侧边栏">&#9776;</button>
   </div>
   <div style="padding:.8rem 0">
-    <a class="nav-link-side active" data-section="dashboard" href="#">总览</a>
-    <a class="nav-link-side" data-section="categories" href="#">分类管理</a>
-    <a class="nav-link-side" data-section="articles" href="#">文章管理</a>
-    <a class="nav-link-side" data-section="albums" href="#">旅行相册</a>
-    <a class="nav-link-side" data-section="upload" href="#">上传中心</a>
-    <a class="nav-link-side" data-section="news" href="#">新闻管理（News）</a>
+    <a class="nav-link-side active" data-section="dashboard" href="#"><i class="nav-icon">⊞</i><span class="nav-label">总览</span></a>
+    <a class="nav-link-side" data-section="categories" href="#"><i class="nav-icon">⊟</i><span class="nav-label">分类管理</span></a>
+    <a class="nav-link-side" data-section="articles" href="#"><i class="nav-icon">✎</i><span class="nav-label">文章管理</span></a>
+    <a class="nav-link-side" data-section="albums" href="#"><i class="nav-icon">⊞</i><span class="nav-label">旅行相册</span></a>
+    <a class="nav-link-side" data-section="upload" href="#"><i class="nav-icon">↑</i><span class="nav-label">上传中心</span></a>
+    <a class="nav-link-side" data-section="news" href="#"><i class="nav-icon">◉</i><span class="nav-label">新闻管理</span></a>
+    <a class="nav-link-side" data-section="daily-logs" href="#"><i class="nav-icon">✦</i><span class="nav-label">日记管理</span></a>
   </div>
 </nav>
 
@@ -88,6 +98,7 @@
       <div class="col-md-3"><div class="stat-card"><div class="num" id="stat-albums">—</div><div class="label">ALBUMS</div></div></div>
       <div class="col-md-3"><div class="stat-card"><div class="num" id="stat-photos">—</div><div class="label">PHOTOS</div></div></div>
       <div class="col-md-3"><div class="stat-card"><div class="num" id="stat-news">—</div><div class="label">NEWS</div></div></div>
+      <div class="col-md-3"><div class="stat-card"><div class="num" id="stat-daily-logs">—</div><div class="label">DAILY LOGS</div></div></div>
     </div>
     <div class="card-panel">
       <h5>快速操作</h5>
@@ -96,6 +107,7 @@
         <button class="btn-primary-warm" onclick="goSection('albums')">+ 新建相册</button>
         <button class="btn-primary-warm" onclick="goSection('upload')">上传图片</button>
         <button class="btn-primary-warm" onclick="goSection('news')">新闻管理</button>
+        <button class="btn-primary-warm" onclick="goSection('daily-logs')">日记管理</button>
       </div>
     </div>
   </section>
@@ -331,10 +343,8 @@
     </div>
   </section>
 
-</div>
 
-
-    <!-- News Manager -->
+  <!-- News Manager -->
     <section class="page-section" id="section-news">
       <h4 class="mb-4" style="font-style:italic;color:var(--muted)">新闻管理</h4>
       <div class="row g-4">
@@ -395,7 +405,101 @@
       </div>
     </section>
 
+  <!-- Daily Logs (思考碎片) -->
+  <section class="page-section" id="section-daily-logs">
+    <h4 class="mb-4" style="font-style:italic;color:var(--muted)">日记管理（思考碎片）</h4>
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="card-panel">
+          <h5>新建日记</h5>
+          <form id="daily-log-form">
+            <div class="mb-3">
+              <label class="form-label">内容 <span style="font-size:.78rem;color:var(--muted)">(正文/思考碎片)</span></label>
+              <textarea class="form-control" name="content" rows="8" placeholder="在咖啡店，在路上…" required></textarea>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label">作者</label>
+                <input class="form-control" name="author" value="美芽" placeholder="美芽">
+              </div>
+              <div class="col-6">
+                <label class="form-label">发布日期</label>
+                <input class="form-control" type="date" name="posted_at">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">心情 <span style="font-size:.78rem;color:var(--muted)">(可选)</span></label>
+              <input class="form-control" name="mood" placeholder="平静、好奇、感动…">
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="log-is-published" name="is_published" checked>
+              <label class="form-check-label" for="log-is-published">公开发布</label>
+            </div>
+            <button class="btn-primary-warm" type="submit">保存日记</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="card-panel">
+          <div class="d-flex justify-content-between align-items-center flex-wrap" style="gap:.6rem;margin-bottom:.8rem;">
+            <p class="text-muted mb-0" style="font-size:.9rem">管理所有思考碎片 / 日记条目。</p>
+            <button class="btn btn-outline-secondary btn-sm" onclick="loadDailyLogs()">刷新列表</button>
+          </div>
+          <div id="daily-logs-table-wrap">
+            <p style="font-size:.9rem;color:var(--muted)">正在加载…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /.main-content -->
+
 <!-- Modals -->
+
+<!-- Edit Daily Log Modal -->
+<div class="modal fade" id="dailyLogEditModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <form id="daily-log-edit-form">
+        <div class="modal-header">
+          <h5 class="modal-title">编辑日记</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="edit-log-id">
+          <div class="mb-3">
+            <label class="form-label">内容</label>
+            <textarea class="form-control" name="content" rows="10" required></textarea>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label">作者</label>
+              <input class="form-control" name="author" placeholder="美芽">
+            </div>
+            <div class="col-6">
+              <label class="form-label">发布日期</label>
+              <input class="form-control" type="date" name="posted_at">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">心情（可选）</label>
+            <input class="form-control" name="mood">
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="edit-log-is-published" name="is_published">
+            <label class="form-check-label" for="edit-log-is-published">公开发布</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="submit" class="btn-primary-warm">保存修改</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="articleEditModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
@@ -509,11 +613,14 @@
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <form id="news-edit-form">
-        <div class="modal-header">
+        <div class="modal-header" style="position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--border);">
           <h5 class="modal-title">编辑新闻</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="d-flex align-items-center gap-2 ms-auto">
+            <button type="submit" class="btn-primary-warm" style="padding:.35rem 1.1rem;font-size:.9rem;">保存修改</button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="overflow-y:auto;max-height:calc(90vh - 64px);">
           <input type="hidden" name="id" id="edit-news-id">
           <div class="row g-3">
             <div class="col-md-8">
@@ -546,7 +653,7 @@
             </div>
             <div class="col-12">
               <label class="form-label">中文正文</label>
-              <textarea class="form-control" name="content_cn" rows="8"></textarea>
+              <textarea class="form-control" name="content_cn" rows="10"></textarea>
             </div>
             <div class="col-12">
               <label class="form-label">英文正文</label>
@@ -560,9 +667,9 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
-          <button type="submit" class="btn-primary-warm">保存修改</button>
+        <div class="modal-footer" style="border-top:1px solid var(--border);padding:.6rem 1rem;">
+          <span style="font-size:.82rem;color:var(--muted)">修改后点击右上角「保存修改」</span>
+          <button type="button" class="btn btn-outline-secondary btn-sm ms-auto" data-bs-dismiss="modal">关闭</button>
         </div>
       </form>
     </div>
@@ -736,6 +843,7 @@
       loadPhotos();
     }
     if (name === 'news') loadNews();
+    if (name === 'daily-logs') loadDailyLogs();
     if (name === 'dashboard') loadDashboard();
   }
 
@@ -747,6 +855,7 @@
       document.getElementById('stat-albums').textContent = data.album_count ?? 0;
       document.getElementById('stat-photos').textContent = data.photo_count ?? 0;
       document.getElementById('stat-news').textContent = data.news_count ?? 0;
+      document.getElementById('stat-daily-logs').textContent = data.daily_log_count ?? 0;
     } catch (e) {
       // silently fail for dashboard stats
     }
@@ -762,6 +871,103 @@
       e.preventDefault();
       goSection(section);
     });
+  });
+
+  let dailyLogModal;
+  dailyLogModal = new bootstrap.Modal(document.getElementById('dailyLogEditModal'));
+  let dailyLogCache = [];
+
+  async function loadDailyLogs() {
+    try {
+      dailyLogCache = await apiGet('/api/daily-logs');
+      const wrap = document.getElementById('daily-logs-table-wrap');
+      if (!dailyLogCache.length) {
+        wrap.innerHTML = '<p style="font-size:.9rem;color:var(--muted)">暂无日记</p>';
+        return;
+      }
+      wrap.innerHTML = `<table class="table table-admin table-sm"><thead><tr>
+        <th>ID</th><th>日期</th><th>内容摘要</th><th>作者</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>${dailyLogCache.map(log => `<tr>
+          <td>${log.id}</td>
+          <td style="white-space:nowrap">${log.posted_at ? log.posted_at.slice(0,10) : '-'}</td>
+          <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.85rem">${esc(log.content.slice(0,60))}…</td>
+          <td>${esc(log.author || '-')}</td>
+          <td><span class="${log.is_published ? 'badge-pub' : 'badge-draft'}">${log.is_published ? '已发布' : '草稿'}</span></td>
+          <td class="d-flex gap-1">
+            <button class="btn btn-outline-secondary btn-sm" onclick="openEditDailyLog(${log.id})">编辑</button>
+            <button class="btn-danger-sm" onclick="delDailyLog(${log.id})">删除</button>
+          </td>
+        </tr>`).join('')}</tbody></table>`;
+    } catch (e) {
+      toast('加载日记失败: ' + e.message, true);
+    }
+  }
+
+  function openEditDailyLog(id) {
+    const log = dailyLogCache.find(x => x.id === id);
+    if (!log) return;
+    document.getElementById('edit-log-id').value = String(log.id);
+    const form = document.getElementById('daily-log-edit-form');
+    form.content.value = log.content || '';
+    form.author.value = log.author || '';
+    form.mood.value = log.mood || '';
+    form.posted_at.value = log.posted_at ? log.posted_at.slice(0,10) : '';
+    form.is_published.checked = !!log.is_published;
+    dailyLogModal.show();
+  }
+
+  async function delDailyLog(id) {
+    if (!confirm('确认删除该日记？')) return;
+    try {
+      await apiDelete('/api/daily-logs/' + id);
+      toast('日记已删除');
+      await loadDailyLogs();
+    } catch (e) {
+      toast('删除失败: ' + e.message, true);
+    }
+  }
+
+  document.getElementById('daily-log-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target;
+    const payload = {
+      content: form.content.value.trim(),
+      author: form.author.value.trim() || '美芽',
+      mood: form.mood.value.trim(),
+      posted_at: form.posted_at.value || new Date().toISOString().slice(0,10),
+      is_published: form.is_published.checked,
+    };
+    try {
+      await apiPost('/api/daily-logs', payload);
+      toast('日记已创建');
+      form.reset();
+      form.author.value = '美芽';
+      form.is_published.checked = true;
+      await loadDailyLogs();
+    } catch (err) {
+      toast('创建失败: ' + err.message, true);
+    }
+  });
+
+  document.getElementById('daily-log-edit-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target;
+    const logId = document.getElementById('edit-log-id').value;
+    const payload = {
+      content: form.content.value.trim(),
+      author: form.author.value.trim() || '美芽',
+      mood: form.mood.value.trim(),
+      posted_at: form.posted_at.value || null,
+      is_published: form.is_published.checked,
+    };
+    try {
+      await apiPut('/api/daily-logs/' + logId, payload);
+      dailyLogModal.hide();
+      toast('日记已更新');
+      await loadDailyLogs();
+    } catch (err) {
+      toast('更新失败: ' + err.message, true);
+    }
   });
 
   function newsStatusBadge(item) {
@@ -1447,6 +1653,28 @@
   loadAlbums();
   loadPhotos();
   loadNews();
+  loadDailyLogs();
+
+  // ── 侧边栏收起/展开 ──────────────────────────────────────
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.querySelector('.main-content');
+  const toggleBtn = document.getElementById('sidebar-toggle');
+
+  function setSidebarCollapsed(collapsed) {
+    sidebar.classList.toggle('collapsed', collapsed);
+    mainContent.classList.toggle('expanded', collapsed);
+    toggleBtn.innerHTML = collapsed ? '&#9776;' : '&#9776;';
+    localStorage.setItem('sidebar-collapsed', collapsed ? '1' : '0');
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    setSidebarCollapsed(!sidebar.classList.contains('collapsed'));
+  });
+
+  // 恢复上次状态
+  if (localStorage.getItem('sidebar-collapsed') === '1') {
+    setSidebarCollapsed(true);
+  }
 </script>
 </body>
 </html>

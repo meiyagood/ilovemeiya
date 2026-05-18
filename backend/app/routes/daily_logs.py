@@ -28,6 +28,7 @@ def create_daily_log(
 ):
     """创建新的日常日志"""
     log = DailyLog(**payload.model_dump())
+    log.date = log.posted_at  # keep legacy `date` column in sync
     db.add(log)
     db.commit()
     db.refresh(log)
@@ -49,6 +50,8 @@ def update_daily_log(
     data = payload.model_dump(exclude_unset=True)
     for key, value in data.items():
         setattr(log, key, value)
+    if 'posted_at' in data:
+        log.date = log.posted_at  # keep legacy `date` column in sync
     
     db.commit()
     db.refresh(log)

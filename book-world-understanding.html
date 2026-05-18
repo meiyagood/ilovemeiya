@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我们如何理解这个世界 | Books & Culture</title>
+  <meta name="description" content="齐格蒙特·鲍曼《我们如何理解这个世界》阅读专页。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #333333;
+      background: #fbfaf8;
+      font-family: "Source Serif 4", "Noto Serif SC", serif;
+      line-height: 1.8;
+    }
+
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 18px 72px;
+    }
+
+    .topbar {
+      border-bottom: 0.5px solid #e6e1d9;
+      padding: 18px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      font-family: "Playfair Display", serif;
+      letter-spacing: 0.08em;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: #262626;
+      text-decoration: none;
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: #6d6a63;
+      letter-spacing: 0.03em;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .lang-switch button {
+      border: none;
+      background: transparent;
+      color: #8b857b;
+      font-family: "Playfair Display", serif;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .lang-switch button.active {
+      color: #1d1a16;
+      font-weight: 700;
+    }
+
+    .hero {
+      margin: 0;
+      text-align: left;
+    }
+
+    .lead-layout {
+      max-width: 980px;
+      margin: 46px auto 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .kicker {
+      margin: 0 0 10px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #7b766d;
+      font-family: "Playfair Display", serif;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Playfair Display", "Noto Serif SC", serif;
+      font-size: clamp(34px, 6vw, 56px);
+      line-height: 1.15;
+      color: #101010;
+      letter-spacing: 0.01em;
+    }
+
+    .dek {
+      margin: 16px 0 18px;
+      font-size: clamp(19px, 2.3vw, 24px);
+      color: #3f3a33;
+      line-height: 1.55;
+    }
+
+    .byline {
+      margin: 0;
+      font-size: 12px;
+      color: #666056;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: "Playfair Display", serif;
+    }
+
+    .meta-row {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #7b766d;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Playfair Display", serif;
+    }
+
+    .lead-visual {
+      margin: 0;
+      max-width: 420px;
+      justify-self: end;
+    }
+
+    .lead-visual img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: contain;
+      background: #f3efe8;
+      border: 0.5px solid #e4dfd7;
+      display: block;
+    }
+
+    .caption {
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: #7a756d;
+    }
+
+    .article,
+    .article-container {
+      max-width: 700px;
+      margin: 36px auto 0;
+      padding: 60px 20px;
+      background-color: #fbfaf8;
+      color: #333333;
+      font-family: "Source Serif 4", "Noto Serif SC", serif;
+      font-size: 19px;
+      line-height: 1.8;
+      text-align: justify;
+    }
+
+    .article p,
+    .article-container p {
+      margin: 0 0 22px;
+    }
+
+    .article p:first-of-type::first-letter,
+    .article-container p:first-of-type::first-letter,
+    .first-paragraph::first-letter {
+      float: left;
+      font-family: "STSong", "Songti SC", "Noto Serif SC", serif;
+      font-size: 5.6rem;
+      line-height: 1;
+      padding-right: 12px;
+      font-weight: 700;
+      color: #0f0f0f;
+    }
+
+    .pullquote,
+    .excerpt-text {
+      margin: 34px 0;
+      padding: 6px 0 6px 16px;
+      border-left: 1px solid #111111;
+      font-family: "Source Serif 4", "Noto Serif SC", serif;
+      font-size: 19px;
+      line-height: 1.8;
+      color: #333333;
+      letter-spacing: 0.02em;
+    }
+
+    .quote-source {
+      margin-top: 8px;
+      font-size: 11px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6b665f;
+    }
+
+    hr {
+      border: 0;
+      border-top: 0.5px solid #e0e0e0;
+      margin: 40px 0;
+    }
+
+    .back {
+      max-width: 680px;
+      margin: 40px auto 0;
+    }
+
+    .pager {
+      max-width: 680px;
+      margin: 28px auto 0;
+      padding-top: 18px;
+      border-top: 0.5px solid #e6e1d9;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      font-size: 0.95rem;
+    }
+
+    .pager a {
+      color: #5a554e;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+
+    .pager a:hover {
+      text-decoration: underline;
+    }
+
+    .pager .next {
+      text-align: right;
+    }
+
+    .back a {
+      color: #5a554e;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .back a:hover { text-decoration: underline; }
+
+    @media (max-width: 680px) {
+      .article { font-size: 1.13rem; }
+      .pullquote { padding: 14px 0; }
+    }
+
+    @media (max-width: 900px) {
+      .lead-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .lead-visual {
+        max-width: 100%;
+        justify-self: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="reading.html">Books & Culture</a>
+      <div class="topbar-right">
+        <div class="breadcrumb" data-zh="阅读 / 深度书评" data-en="Reading / Under Review" data-fr="Lecture / Analyse">阅读 / 深度书评</div>
+        <div class="lang-switch" aria-label="language switch">
+          <button id="btn-zh" class="active" type="button">ZH</button>
+          <button id="btn-en" type="button">EN</button>
+          <button id="btn-fr" type="button">FR</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="lead-layout">
+      <div class="hero">
+        <p class="kicker" data-zh="深度书评" data-en="Under Review" data-fr="Analyse">深度书评</p>
+        <h1 data-zh="我们如何理解这个世界" data-en="How We Understand the World" data-fr="Comment comprendre le monde">我们如何理解这个世界</h1>
+        <p class="dek" data-zh="特斯特：在这次对话的最后，你能用一段话来总结你的关切吗？鲍曼：那就给你一句话吧，不过不是我说的——是阿尔贝 •加缪说的：这世界上有美，也有受辱者。无论这项事业可能带来什么困难，我都希望永远不对后者或前者不忠。" data-en="特斯特：在这次对话的最后，你能用一段话来总结你的关切吗？鲍曼：那就给你一句话吧，不过不是我说的——是阿尔贝 •加缪说的：这世界上有美，也有受辱者。无论这项事业可能带来什么困难，我都希望永远不对后者或前者不忠。" data-fr="特斯特：在这次对话的最后，你能用一段话来总结你的关切吗？鲍曼：那就给你一句话吧，不过不是我说的——是阿尔贝 •加缪说的：这世界上有美，也有受辱者。无论这项事业可能带来什么困难，我都希望永远不对后者或前者不忠。">特斯特：在这次对话的最后，你能用一段话来总结你的关切吗？鲍曼：那就给你一句话吧，不过不是我说的——是阿尔贝 •加缪说的：这世界上有美，也有受辱者。无论这项事业可能带来什么困难，我都希望永远不对后者或前者不忠。</p>
+        <p class="byline" data-zh="作者：齐格蒙特·鲍曼 · 读书笔记：Meiya" data-en="By Zygmunt Bauman · Notes by Meiya" data-fr="Par Zygmunt Bauman · Notes par Meiya">作者：齐格蒙特·鲍曼 · 读书笔记：Meiya</p>
+        <p class="meta-row" data-zh="2026年4月30日 · 约8分钟阅读" data-en="April 30, 2026 · 8 min read" data-fr="30 avril 2026 · 8 min de lecture">2026年4月30日 · 约8分钟阅读</p>
+      </div>
+
+      <figure class="lead-visual">
+        <img src="images/cover-sartre.jpg" alt="我们如何理解这个世界 封面" loading="lazy" />
+        <figcaption class="caption" data-zh="封面图片来自个人藏书档案。" data-en="Cover image from personal library archive." data-fr="Image de couverture issue des archives personnelles.">封面图片来自个人藏书档案。</figcaption>
+      </figure>
+    </section>
+
+    <article class="article article-container">
+      <blockquote class="pullquote excerpt-text">如果"世界成了我们欲望的一个巨大客体——一个巨大的苹果、一个巨大的奶瓶、一个硕大的乳房"，而我们则成了"吸吮者，永远在渴求，永远在希望，却永远感到失望"，那么，"尽管每个人都试图尽可能接近他人，但实际上每个人都身处彻底的孤独之中，始终被那种深刻的不安全感、焦虑和负罪感所笼罩，而这些情绪正是人与人之间的隔阂无法被克服的必然结果"。<div class="quote-source" data-zh="摘自 齐格蒙特·鲍曼" data-en="FROM ZYGMUNT BAUMAN" data-fr="EXTRAIT DE ZYGMUNT BAUMAN">摘自 齐格蒙特·鲍曼</div></blockquote>
+
+      <p><strong>2026.05.05 23:00</strong><br>鲍曼在书中提到，阿尔伯特·赫希曼在《欲望与利益》中的观点——人们把"逐利的激情"视为武器，旨在驯服、消解并无害化其他被指责导致人类的共同生活混乱无序的激情。</p>
+
+      <p>理解这句话，我们要打破现代人"逐利是贪婪、是不道德"的固有印象，回到17、18世纪的语境中。当时的思想家们正试图解决一个紧迫的问题："如何防止社会在狂热的激情中走向自我毁灭？"</p>
+
+      <p><strong>1. 混乱的源头：破坏性的"激情"</strong><br>在启蒙运动早期，人们普遍认为人类被几种强大的、非理性的激情（荣誉感与虚荣心、权力欲、宗教狂热）所驱动。这些激情极具破坏力，往往导致战争、宗教冲突和政治动荡，被认为是"无序"的，因为它们难以预测，且往往追求的是"零和博弈"。</p>
+
+      <p><strong>2. 驯服的策略：以毒攻毒</strong><br>面对这些狂暴的激情，道德说教和单纯的镇压都失败了。于是，思想家们提出了一种巧妙的方案——"用一种激情去对抗另一种激情。"这种被选中的、用来"冲抵"其他激情的武器，就是"逐利的激情"（即贪婪或对物质财富的追求）。</p>
+
+      <p><strong>3. 为什么是"利"？（逐利的无害化特征）</strong><br>人们发现，追求经济利益虽然在道德上谈不上崇高，但它具有几个让政治家感到"安心"的特征：可预测性（Predictability）——追求利益的人通常是理性的；持久性与平淡性——逐利是一项长期的、重复的琐事，它要求人保持冷静、守时和谨慎，这种平淡的特质正好中和了英雄主义式的狂热；和平的相互依赖——贸易需要对方生存，而非毁灭对方。</p>
+
+      <p><strong>4. 从"贪婪"到"利益"的华丽转身</strong><br>在这个过程中，"贪婪"（Avarice）这一贬义词被转化成了中性甚至略带褒义的"利益"（Interest）。既然我们无法让所有人变成圣人，那么让大家去"做生意"总比让他们去"打仗"要好。人们通过鼓励大众追求财富，将原本可能投入到权力争夺或暴力冲突中的精力，引导到了商贸活动中。这就是所谓的"消解并无害化"：激情的火焰没有熄灭，但它被引进了工厂的锅炉里，变成了推动社会运转的温和动力。</p>
+
+      <p>现代资本主义文明的一个政治基础：商业精神并非仅仅是为了致富，它在最初被构想时，其实是一剂"镇静剂"。它通过一种相对"庸俗"但稳定的欲望（赚钱），去驯服那些更危险、更致命的欲望（如复仇、狂热和征服）。这就是赫希曼所说的"温柔的商业"（doux commerce）理论——人们忙着算账时，就没时间去砍对方的头了。</p>
+    </article>
+
+    <nav class="pager" aria-label="article navigation">
+      <a class="prev" href="book-human-condition.html" data-zh="← 上一篇：人的境况" data-en="← Previous: The Human Condition" data-fr="← Precedent : La Condition de l'homme moderne">← 上一篇：人的境况</a>
+      <a class="next" href="book-iberian-food-history.html" data-zh="下一篇：伊比利亚饮食史 →" data-en="Next: A History of Iberian Food →" data-fr="Suivant : Histoire culinaire iberique →">下一篇：伊比利亚饮食史 →</a>
+    </nav>
+
+    <div class="back"><a href="reading.html" data-zh="← 返回 Books & Culture" data-en="← Back to Books & Culture" data-fr="← Retour a Books & Culture">← 返回 Books & Culture</a></div>
+  </div>
+
+  <script>
+    function setLanguage(lang) {
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+      document.querySelectorAll("[data-zh][data-en][data-fr]").forEach((node) => {
+        node.textContent = node.getAttribute(`data-${lang}`);
+      });
+      document.getElementById("btn-zh").classList.toggle("active", lang === "zh");
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+      document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
+    }
+
+    document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
+    document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+  </script>
+</body>
+</html>

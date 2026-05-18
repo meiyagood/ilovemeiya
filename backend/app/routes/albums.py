@@ -28,6 +28,15 @@ router = APIRouter(prefix="/api/albums", tags=["Albums"])
 # 相册 CRUD
 # ──────────────────────────────────────────────────────────
 
+@router.get("", response_model=list[AlbumOut])
+def list_albums(
+    _: str = Depends(verify_admin),
+    db: Session = Depends(get_db),
+):
+    """列出所有相册（管理员）"""
+    return db.query(Album).order_by(Album.created_at.desc()).all()
+
+
 @router.post("", response_model=AlbumOut, status_code=201)
 def create_album(
     payload: AlbumCreate,

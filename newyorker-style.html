@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>纽约客风格 | New Yorker Style</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Additional New Yorker-specific styling */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Masthead */
+    .masthead {
+      text-align: center;
+      padding: 40px 20px;
+      border-bottom: var(--border-double);
+      margin-bottom: 30px;
+    }
+
+    .masthead h1 {
+      margin: 0;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .masthead p {
+      margin: 8px 0 0;
+      color: var(--color-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    /* Navigation with double border */
+    nav.main-nav {
+      border-top: var(--border-double);
+      border-bottom: var(--border-double);
+      padding: 16px 0;
+      margin-bottom: 40px;
+      background: var(--color-paper);
+    }
+
+    nav.main-nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0 20px;
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    nav.main-nav a {
+      text-decoration: none;
+      color: var(--color-ink);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav.main-nav a::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--color-ink);
+      transition: width 0.3s ease;
+    }
+
+    nav.main-nav a:hover {
+      color: var(--color-rule-soft);
+    }
+
+    nav.main-nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    /* Article metadata */
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--color-rule-soft);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .article-category {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-rule-soft);
+      font-weight: 700;
+    }
+
+    .article-date {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+
+    /* Article header */
+    article header {
+      margin-bottom: 40px;
+    }
+
+    .article-title {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.15;
+    }
+
+    .article-subtitle {
+      margin: 0 0 16px;
+      font-size: 1.25rem;
+      color: var(--color-muted);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .article-byline {
+      font-size: 0.9rem;
+      color: var(--color-ink);
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .article-byline strong {
+      font-weight: 700;
+    }
+
+    /* Article body */
+    article .content {
+      font-size: 1.0625rem;
+      line-height: 1.8;
+      color: var(--color-ink);
+    }
+
+    article p {
+      margin: 0 0 1.5rem;
+    }
+
+    /* Drop cap */
+    article p:first-of-type::first-letter {
+      font-size: 3.6rem;
+      float: left;
+      font-family: var(--font-title);
+      font-weight: 700;
+      line-height: 1;
+      margin-right: 8px;
+      margin-top: 4px;
+      color: var(--color-title);
+    }
+
+    /* Figure/image container */
+    figure {
+      margin: 32px 0;
+      padding: 0;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-bottom: 8px;
+    }
+
+    figcaption {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--color-rule-soft);
+      padding-bottom: 12px;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px dashed var(--color-rule-soft);
+      text-align: center;
+      color: var(--color-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .masthead {
+        padding: 30px 16px;
+      }
+
+      .masthead h1 {
+        font-size: 2rem;
+      }
+
+      nav.main-nav ul {
+        gap: 16px;
+        padding: 0 16px;
+      }
+
+      nav.main-nav a {
+        font-size: 0.75rem;
+      }
+
+      .container {
+        padding: 0 16px 40px;
+      }
+
+      .article-title {
+        font-size: 1.75rem;
+      }
+
+      .article-subtitle {
+        font-size: 1rem;
+      }
+
+      article .content {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Masthead / Logo -->
+  <header class="masthead">
+    <h1>The New Yorker</h1>
+    <p>Since 1925</p>
+  </header>
+
+  <!-- Main Navigation with Double Border -->
+  <nav class="main-nav">
+    <ul>
+      <li><a href="#news">Reporting</a></li>
+      <li><a href="#essays">Essays</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#culture">Culture</a></li>
+      <li><a href="#humor">Humor</a></li>
+      <li><a href="#podcasts">Podcasts</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container">
+    <article>
+      <!-- Article Metadata -->
+      <div class="article-meta">
+        <span class="article-category">Reporting</span>
+        <time class="article-date">April 29, 2026</time>
+      </div>
+
+      <!-- Article Header -->
+      <header>
+        <h1 class="article-title">The Art of Silence: How We Lost the Ability to Think</h1>
+        <p class="article-subtitle">In an age of constant noise, the luxury of contemplation has become a radical act.</p>
+        <p class="article-byline">By <strong>Jane Doe</strong></p>
+      </header>
+
+      <!-- Article Body -->
+      <section class="content">
+        <p>
+          The morning light falls in sharp diagonal lines across the desk of a writer in Brooklyn, but she doesn't notice. Her phone sits beside her, glowing with notifications—an email from her editor, a message from her sister, a news alert about something that happened in the world three minutes ago. She reads none of them. Instead, she stares at the blank page and waits for a thought to arrive.
+        </p>
+
+        <p>
+          This is becoming a rare moment. Not the waiting—we all wait now, suspended between distraction and intention. But the deliberate choice to sit with nothing, to let silence do its work. In the 1970s, a psychologist named David Lewis found that it takes the brain an average of twenty-three minutes and fifteen seconds to refocus on a task after an interruption. Now, with our devices designed to interrupt us every few minutes, we have become a civilization of people who have never finished a thought.
+        </p>
+
+        <figure>
+          <img src="https://via.placeholder.com/820x460" alt="Contemplation in modern age" />
+          <figcaption>
+            A reader lost in thought: a scene increasingly rare in contemporary life. Photograph by an unnamed chronicler of our distracted times.
+          </figcaption>
+        </figure>
+
+        <p>
+          The silence we're discussing here is not the absence of sound, though that would be a start. It's a condition of mental sovereignty—the ability to close the door to the outside world, if only for an hour, and trust that your own thoughts are worth the investment. It's what philosophy teachers call contemplation, what writers call the work, what lawyers call billable hours, and what everyone else has learned to call the impossible dream.
+        </p>
+
+        <p>
+          Yet the question lingers: have we actually lost this ability, or have we simply lost interest in keeping it?
+        </p>
+      </section>
+
+      <!-- Signature/Byline Footer -->
+      <footer>
+        <p>Jane Doe is a staff writer at The New Yorker, where she writes about culture and the mind.</p>
+      </footer>
+    </article>
+  </main>
+</body>
+</html>

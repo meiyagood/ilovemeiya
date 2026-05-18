@@ -16,10 +16,28 @@ from ..schemas import NewsItemCreate, NewsItemOut, NewsItemUpdate
 router = APIRouter(prefix="/api/news", tags=["News"])
 
 
+@router.get("/public", response_model=list[NewsItemOut])
+def list_public_news(
+    skip: int = 0,
+    limit: int = 50,
+    db: Session = Depends(get_db),
+):
+    """获取公开新闻列表（仅 is_public=True）"""
+    return (
+        db.query(NewsItem)
+        .filter(NewsItem.is_public == True)  # noqa: E712
+        .order_by(NewsItem.date.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
 @router.get("", response_model=list[NewsItemOut])
 def list_news(
     skip: int = 0,
     limit: int = 50,
+    _: str = Depends(verify_admin),
     db: Session = Depends(get_db),
 ):
     """获取新闻列表（管理端，包含草稿）"""

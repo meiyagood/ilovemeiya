@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 from ..auth import verify_admin
 from ..config import ALLOWED_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES, UPLOAD_DIR
 from ..database import get_db
-from ..models import Album, Article, Category, NewsItem, Photo
+from ..models import Album, Article, Category, DailyLog, NewsItem, Photo
 from ..schemas import UploadResponse
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
@@ -129,5 +129,6 @@ def get_admin_data(
         "album_count": db.query(Album).count(),
         "photo_count": len(photos),
         "news_count": db.query(NewsItem).count(),
+        "daily_log_count": db.query(DailyLog).count(),
         "photos": [p.to_dict() for p in photos],
     }

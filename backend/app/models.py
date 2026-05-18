@@ -241,6 +241,7 @@ class DailyLog(Base):
     
     # 时间戳
     posted_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)  # 发布时间（用于排序和显示）
+    date: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)  # legacy column kept for DB compatibility
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
