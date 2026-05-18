@@ -3,59 +3,1197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>旅行 | Meiya Atelier</title>
+  <title>Voyage | Une vie pensée</title>
+  <meta name="description" content="Une vie pensée | 审思而活。思考服务于行动。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
   <style>
-    :root { --ink:#1f1c19; --muted:#615b53; --bg:#f7f1e8; --card:#fffaf1; --line:#d8c7b2; --accent:#de6b22; }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:"Noto Serif SC",serif; color:var(--ink); background:var(--bg); }
-    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
-    .top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
-    .home { text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-family:"Space Grotesk",sans-serif; font-size:12px; }
-    .lang button { border:1px solid var(--line); background:#fffdf8; border-radius:999px; padding:6px 10px; margin-left:6px; cursor:pointer; }
-    .hero { margin-top:16px; border:1px solid var(--line); border-radius:18px; padding:22px; background:linear-gradient(120deg, rgba(222,107,34,.12), rgba(255,255,255,.5)); }
-    h1 { margin:0 0 8px; font-size:36px; }
-    p { color:var(--muted); }
-    .grid { margin-top:16px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-    .card { border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--card); }
-    img { width:100%; height:170px; object-fit:cover; display:block; }
-    .txt { padding:10px 12px 14px; }
-    .txt h3 { margin:0 0 8px; font-size:20px; }
-    @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: #1f2428;
+      background: #fcfaf6;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      line-height: 1.7;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px 72px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      background: rgba(252, 250, 246, 0.95);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 14px 0;
+      gap: 6px;
+    }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      color: #1f2428;
+      font-family: "Playfair Display", serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .nav-close {
+      display: none;
+    }
+
+    .logo-stack {
+      text-align: center;
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      line-height: 1.5;
+      letter-spacing: 0.15em;
+      color: #1f2428;
+      padding: 24px 0;
+      width: 100%;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 4px double #1f2428;
+    }
+
+    .nav-overlay {
+      display: none;
+    }
+
+    .nav a,
+    .lang button {
+      text-decoration: none;
+      color: #1f2428;
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 400;
+      font-family: "Playfair Display", serif;
+      background: transparent;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: capitalize;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.2;
+    }
+
+    .nav a span {
+      font-size: 11px;
+      color: #575757;
+      font-weight: 400;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .nav a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    .lang button {
+      font-size: 12px;
+      font-family: "Crimson Text", serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .lang button:hover { opacity: 0.6; }
+    .lang button.active { font-weight: 700; }
+
+    .nav a:focus-visible,
+    .lang button:focus-visible {
+      outline: 2px solid #2b4c63;
+      outline-offset: 2px;
+    }
+
+    .page-header {
+      text-align: center;
+      padding: 64px 0 48px;
+      border-bottom: 4px double #1f2428;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-family: "Playfair Display", serif;
+      font-size: 48px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #1f2428;
+      line-height: 1.2;
+    }
+
+    .page-header .page-sub {
+      font-size: 12px;
+      color: #a8a8a8;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+    }
+
+    .page-jump {
+      margin-top: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #4c5d6a;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid #d6d0c6;
+      padding-bottom: 2px;
+    }
+
+    .page-jump:hover {
+      color: #1f2428;
+      border-bottom-color: #1f2428;
+    }
+
+    .page-jump::after {
+      content: "↓";
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    .south-france-module {
+      max-width: 920px;
+      margin: 92px auto 110px;
+      padding: 0 8px;
+    }
+
+    .sf-cover {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: minmax(300px, 46vw) auto;
+      gap: 0;
+      align-items: stretch;
+      min-height: 300px;
+      width: 100%;
+      border: 1px solid #dfd9d0;
+      background: #fdfaf5;
+      text-align: left;
+      padding: 0;
+      cursor: pointer;
+      transition: border-color 220ms ease, transform 220ms ease, background 220ms ease;
+    }
+
+    .sf-cover:hover {
+      border-color: #b9b0a2;
+      transform: translateY(-2px);
+      background: #fffdf8;
+    }
+
+    .sf-cover:focus-visible {
+      outline: 2px solid #2b4c63;
+      outline-offset: 2px;
+    }
+
+    .sf-title {
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.55rem, 3.8vw, 2.3rem);
+      line-height: 1.24;
+      color: #1f2428;
+    }
+
+    .cn-title {
+      display: block;
+      font-size: 0.45em;
+      color: #888;
+      font-weight: normal;
+      margin-top: 4px;
+      letter-spacing: 2px;
+      font-family: "Songti SC", "Source Han Serif CN", "Noto Serif SC", serif;
+    }
+
+    .sf-description {
+      margin: 14px 0 0;
+      font-size: clamp(1rem, 1.7vw, 1.15rem);
+      color: #32373c;
+      line-height: 1.82;
+    }
+
+    .cn-description {
+      font-size: 0.9rem;
+      color: #7a7e83;
+      margin-top: 8px;
+      line-height: 1.64;
+      font-family: "Songti SC", "Source Han Serif CN", "Noto Serif SC", serif;
+    }
+
+    .sf-caption {
+      display: inline-flex;
+      margin-top: 14px;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      color: #6e7378;
+      border-bottom: 1px solid #d6d0c6;
+      padding-bottom: 1px;
+    }
+
+    .south-france-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      background-color: #fdfaf5;
+      border: 1px solid #e0ddd8;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 30px;
+      min-height: 300px;
+    }
+
+    .sf-cover-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      min-height: 0;
+      border-right: none;
+      border-bottom: 1px solid #ece5db;
+    }
+
+    .sf-cover-media {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .sf-cover-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.18) 0.6px, transparent 0.7px), radial-gradient(rgba(0, 0, 0, 0.12) 0.45px, transparent 0.6px);
+      background-size: 4px 4px, 3px 3px;
+      background-position: 0 0, 1px 1px;
+      opacity: 0.16;
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+    }
+
+    .sf-text-content {
+      padding: 25px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .article-body {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 56px 0;
+    }
+
+    .articles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    .article-item {
+      border-bottom: 1px solid #e8e4de;
+      padding-bottom: 56px;
+    }
+
+    .article-item:last-child {
+      border-bottom: none;
+    }
+
+    .article-item h2 {
+      margin: 0 0 8px;
+      font-family: "Playfair Display", serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #1f2428;
+      line-height: 1.4;
+    }
+
+    .article-meta {
+      font-size: 12px;
+      color: #a8a8a8;
+      margin-bottom: 20px;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0.05em;
+    }
+
+    .article-item p {
+      margin: 0 0 20px;
+      color: #1f2428;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .article-item p:first-of-type::first-letter {
+      float: left;
+      font-family: "Playfair Display", serif;
+      font-size: 4.2rem;
+      font-weight: 700;
+      line-height: 0.82;
+      margin: 6px 10px 0 0;
+      color: #1f2428;
+    }
+
+    .article-link {
+      display: inline-block;
+      color: #1f2428;
+      text-decoration: underline;
+      font-family: "Crimson Text", serif;
+      font-size: 1rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .article-link:hover { opacity: 0.7; }
+
+    .photo-feature {
+      margin-top: 26px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: max-height 520ms ease, opacity 420ms ease, transform 420ms ease;
+    }
+
+    .south-france-module.is-open .photo-feature {
+      max-height: 2400px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .photo-feature-header {
+      margin-bottom: 44px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid #dfd9d0;
+    }
+
+    .photo-feature-title {
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2rem, 5.2vw, 3.7rem);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: 0.01em;
+      color: #1f2428;
+    }
+
+    .cn-sub {
+      display: block;
+      margin-top: 8px;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      color: #6a6f74;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .photo-feature-intro {
+      max-width: 640px;
+      margin: 20px 0 0;
+      color: #32373c;
+      font-size: clamp(1.05rem, 1.8vw, 1.26rem);
+      line-height: 1.92;
+      text-wrap: pretty;
+    }
+
+    .cn-intro {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.98rem;
+      line-height: 1.9;
+      color: #5f666b;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+    }
+
+    .photo-feature-intro::first-letter {
+      float: left;
+      font-family: "Playfair Display", serif;
+      font-size: 4.4rem;
+      font-weight: 700;
+      line-height: 0.84;
+      margin: 6px 10px 0 0;
+      color: #14171a;
+    }
+
+    .photo-stream {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.16fr);
+      gap: 38px 44px;
+      align-items: start;
+    }
+
+    .photo-card {
+      margin: 0;
+    }
+
+    .photo-card--offset {
+      margin-top: 54px;
+    }
+
+    .photo-card--wide {
+      grid-column: 1 / -1;
+      max-width: 78%;
+      margin-left: auto;
+    }
+
+    .photo-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      background: #f9f6f0;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 420ms ease, transform 420ms ease;
+    }
+
+    .photo-frame {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      background: #f9f6f0;
+      min-height: 220px;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 3 / 2;
+      object-fit: contain;
+      object-position: center;
+      background: #f9f6f0;
+    }
+
+    .photo-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.42) 50%, rgba(255, 255, 255, 0) 80%);
+      transform: translateX(-100%);
+      animation: niceShimmer 1.8s ease-in-out infinite;
+    }
+
+    .photo-frame.is-loaded::before {
+      display: none;
+    }
+
+    .photo-frame.is-loaded img {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .photo-card figcaption {
+      margin-top: 11px;
+      font-size: 0.8rem;
+      letter-spacing: 0.045em;
+      color: #8a8a8a;
+      font-family: "Crimson Text", serif;
+    }
+
+    .cn-caption {
+      display: block;
+      font-size: 0.85rem;
+      color: #999;
+      margin-top: 4px;
+      letter-spacing: 0;
+      font-family: "Songti SC", "Source Han Serif CN", "Noto Serif SC", serif;
+      line-height: 1.72;
+    }
+
+    .dynamic-voyage-albums {
+      margin-top: 4px;
+    }
+
+    .dynamic-voyage-albums[hidden] {
+      display: none;
+    }
+
+    @keyframes niceShimmer {
+      100% { transform: translateX(100%); }
+    }
+
+    /* 社交链接专用 */
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid #e8e4de;
+      text-decoration: none;
+      color: #1f2428;
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s ease;
+    }
+
+    .social-links a:last-child { border-bottom: none; }
+    .social-links a:hover { opacity: 0.6; }
+
+    .social-links a span {
+      font-family: "Crimson Text", serif;
+      font-size: 13px;
+      color: #a8a8a8;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .back-home {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 0 48px;
+    }
+
+    .back-home a {
+      color: #a8a8a8;
+      text-decoration: none;
+      font-family: "Crimson Text", serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .back-home a:hover { color: #1f2428; }
+    .back-home a::before { content: "←"; font-size: 1rem; }
+
+    footer {
+      padding-top: 20px;
+      border-top: 1px solid #1f2428;
+      text-align: center;
+      color: #1f2428;
+      font-size: 0.9rem;
+      font-family: "Crimson Text", serif;
+    }
+
+    @media (max-width: 960px) {
+      .logo-stack { font-size: 16px; }
+      .nav { gap: 12px; }
+      .article-body { padding: 40px 0; }
+      .south-france-module { margin: 74px auto 94px; }
+      .sf-cover {
+        grid-template-rows: minmax(260px, 52vw) auto;
+      }
+      .south-france-card { min-height: 220px; }
+      .sf-text-content { padding: 22px; }
+      .photo-card--wide { max-width: 86%; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar-header { justify-content: space-between; padding: 10px 0; }
+      .nav-toggle { display: inline-block; }
+      .logo-stack { font-size: 14px; padding: 16px 0; letter-spacing: 0.1em; }
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(62vw, 260px);
+        height: 100vh;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 84px 14px 20px;
+        border-bottom: none;
+        border-right: 1px solid #1f2428;
+        background: #fcfaf6;
+        transform: translateX(-110%);
+        transition: transform 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+        z-index: 25;
+      }
+      .nav a { font-size: 14px; }
+      .nav a span { font-size: 12px; }
+      .nav-close {
+        display: inline-block;
+        border: none;
+        background: transparent;
+        color: #1f2428;
+        font-family: "Playfair Display", serif;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0;
+        margin-bottom: 8px;
+        cursor: pointer;
+      }
+      body.nav-open .nav { transform: translateX(0); }
+      .nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 20;
+      }
+      body.nav-open .nav-overlay { display: block; }
+      body.nav-open { overflow: hidden; }
+      .page-header h1 { font-size: 32px; }
+      .article-item h2 { font-size: 22px; }
+      .south-france-module {
+        margin: 58px auto 74px;
+        padding: 0;
+      }
+      .sf-cover {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(220px, 64vw) auto;
+        min-height: 0;
+      }
+      .south-france-card {
+        grid-template-columns: 1fr;
+        margin-top: 18px;
+      }
+      .sf-cover-image {
+        width: 100%;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid #ece5db;
+      }
+      .sf-cover-media {
+        width: 100%;
+      }
+      .sf-text-content {
+        width: 100%;
+        padding: 18px 18px 20px;
+      }
+      .sf-caption { margin-top: 10px; }
+      .photo-feature { margin-top: 18px; }
+      .photo-feature-header {
+        margin-bottom: 30px;
+      }
+      .photo-stream {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .photo-card--offset {
+        margin-top: 0;
+      }
+      .photo-card--wide {
+        grid-column: auto;
+        max-width: 100%;
+        margin-left: 0;
+      }
+      .photo-card figcaption {
+        font-size: 0.76rem;
+      }
+      .photo-frame {
+        min-height: 180px;
+      }
+      .photo-frame img {
+        aspect-ratio: 3 / 2;
+      }
+      .cms-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="wrap">
-    <div class="top">
-      <a class="home" href="index.html">← 返回首页</a>
-      <div class="lang"><button id="zh">中文</button><button id="fr">FR</button></div>
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-header">
+        <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">Menu</button>
+        <div class="lang" aria-label="language switch">
+          <button id="btn-zh" class="active" type="button">ZH</button>
+          <button id="btn-en" type="button">EN</button>
+          <button id="btn-fr" type="button">FR</button>
+        </div>
+      </div>
+      <div class="logo-stack" data-zh="人们厌倦一切，除了懂得。" data-en="One grows weary of everything except knowing." data-fr="On se lasse de tout excepté de connaître.">On se lasse de tout excepté de connaître.</div>
+      <nav id="main-nav" class="nav" aria-label="main navigation">
+        <button id="nav-close" class="nav-close" type="button">Close</button>
+        <a href="news.html" data-zh="新闻" data-en="News" data-fr="News">News<span data-zh="新闻" data-en="News" data-fr="News">新闻</span></a>
+        <a href="travel.html" data-zh="旅行" data-en="Voyage" data-fr="Voyage">Voyage<span data-zh="旅行" data-en="Voyage" data-fr="Voyage">旅行</span></a>
+        <a href="reading.html" data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">Books & Culture<span data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">读书&文化</span></a>
+        <a href="social.html" data-zh="写作" data-en="Writing" data-fr="Writing">Writing<span data-zh="写作" data-en="Writing" data-fr="Writing">写作</span></a>
+        <a href="french.html" data-zh="语言" data-en="Français" data-fr="Français">Français<span data-zh="法语" data-en="Français" data-fr="Français">法语</span></a>
+        <a href="vibe.html" data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">Vibe Coding<span data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">AI编程</span></a>
+      </nav>
+      <div class="nav-overlay" id="nav-overlay"></div>
+    </header>
+
+    <div class="page-header">
+      <h1 id="page-title" data-zh="旅行" data-en="Voyage" data-fr="Voyage">旅行</h1>
+      <a class="page-jump" href="#south-of-france" data-zh="跳转至南法摄影合集" data-en="Jump to South of France Collection" data-fr="Aller a la collection du sud de la France">Jump to South of France Collection</a>
     </div>
-    <section class="hero">
-      <h1 id="title">旅行</h1>
-      <p id="desc">记录我的路线、预算和风景时刻，把旅行变成可回看的长期记忆。</p>
-    </section>
-    <section class="grid">
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=900&q=80" alt="路线" />
-        <div class="txt"><h3 id="c1t">路线笔记</h3><p id="c1d">每次出发前后的路线优化与交通记录。</p></div>
-      </article>
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=900&q=80" alt="预算" />
-        <div class="txt"><h3 id="c2t">预算清单</h3><p id="c2d">机酒、餐饮、门票及本地交通的拆解模板。</p></div>
-      </article>
-      <article class="card">
-        <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=900&q=80" alt="故事" />
-        <div class="txt"><h3 id="c3t">城市故事</h3><p id="c3d">街道、博物馆和咖啡馆里的瞬间与观察。</p></div>
-      </article>
-    </section>
+
+    <div class="article-body">
+      <section id="south-of-france" class="south-france-module" aria-label="South of France collection module">
+        <button id="sf-toggle" class="sf-cover south-france-card" type="button" aria-expanded="false" aria-controls="sf-gallery">
+          <div class="sf-cover-media">
+            <img class="sf-cover-image" src="media/image_bbfd9d.jpg" alt="尼斯蔚蓝海岸与阳光海面" loading="eager" decoding="async" />
+          </div>
+          <div class="sf-text-content">
+            <h2 class="sf-title">Collection de photographies du Sud de la France<span class="cn-title">南法摄影合集</span></h2>
+            <div class="sf-description">Between the Cote d'Azur and luminous stone walls, time seems suspended in each frame.<div class="cn-description">捕捉尼斯蔚蓝海岸的瞬息与宁静。</div></div>
+            <span class="sf-caption" data-zh="尼斯：蓝色地平线" data-en="Nice: Blue Horizon" data-fr="Nice : horizon bleu">尼斯：蓝色地平线</span>
+          </div>
+        </button>
+
+        <div id="sf-gallery" class="photo-feature" hidden>
+          <header class="photo-feature-header">
+            <h2 class="photo-feature-title">
+              Nice: Blue Horizon <span class="cn-sub">尼斯：蓝色地平线</span>
+            </h2>
+            <p class="photo-feature-intro">
+              Nice s'eveille entre azur et pierre claire. Le matin, la mer respire lentement, et chaque pas sur la Promenade semble suspendre le temps.
+              <br>
+              <span class="cn-intro">尼斯在蔚蓝与浅色石墙间苏醒。清晨的海面呼吸平缓，漫步在英国人漫步大道，仿佛时间也随之停驻。</span>
+            </p>
+          </header>
+
+          <div class="photo-stream">
+            <figure class="photo-card">
+              <div class="photo-frame">
+                <img class="js-lazy-photo" src="media/nice-01.jpg" data-fallback="https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=1400&q=80" alt="晨光下的尼斯海岸线与蔚蓝海面" loading="lazy" decoding="async" />
+              </div>
+              <figcaption>
+                Promenade des Anglais, 07:12 - la premiere lumiere sur la baie.
+                <span class="cn-caption">英国人漫步大道，07:12 —— 海湾的第一缕晨曦。</span>
+              </figcaption>
+            </figure>
+
+            <figure class="photo-card photo-card--offset">
+              <div class="photo-frame">
+                <img class="js-lazy-photo" src="media/nice-02.jpg" data-fallback="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80" alt="尼斯老城街角与暖色建筑立面" loading="lazy" decoding="async" />
+              </div>
+              <figcaption>
+                Vieux Nice - facades ocres, volets pales, odeur de cafe.
+                <span class="cn-caption">尼斯老城 —— 赭色墙面，浅色百叶窗，空气中弥漫着咖啡香。</span>
+              </figcaption>
+            </figure>
+
+            <figure class="photo-card photo-card--wide">
+              <div class="photo-frame">
+                <img class="js-lazy-photo" src="media/nice-03.jpg" data-fallback="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=80" alt="地中海平线与黄昏时分的天空" loading="lazy" decoding="async" />
+              </div>
+              <figcaption>
+                Au crepuscule, la ligne d'horizon devient presque abstraite.
+                <span class="cn-caption">黄昏时分，地平线几乎化作一片抽象。</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <div id="dynamic-voyage-albums" class="dynamic-voyage-albums" hidden></div>
+    </div>
+    <div class="back-home">
+      <a href="index.html" data-zh="返回首页" data-en="Back to home" data-fr="Retour à l'accueil">返回首页</a>
+    </div>
+
+    <footer id="footer-text">© 2026 Une vie pensée. Chez Meiya.</footer>
   </div>
+
   <script>
-    const text={zh:{title:"旅行",desc:"记录我的路线、预算和风景时刻，把旅行变成可回看的长期记忆。",c1t:"路线笔记",c1d:"每次出发前后的路线优化与交通记录。",c2t:"预算清单",c2d:"机酒、餐饮、门票及本地交通的拆解模板。",c3t:"城市故事",c3d:"街道、博物馆和咖啡馆里的瞬间与观察。"},fr:{title:"Voyage",desc:"Mes itinéraires, budgets et paysages, transformés en mémoire durable.",c1t:"Itinéraire",c1d:"Optimisation des trajets et transports avant/après départ.",c2t:"Budget",c2d:"Template pour vols, hôtels, repas, billets et mobilité locale.",c3t:"Chroniques",c3d:"Instants et observations dans les rues, musées et cafés."}};
-    function setL(l){Object.keys(text[l]).forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=text[l][k];});document.documentElement.lang=l==='fr'?'fr':'zh-CN';}
-    document.getElementById('zh').onclick=()=>setL('zh');
-    document.getElementById('fr').onclick=()=>setL('fr');
+    const languageStore = {
+      zh: { htmlLang: "zh-CN", pageTitle: "旅行", footer: "© 2026 Une vie pensée. Chez Meiya." },
+      en: { htmlLang: "en", pageTitle: "Voyage", footer: "© 2026 Une vie pensée. Chez Meiya." },
+      fr: { htmlLang: "fr", pageTitle: "Voyage", footer: "© 2026 Une vie pensée. Chez Meiya." }
+    };
+    let currentLanguage = "zh";
+
+    function setLanguage(lang) {
+      const pack = languageStore[lang];
+      currentLanguage = lang;
+      document.documentElement.lang = pack.htmlLang;
+      document.getElementById("page-title").textContent = pack.pageTitle;
+      document.getElementById("footer-text").textContent = pack.footer;
+      
+      document.querySelectorAll("[data-zh][data-en][data-fr]").forEach((node) => {
+        node.textContent = node.getAttribute(`data-${lang}`);
+      });
+
+      document.getElementById("btn-zh").classList.toggle("active", lang === "zh");
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+      document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
+      rerenderDynamicAlbums();
+    }
+
+    const navToggle = document.getElementById("nav-toggle");
+    const navClose = document.getElementById("nav-close");
+    const navOverlay = document.getElementById("nav-overlay");
+    const navLinks = document.querySelectorAll("#main-nav a");
+
+    function closeMobileNav() {
+      document.body.classList.remove("nav-open");
+      navToggle.setAttribute("aria-expanded", "false");
+      navToggle.textContent = "Menu";
+    }
+
+    function openMobileNav() {
+      document.body.classList.add("nav-open");
+      navToggle.setAttribute("aria-expanded", "true");
+      navToggle.textContent = "Close";
+    }
+
+    navToggle.addEventListener("click", () => {
+      if (document.body.classList.contains("nav-open")) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+
+    navOverlay.addEventListener("click", closeMobileNav);
+    navClose.addEventListener("click", closeMobileNav);
+    navLinks.forEach((link) => link.addEventListener("click", closeMobileNav));
+
+    document.addEventListener("click", (event) => {
+      if (!document.body.classList.contains("nav-open")) {
+        return;
+      }
+      if (event.target.closest("#main-nav") || event.target.closest("#nav-toggle")) {
+        return;
+      }
+      closeMobileNav();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMobileNav();
+      }
+    });
+
+    window.matchMedia("(min-width: 681px)").addEventListener("change", (event) => {
+      if (event.matches) {
+        closeMobileNav();
+      }
+    });
+
+    document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
+    document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+
+    function bindLazyImages(root = document) {
+      root.querySelectorAll(".js-lazy-photo").forEach((img) => {
+        if (img.dataset.lazyBound === "1") {
+          return;
+        }
+        img.dataset.lazyBound = "1";
+
+        const frame = img.closest(".photo-frame");
+        const markLoaded = () => frame?.classList.add("is-loaded");
+
+        img.addEventListener("load", markLoaded, { once: true });
+        img.addEventListener("error", () => {
+          const fallback = img.dataset.fallback;
+          if (!fallback || img.dataset.fallbackTried === "1") {
+            markLoaded();
+            return;
+          }
+          img.dataset.fallbackTried = "1";
+          img.src = fallback;
+        });
+
+        if (img.complete && img.naturalWidth > 0) {
+          markLoaded();
+        }
+      });
+    }
+
+    bindLazyImages();
+
+    const sfModule = document.getElementById("south-of-france");
+    const sfToggle = document.getElementById("sf-toggle");
+    const sfGallery = document.getElementById("sf-gallery");
+
+    function setSouthFranceOpen(open) {
+      if (!sfModule || !sfToggle || !sfGallery) {
+        return;
+      }
+      sfModule.classList.toggle("is-open", open);
+      sfToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      sfGallery.hidden = !open;
+
+      if (open) {
+        requestAnimationFrame(() => {
+          window.dispatchEvent(new Event("scroll"));
+          window.dispatchEvent(new Event("resize"));
+          sfGallery.querySelectorAll(".js-lazy-photo").forEach((img) => {
+            if (img.loading === "lazy") {
+              img.loading = "eager";
+            }
+            if (img.complete && img.naturalWidth > 0) {
+              img.closest(".photo-frame")?.classList.add("is-loaded");
+            }
+          });
+        });
+      }
+    }
+
+    sfToggle?.addEventListener("click", () => {
+      const open = sfToggle.getAttribute("aria-expanded") !== "true";
+      if (open) {
+        closeDynamicAlbums();
+      }
+      setSouthFranceOpen(open);
+      if (open) {
+        sfGallery?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    if (window.location.hash === "#south-of-france") {
+      setSouthFranceOpen(true);
+    }
+
+    // ── Dynamic travel albums from /api/albums?category=voyage ─────────
+    const dynamicAlbumsRoot = document.getElementById("dynamic-voyage-albums");
+    let voyageAlbums = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function photoCardClass(index) {
+      if (index % 3 === 1) {
+        return "photo-card photo-card--offset";
+      }
+      if (index % 3 === 2) {
+        return "photo-card photo-card--wide";
+      }
+      return "photo-card";
+    }
+
+    function buildPhotoStream(photos) {
+      const list = Array.isArray(photos) ? photos : [];
+      if (!list.length) {
+        return "";
+      }
+      return list.map((photo, index) => {
+        const captionFr = escapeHtml(photo.caption_fr || photo.caption_cn || "");
+        const captionCn = escapeHtml(photo.caption_cn || photo.caption_fr || "");
+        const altText = captionCn || captionFr || "travel photo";
+        return `<figure class="${photoCardClass(index)}">
+          <div class="photo-frame">
+            <img class="js-lazy-photo" src="${escapeHtml(photo.url || "media/placeholder.jpg")}" alt="${altText}" loading="lazy" decoding="async" />
+          </div>
+          <figcaption>
+            ${captionFr}
+            <span class="cn-caption">${captionCn}</span>
+          </figcaption>
+        </figure>`;
+      }).join("");
+    }
+
+    function buildAlbumModule(album, index) {
+      const albumId = Number(album.id);
+      const moduleId = `voyage-album-${albumId}`;
+      const galleryId = `voyage-gallery-${albumId}`;
+      const titleFr = escapeHtml(album.title_fr || album.title_cn || "Voyage");
+      const titleCn = escapeHtml(album.title_cn || album.title_fr || "旅行");
+      const descFr = escapeHtml(album.desc_fr || album.desc_cn || "");
+      const descCn = escapeHtml(album.desc_cn || album.desc_fr || "");
+      const photos = Array.isArray(album.photos) ? album.photos : [];
+      const coverUrl = escapeHtml(album.cover_url || photos[0]?.url || "media/placeholder.jpg");
+      const badgeText = currentLanguage === "zh" ? titleCn : titleFr;
+
+      return `<section id="${moduleId}" class="south-france-module dynamic-album" aria-label="voyage album ${index + 1}">
+        <button class="sf-cover south-france-card js-album-toggle" type="button" aria-expanded="false" aria-controls="${galleryId}">
+          <div class="sf-cover-media">
+            <img class="sf-cover-image" src="${coverUrl}" alt="${titleCn}" loading="lazy" decoding="async" />
+          </div>
+          <div class="sf-text-content">
+            <h2 class="sf-title">${titleFr}<span class="cn-title">${titleCn}</span></h2>
+            <div class="sf-description">${descFr}${descCn ? `<div class="cn-description">${descCn}</div>` : ""}</div>
+            <span class="sf-caption">${badgeText}</span>
+          </div>
+        </button>
+
+        <div id="${galleryId}" class="photo-feature" hidden>
+          <header class="photo-feature-header">
+            <h2 class="photo-feature-title">
+              ${titleFr} <span class="cn-sub">${titleCn}</span>
+            </h2>
+            <p class="photo-feature-intro">
+              ${descFr || "Voyage photo collection."}
+              ${descCn ? `<br><span class="cn-intro">${descCn}</span>` : ""}
+            </p>
+          </header>
+
+          <div class="photo-stream">
+            ${buildPhotoStream(photos)}
+          </div>
+        </div>
+      </section>`;
+    }
+
+    function setAlbumOpen(module, open) {
+      const toggle = module.querySelector(".js-album-toggle");
+      const gallery = module.querySelector(".photo-feature");
+      if (!toggle || !gallery) {
+        return;
+      }
+      module.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      gallery.hidden = !open;
+
+      if (open) {
+        requestAnimationFrame(() => {
+          window.dispatchEvent(new Event("scroll"));
+          window.dispatchEvent(new Event("resize"));
+          gallery.querySelectorAll(".js-lazy-photo").forEach((img) => {
+            if (img.loading === "lazy") {
+              img.loading = "eager";
+            }
+            if (img.complete && img.naturalWidth > 0) {
+              img.closest(".photo-frame")?.classList.add("is-loaded");
+            }
+          });
+        });
+      }
+    }
+
+    function closeDynamicAlbums(exceptModuleId = "") {
+      if (!dynamicAlbumsRoot) {
+        return;
+      }
+      dynamicAlbumsRoot.querySelectorAll(".dynamic-album").forEach((module) => {
+        if (exceptModuleId && module.id === exceptModuleId) {
+          return;
+        }
+        setAlbumOpen(module, false);
+      });
+    }
+
+    function attachDynamicAlbumEvents() {
+      if (!dynamicAlbumsRoot) {
+        return;
+      }
+      dynamicAlbumsRoot.querySelectorAll(".dynamic-album").forEach((module) => {
+        const toggle = module.querySelector(".js-album-toggle");
+        const gallery = module.querySelector(".photo-feature");
+        if (!toggle || !gallery) {
+          return;
+        }
+        toggle.addEventListener("click", () => {
+          const open = toggle.getAttribute("aria-expanded") !== "true";
+          closeDynamicAlbums(module.id);
+          if (open) {
+            setSouthFranceOpen(false);
+          }
+          setAlbumOpen(module, open);
+          if (open) {
+            gallery.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+    }
+
+    function renderDynamicAlbums() {
+      if (!dynamicAlbumsRoot) {
+        return;
+      }
+      if (!Array.isArray(voyageAlbums) || voyageAlbums.length === 0) {
+        dynamicAlbumsRoot.hidden = true;
+        dynamicAlbumsRoot.innerHTML = "";
+        return;
+      }
+
+      dynamicAlbumsRoot.hidden = false;
+      dynamicAlbumsRoot.innerHTML = voyageAlbums
+        .map((album, index) => buildAlbumModule(album, index))
+        .join("");
+
+      attachDynamicAlbumEvents();
+      bindLazyImages(dynamicAlbumsRoot);
+    }
+
+    async function fetchAlbumPhotos(albumId) {
+      try {
+        const response = await fetch(`/api/albums/${albumId}/photos`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const photos = await response.json();
+        return Array.isArray(photos) ? photos : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    async function loadVoyageAlbums() {
+      if (!dynamicAlbumsRoot) {
+        return;
+      }
+      try {
+        const response = await fetch("/api/albums?category=voyage");
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const baseAlbums = await response.json();
+        if (!Array.isArray(baseAlbums) || baseAlbums.length === 0) {
+          voyageAlbums = [];
+          renderDynamicAlbums();
+          return;
+        }
+
+        const photosByAlbum = await Promise.all(
+          baseAlbums.map((album) => fetchAlbumPhotos(album.id))
+        );
+
+        voyageAlbums = baseAlbums.map((album, index) => ({
+          ...album,
+          photos: photosByAlbum[index] || [],
+        }));
+
+        renderDynamicAlbums();
+      } catch (error) {
+        dynamicAlbumsRoot.hidden = true;
+      }
+    }
+
+    function rerenderDynamicAlbums() {
+      if (voyageAlbums.length) {
+        renderDynamicAlbums();
+      }
+    }
+
+    loadVoyageAlbums();
   </script>
 </body>
 </html>

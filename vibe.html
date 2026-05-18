@@ -1,51 +1,434 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vibe Coding 项目 | Meiya Atelier</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
-  <style>
-    :root { --ink:#1f1c19; --muted:#615b53; --bg:#f5efe7; --card:#fffaf1; --line:#d8c7b2; }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:"Noto Serif SC",serif; color:var(--ink); background:var(--bg); }
-    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
-    .top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
-    .home { text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-family:"Space Grotesk",sans-serif; font-size:12px; }
-    .lang button { border:1px solid var(--line); background:#fffdf8; border-radius:999px; padding:6px 10px; margin-left:6px; cursor:pointer; }
-    .hero { margin-top:16px; border:1px solid var(--line); border-radius:18px; padding:22px; background:linear-gradient(120deg, rgba(15,122,135,.12), rgba(222,107,34,.1)); }
-    h1 { margin:0 0 8px; font-size:34px; }
-    p { color:var(--muted); }
-    .proj { margin-top:14px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-    .item { border:1px solid var(--line); border-radius:14px; padding:14px; background:var(--card); }
-    .item h3 { margin:0 0 8px; }
-    @media (max-width:860px){ .proj{ grid-template-columns:1fr; } }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="top">
-      <a class="home" href="index.html">← 返回首页</a>
-      <div class="lang"><button id="zh">中文</button><button id="fr">FR</button></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vibe Coding | Chronicle Snippets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800&family=Source+Serif+4:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        background: #f9f7f2;
+        color: #1a1a1a;
+        font-family: "Source Serif 4", "Crimson Text", serif;
+      }
+
+      .shell {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 20px 72px;
+      }
+
+      .masthead {
+        position: relative;
+        margin-bottom: 44px;
+      }
+
+      .masthead-quote {
+        margin: 18px 0 12px;
+        text-align: center;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #1a1a1a;
+      }
+
+      .masthead-rule {
+        height: 1px;
+        background: #1a1a1a;
+        opacity: 0.9;
+      }
+
+      .topbar-header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 14px 0;
+        background: rgba(249, 247, 242, 0.96);
+        backdrop-filter: blur(8px);
+      }
+
+      .brand {
+        flex: 0 0 auto;
+        color: #1a1a1a;
+        text-decoration: none;
+        font-family: "Playfair Display", serif;
+        font-size: 13px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 1 auto;
+        gap: 28px;
+        min-width: 0;
+      }
+
+      .nav a {
+        position: relative;
+        color: #1a1a1a;
+        text-decoration: none;
+        font-family: "Playfair Display", serif;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 4px 0;
+        white-space: nowrap;
+      }
+
+      .nav a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 180ms ease;
+      }
+
+      .nav a:hover::after,
+      .nav a:focus-visible::after {
+        transform: scaleX(1);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 18px;
+        flex: 0 0 auto;
+      }
+
+      .search-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #1a1a1a;
+        cursor: pointer;
+      }
+
+      .search-button svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .lang {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .lang button {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #8b8578;
+        font: inherit;
+        cursor: pointer;
+        transition: color 160ms ease, opacity 160ms ease;
+      }
+
+      .lang button.active {
+        color: #1a1a1a;
+      }
+
+      .lang-separator {
+        color: #8b8578;
+        user-select: none;
+      }
+
+      .nav-toggle,
+      .nav-close {
+        display: none;
+        border: 0;
+        background: transparent;
+        color: #1a1a1a;
+        font-family: "Times New Roman", serif;
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .nav-overlay {
+        display: none;
+      }
+
+      @media (max-width: 720px) {
+        .topbar-header {
+          gap: 12px;
+        }
+
+        .nav {
+          position: fixed;
+          top: 0;
+          right: 0;
+          width: min(84vw, 320px);
+          height: 100vh;
+          padding: 92px 20px 24px;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          gap: 18px;
+          background: #f9f7f2;
+          border-left: 1px solid #1a1a1a;
+          transform: translateX(110%);
+          transition: transform 180ms ease;
+          z-index: 40;
+        }
+
+        .nav-toggle {
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .nav-close {
+          display: inline-flex;
+        }
+
+        .search-button,
+        .lang {
+          display: none;
+        }
+
+        body.nav-open .nav {
+          transform: translateX(0);
+        }
+
+        body.nav-open .nav-overlay {
+          display: block;
+          position: fixed;
+          inset: 0;
+          background: rgba(26, 26, 26, 0.18);
+          z-index: 35;
+        }
+
+        body.nav-open {
+          overflow: hidden;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="./vibe.css" />
+    <script src="./vibe.js" defer></script>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="masthead">
+        <p class="masthead-quote">On se lasse de tout excepte de connaitre.</p>
+        <div class="masthead-rule" aria-hidden="true"></div>
+        <div class="topbar-header">
+          <a class="brand" href="index.html" aria-label="ZAOANMEIYA home">ZAOANMEIYA</a>
+          <nav id="main-nav" class="nav" aria-label="main navigation">
+            <button id="nav-close" class="nav-close" type="button">Close</button>
+            <a href="index.html">Home</a>
+            <a href="reading.html">Journal</a>
+            <a href="travel.html">Photography</a>
+            <a href="social.html">Philosophy</a>
+            <a href="french.html">About</a>
+            <a href="vibe.html">Vibe</a>
+          </nav>
+          <div class="nav-actions">
+            <button class="search-button" type="button" aria-label="Search">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="11" cy="11" r="6"></circle>
+                <path d="M16 16L21 21"></path>
+              </svg>
+            </button>
+            <div class="lang" aria-label="language switch">
+              <button id="btn-fr" class="active" type="button">FR</button>
+              <span class="lang-separator" aria-hidden="true">/</span>
+              <button id="btn-cn" type="button">CN</button>
+            </div>
+            <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">Menu</button>
+          </div>
+        </div>
+        <div class="masthead-rule" aria-hidden="true"></div>
+        <div class="nav-overlay" id="nav-overlay"></div>
+      </header>
+
+      <main class="vibe-page">
+        <header class="section-header">
+          <h1>VIBE CODING</h1>
+          <p class="section-subtitle">Chronicle Snippets · Une vie pensee</p>
+        </header>
+        <div class="section-rule" role="presentation" aria-hidden="true"></div>
+
+        <!-- 在现有项目块之间插入本 section -->
+        <section class="chronicle-snippets" aria-label="Chronicle Snippets timeline">
+          <div class="month-divider" role="presentation" aria-hidden="true"></div>
+
+          <article class="chronicle-item minor-item">
+          <div class="time-note">
+            <p>March 2026</p>
+          </div>
+          <div class="story-note">
+            <p>
+              我购买域名 <strong>zaoanmeiya.com</strong>，像在报纸页眉上写下第一行署名；随后推进
+              ICP 备案，并搭起个人网页的首版版面，让线上空间拥有可被追溯的起点。
+            </p>
+          </div>
+          </article>
+
+          <div class="month-divider" role="presentation" aria-hidden="true"></div>
+
+          <article class="chronicle-item major-item">
+          <div class="time-note">
+            <p>April 2026</p>
+          </div>
+          <div class="story-note">
+            <h2>Focus &amp; Milestone 小程序</h2>
+            <p class="dropcap">
+              这不是一款关于“效率”的应用，而是一次关于注意力的手工装订。
+              我用它记录哲学语录与日常反思，让每次输入都成为节律校准。
+              从灵感捕捉到里程碑追踪，它更像一本持续增订的思辨手账。
+            </p>
+
+            <div class="project-embed wechat-mockup" aria-label="WeChat Mini Program mockup">
+              <p class="embed-title">WeChat Mini Program Demo</p>
+              <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                  <div class="phone-header">Focus &amp; Milestone</div>
+                  <div class="phone-line"></div>
+                  <div class="phone-line short"></div>
+                  <div id="wechat-card" class="phone-card">今日语录：真正的秩序，从自我观察开始。</div>
+                  <p id="wechat-caption" class="phone-caption">Scene 1 / 3</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </article>
+
+          <article class="chronicle-item minor-item">
+          <div class="time-note">
+            <p>April 2026</p>
+          </div>
+          <div class="story-note">
+            <p>在项目迭代间隙完成“法语视频翻译网页”的交互雏形，用最少界面承接语言转换。</p>
+          </div>
+          </article>
+
+          <article class="chronicle-item major-item">
+          <div class="time-note">
+            <p>April 2026</p>
+          </div>
+          <div class="story-note">
+            <h2>法语翻译工具（网页）</h2>
+            <p class="dropcap">
+              当视频成为语言学习入口，翻译就不再只是“结果”，而是一种观看方式。
+              我把字幕提取、短句对照与注释放在同一视野里，让理解这件事变得更慢，也更清晰。
+            </p>
+
+            <div class="project-embed translator-embed" aria-label="French translation interaction model">
+              <p class="embed-title">French Translation Console</p>
+              <label for="fr-input" class="visually-hidden">法语输入</label>
+              <input
+                id="fr-input"
+                type="text"
+                placeholder="Entrez une phrase francaise..."
+                autocomplete="off"
+              />
+              <button id="translate-button" type="button">Translate</button>
+              <p id="translation-output" class="translation-output">中文译文将显示在这里。</p>
+            </div>
+          </div>
+          </article>
+
+          <div class="month-divider" role="presentation" aria-hidden="true"></div>
+
+          <article class="chronicle-item major-item">
+          <div class="time-note">
+            <p>May 2026</p>
+          </div>
+          <div class="story-note">
+            <h2>欧洲旅行交通地图爬虫</h2>
+            <p class="dropcap">
+              为七月十五天的荷德法之行，我编写路线与交通信息工具，把城市间的换乘逻辑折叠为
+              可阅读、可比较的路径图。技术在此不只是准备工作，而是一种提前抵达的方式。
+            </p>
+
+            <div class="project-embed map-embed" aria-label="Europe transportation map canvas">
+              <p class="embed-title">Europe Mobility Canvas</p>
+              <canvas id="eu-route-canvas" width="900" height="360" aria-label="Europe route canvas"></canvas>
+              <p class="canvas-caption">可替换为真实轨迹数据；当前为示意路径层。</p>
+            </div>
+          </div>
+          </article>
+        </section>
+      </main>
     </div>
-    <section class="hero">
-      <h1 id="title">我做的 Vibe Coding 项目</h1>
-      <p id="desc">展示我和 AI 协作完成的工具与网页项目，强调可复用和可迭代。</p>
-    </section>
-    <section class="proj">
-      <article class="item"><h3 id="p1t">字幕处理自动化</h3><p id="p1d">从字幕清洗到文档导出，一次命令完成多步流程。</p></article>
-      <article class="item"><h3 id="p2t">个人站自动部署</h3><p id="p2d">本地提交后自动构建并发布到服务器。</p></article>
-      <article class="item"><h3 id="p3t">法语学习工具页</h3><p id="p3d">把词汇卡片、表达模板与复习计划集中管理。</p></article>
-      <article class="item"><h3 id="p4t">翻译工作流脚本</h3><p id="p4d">批量文档处理与格式一致化，减少重复劳动。</p></article>
-    </section>
-  </div>
-  <script>
-    const text={zh:{title:"我做的 Vibe Coding 项目",desc:"展示我和 AI 协作完成的工具与网页项目，强调可复用和可迭代。",p1t:"字幕处理自动化",p1d:"从字幕清洗到文档导出，一次命令完成多步流程。",p2t:"个人站自动部署",p2d:"本地提交后自动构建并发布到服务器。",p3t:"法语学习工具页",p3d:"把词汇卡片、表达模板与复习计划集中管理。",p4t:"翻译工作流脚本",p4d:"批量文档处理与格式一致化，减少重复劳动。"},fr:{title:"Mes projets Vibe Coding",desc:"Outils et sites créés avec l'IA, orientés réutilisabilité et itération.",p1t:"Automatisation des sous-titres",p1d:"Nettoyage des sous-titres et export doc en une commande.",p2t:"Déploiement auto du site",p2d:"Push local puis build + publication sur le serveur.",p3t:"Outil d'apprentissage du français",p3d:"Cartes, expressions et planning de révision centralisés.",p4t:"Script de traduction",p4d:"Traitement de lots et harmonisation du format."}};
-    function setL(l){Object.keys(text[l]).forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=text[l][k];});document.documentElement.lang=l==='fr'?'fr':'zh-CN';}
-    document.getElementById('zh').onclick=()=>setL('zh');
-    document.getElementById('fr').onclick=()=>setL('fr');
-  </script>
-</body>
+    <script>
+      const navToggle = document.getElementById("nav-toggle");
+      const navClose = document.getElementById("nav-close");
+      const navOverlay = document.getElementById("nav-overlay");
+      const navLinks = document.querySelectorAll("#main-nav a");
+
+      function closeMobileNav() {
+        document.body.classList.remove("nav-open");
+        navToggle.setAttribute("aria-expanded", "false");
+        navToggle.textContent = "Menu";
+      }
+
+      function openMobileNav() {
+        document.body.classList.add("nav-open");
+        navToggle.setAttribute("aria-expanded", "true");
+        navToggle.textContent = "Close";
+      }
+
+      navToggle.addEventListener("click", () => {
+        if (document.body.classList.contains("nav-open")) {
+          closeMobileNav();
+        } else {
+          openMobileNav();
+        }
+      });
+
+      navOverlay.addEventListener("click", closeMobileNav);
+      navClose.addEventListener("click", closeMobileNav);
+      navLinks.forEach((link) => link.addEventListener("click", closeMobileNav));
+
+      const btnFr = document.getElementById("btn-fr");
+      const btnCn = document.getElementById("btn-cn");
+
+      btnFr.addEventListener("click", () => {
+        btnFr.classList.add("active");
+        btnCn.classList.remove("active");
+      });
+
+      btnCn.addEventListener("click", () => {
+        btnCn.classList.add("active");
+        btnFr.classList.remove("active");
+      });
+    </script>
+  </body>
 </html>
