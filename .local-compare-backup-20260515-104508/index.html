@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHEZ MEIYA | On se lasse de tout excepté de connaître</title>
+  <meta name="description" content="Une vie pensée | 审思而活。思考服务于行动。A reflective life in Chinese, English and French." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #2b4c63;
+      --blue-deep: #244053;
+      --sky: #f2f3f1;
+      --white: #ffffff;
+      --ink: #1f2428;
+      --muted: #5a667d;
+      --line: #cdd5db;
+      --line-soft: #dee4e8;
+      --card-shadow: 0 8px 24px rgba(31, 45, 58, 0.1);
+      --radius: 18px;
+      --radius-lg: 24px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-7: 28px;
+      --ease: 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #fcfaf6;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      line-height: 1.7;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 var(--space-4) 72px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0;
+      border-bottom: none;
+      background: rgba(252, 250, 246, 0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: none;
+    }
+
+    .topbar-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 14px 0;
+      gap: 6px;
+    }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      color: #1f2428;
+      font-family: "Playfair Display", serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .nav-close {
+      display: none;
+    }
+
+    .logo-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin: 60px 0;
+    }
+
+    .logo-stack .logo-top {
+      font-family: "Playfair Display", serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.8em;
+      text-transform: uppercase;
+      margin-bottom: -10px;
+      color: #000;
+    }
+
+    .logo-stack .logo-main {
+      font-family: "Playfair Display", serif;
+      font-weight: 900;
+      font-size: 100px;
+      text-transform: uppercase;
+      letter-spacing: -0.1em;
+      display: inline-block;
+      transform: scale(0.65, 1.4);
+      transform-origin: top center;
+      line-height: 1;
+      color: #000;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 4px double #1f2428;
+    }
+
+    .nav-overlay {
+      display: none;
+    }
+
+    .nav a,
+    .lang button {
+      text-decoration: none;
+      color: #1f2428;
+      border-radius: 0;
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 400;
+      font-family: "Playfair Display", serif;
+      background: transparent;
+      cursor: pointer;
+      transition: opacity var(--ease);
+      letter-spacing: 0.08em;
+      text-transform: capitalize;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.2;
+    }
+
+    .nav a span {
+      font-size: 11px;
+      color: #575757;
+      font-weight: 400;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+      text-transform: none;
+      display: inline;
+    }
+
+    .nav a:hover {
+      opacity: 1;
+      transform: none;
+      border: none;
+      background: transparent;
+      text-decoration: underline;
+    }
+
+    .lang button {
+      padding: 0;
+      font-size: 12px;
+      font-family: "Crimson Text", serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bbb;
+    }
+
+    .lang button:hover {
+      border-color: transparent;
+      background: transparent;
+      color: #888;
+      transform: none;
+    }
+
+    .lang button.active {
+      color: #1f2428;
+      font-weight: 700;
+    }
+
+    .nav a:focus-visible,
+    .lang button:focus-visible,
+    .hero-cta:focus-visible,
+    .panel .jump:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-main {
+      text-align: center;
+      max-width: 760px;
+      padding: 64px 28px;
+    }
+
+    .hero-epigraph {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #8a949d;
+      margin-bottom: 28px;
+    }
+
+    .hero-main h1 {
+      margin: 0;
+      font-family: "Playfair Display", "Noto Serif SC", serif;
+      font-size: clamp(40px, 5.5vw, 62px);
+      line-height: 1.28;
+      font-weight: 900;
+      color: #1f2428;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #c4ccd3;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      animation: scroll-pulse 2.6s ease-in-out infinite;
+    }
+
+    .hero-scroll::after {
+      content: "";
+      display: block;
+      width: 1px;
+      height: 38px;
+      background: currentColor;
+    }
+
+    .content-grid {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 0;
+      row-gap: 0;
+    }
+
+    .panel {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      padding: 40px 0;
+      animation: none;
+      transition: none;
+    }
+
+    .panel:hover {
+      transform: none;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .panel h3 {
+      margin: 0 0 var(--space-2);
+      font-family: "Playfair Display", serif;
+      font-size: 28px;
+      color: #1f2428;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      line-height: 1.3;
+    }
+
+    .panel h3 span {
+      display: block;
+      font-size: 12px;
+      color: #a8a8a8;
+      font-weight: 400;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      text-transform: none;
+      letter-spacing: 0;
+      margin-top: 6px;
+    }
+
+    .panel.span-4 {
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .panel .jump {
+      display: inline-block;
+      margin-top: var(--space-5);
+      color: #1f2428;
+      border: none;
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
+      text-decoration: underline;
+      font-family: "Crimson Text", serif;
+      font-weight: 400;
+      font-size: 1rem;
+      line-height: 1.6;
+      transition: opacity 0.2s ease;
+    }
+
+    .panel .jump:hover {
+      background: transparent;
+      border-color: transparent;
+      transform: none;
+      opacity: 0.7;
+    }
+
+    .span-4 { grid-column: span 4; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .timeline {
+      margin: var(--space-4) 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      border-left: none;
+    }
+
+    .timeline li {
+      position: relative;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      padding: 8px 12px;
+      font-family: "Crimson Text", serif;
+      margin-right: 16px;
+    }
+
+    .timeline li::before {
+      content: none;
+    }
+
+    .timeline time {
+      display: inline;
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .quotes {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .quotes li {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 16px 0;
+      margin: 0;
+      font-style: italic;
+      color: #1f2428;
+      line-height: 1.8;
+      font-family: "Crimson Text", serif;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .quote-name {
+      margin-top: 8px;
+      display: block;
+      font-style: normal;
+      font-weight: 400;
+      color: #a8a8a8;
+      font-size: 0.9rem;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0.05em;
+    }
+
+    .about {
+      margin-top: 40px;
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .about p {
+      margin: 0;
+      color: #1f2428;
+      font-size: 1rem;
+      font-family: "Crimson Text", serif;
+      line-height: 1.8;
+    }
+
+    .signature {
+      margin-top: 0;
+      padding: 20px 0;
+      border-top: none;
+      border-bottom: none;
+      background: transparent;
+      color: #1f2428;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      line-height: 1.8;
+    }
+
+    .signature small {
+      display: block;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      font-size: 1rem;
+      color: #1f2428;
+      margin-top: 12px;
+      font-style: normal;
+      line-height: 1.7;
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid #1f2428;
+      text-align: center;
+      color: #1f2428;
+      font-size: 0.9rem;
+      font-family: "Crimson Text", serif;
+    }
+
+    .content-grid .panel:nth-child(1) { animation-delay: 0; }
+    .content-grid .panel:nth-child(2) { animation-delay: 0; }
+    .content-grid .panel:nth-child(3) { animation-delay: 0; }
+    .content-grid .panel:nth-child(4) { animation-delay: 0; }
+    .content-grid .panel:nth-child(5) { animation-delay: 0; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scroll-pulse {
+      0%, 100% { opacity: 0.35; transform: translateX(-50%) translateY(0); }
+      50% { opacity: 0.8; transform: translateX(-50%) translateY(7px); }
+    }
+
+    @media (max-width: 960px) {
+      .span-4, .span-8 { grid-column: span 12; }
+      .panel.span-4 { min-height: 140px; }
+      .nav { gap: 12px; }
+      .logo-stack .logo-top { font-size: 12px; letter-spacing: 0.8em; }
+      .logo-stack .logo-main { font-size: 80px; letter-spacing: -0.1em; transform: scale(0.65, 1.4); }
+    }
+
+    @media (max-width: 680px) {
+      .topbar { flex-direction: column; align-items: stretch; }
+      .topbar-header { justify-content: space-between; padding: 10px 0; }
+      .nav-toggle { display: inline-block; }
+      .logo-stack { padding: 14px 0; }
+      .logo-stack .logo-top { font-size: 11px; letter-spacing: 0.8em; }
+      .logo-stack .logo-main { font-size: 60px; letter-spacing: -0.1em; transform: scale(0.65, 1.4); }
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(62vw, 260px);
+        height: 100vh;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 84px 14px 20px;
+        border-bottom: none;
+        border-right: 1px solid #1f2428;
+        background: #fcfaf6;
+        transform: translateX(-110%);
+        transition: transform var(--ease);
+        z-index: 25;
+      }
+      .nav a {
+        font-size: 14px;
+      }
+      .nav a span {
+        font-size: 12px;
+      }
+      .nav-close {
+        display: inline-block;
+        border: none;
+        background: transparent;
+        color: #1f2428;
+        font-family: "Playfair Display", serif;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0;
+        margin-bottom: 8px;
+        cursor: pointer;
+      }
+      body.nav-open .nav {
+        transform: translateX(0);
+      }
+      .nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 20;
+      }
+      body.nav-open .nav-overlay {
+        display: block;
+      }
+      body.nav-open {
+        overflow: hidden;
+      }
+      .hero-main { padding: 48px 20px; }
+    }
+
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-header">
+        <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">Menu</button>
+        <div class="lang" aria-label="language switch">
+          <button id="btn-zh" class="active" type="button">ZH</button>
+          <button id="btn-en" type="button">EN</button>
+          <button id="btn-fr" type="button">FR</button>
+        </div>
+      </div>
+      <div class="logo-stack">
+        <span class="logo-top">Chez</span>
+        <span class="logo-main">Meiya</span>
+      </div>
+      <nav id="main-nav" class="nav" aria-label="main navigation">
+        <button id="nav-close" class="nav-close" type="button">Close</button>
+        <a href="news.html" data-zh="新闻" data-en="News" data-fr="News">News<span data-zh="新闻" data-en="News" data-fr="News">新闻</span></a>
+        <a href="travel.html" data-zh="旅行" data-en="Voyage" data-fr="Voyage">Voyage<span data-zh="旅行" data-en="Voyage" data-fr="Voyage">旅行</span></a>
+        <a href="reading.html" data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">Books & Culture<span data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">读书&文化</span></a>
+        <a href="social.html" data-zh="写作" data-en="Writing" data-fr="Writing">Writing<span data-zh="写作" data-en="Writing" data-fr="Writing">写作</span></a>
+        <a href="french.html" data-zh="语言" data-en="Français" data-fr="Français">Français<span data-zh="法语" data-en="Français" data-fr="Français">法语</span></a>
+        <a href="vibe.html" data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">Vibe Coding<span data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">AI编程</span></a>
+      </nav>
+      <div class="nav-overlay" id="nav-overlay"></div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-main">
+        <p class="hero-epigraph" data-zh="经思考的生活" data-en="A reflective life" data-fr="Une vie réfléchie">经思考的生活</p>
+        <h1 id="title-main" data-zh="「经过思考的生活，是一种自由的实践。」" data-en="“A considered life is a practice of freedom.”" data-fr="“Une vie pensée est une pratique de liberté.”">「经过思考的生活，是一种自由的实践。」</h1>
+      </div>
+      <div class="hero-scroll" data-zh="向下" data-en="Scroll" data-fr="Défiler">向下</div>
+    </section>
+
+    <main class="content-grid">
+      <section id="citations" class="panel span-4">
+        <ul class="quotes">
+          <li>
+            "On ne naît pas femme&nbsp;: on le devient."
+            <span class="quote-name">— Simone de Beauvoir</span>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer id="footer-text">© 2026 Une vie pensée. Chez Meiya.</footer>
+  </div>
+
+  <script>
+    const languageStore = {
+      zh: {
+        htmlLang: "zh-CN",
+        titleMain: "「经过思考的生活，是一种自由的实践。」",
+        aboutLine: "这里是一个慢速更新、长期有效的个人现场。我记录的不只是经历，更是每一次思想转向。",
+        signatureTranslation: "思考，是作用于自身，以便更好地作用于世界。",
+        footer: "© 2026 Une vie pensée. Chez Meiya."
+      },
+      en: {
+        htmlLang: "en",
+        titleMain: "“A considered life is a practice of freedom.”",
+        aboutLine: "This is a slowly updated, long-lived personal field note. I document not only events, but shifts in thought.",
+        signatureTranslation: "To think is to work on oneself, so as to better work on the world.",
+        footer: "© 2026 Une vie pensée. Chez Meiya."
+      },
+      fr: {
+        htmlLang: "fr",
+        titleMain: "“Une vie pensée est une pratique de liberté.”",
+        aboutLine: "Un espace personnel lent et durable: j'y note non seulement des faits, mais les inflexions de ma pensée.",
+        signatureTranslation: "Penser, c'est agir sur soi-même pour mieux agir sur le monde.",
+        footer: "© 2026 Une vie pensée. Chez Meiya."
+      }
+    };
+
+    function setLanguage(lang) {
+      const pack = languageStore[lang];
+      document.documentElement.lang = pack.htmlLang;
+      document.getElementById("title-main").textContent = pack.titleMain;
+      document.getElementById("signature-translation").textContent = pack.signatureTranslation;
+      document.getElementById("footer-text").textContent = pack.footer;
+
+      document.querySelectorAll("[data-zh][data-en][data-fr]").forEach((node) => {
+        node.textContent = node.getAttribute(`data-${lang}`);
+      });
+
+      document.getElementById("btn-zh").classList.toggle("active", lang === "zh");
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+      document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
+    }
+
+    const navToggle = document.getElementById("nav-toggle");
+    const navClose = document.getElementById("nav-close");
+    const navOverlay = document.getElementById("nav-overlay");
+    const navLinks = document.querySelectorAll("#main-nav a");
+
+    function closeMobileNav() {
+      document.body.classList.remove("nav-open");
+      navToggle.setAttribute("aria-expanded", "false");
+      navToggle.textContent = "Menu";
+    }
+
+    function openMobileNav() {
+      document.body.classList.add("nav-open");
+      navToggle.setAttribute("aria-expanded", "true");
+      navToggle.textContent = "Close";
+    }
+
+    navToggle.addEventListener("click", () => {
+      if (document.body.classList.contains("nav-open")) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+
+    navOverlay.addEventListener("click", closeMobileNav);
+    navClose.addEventListener("click", closeMobileNav);
+    navLinks.forEach((link) => link.addEventListener("click", closeMobileNav));
+
+    document.addEventListener("click", (event) => {
+      if (!document.body.classList.contains("nav-open")) {
+        return;
+      }
+      if (event.target.closest("#main-nav") || event.target.closest("#nav-toggle")) {
+        return;
+      }
+      closeMobileNav();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMobileNav();
+      }
+    });
+
+    window.matchMedia("(min-width: 681px)").addEventListener("change", (event) => {
+      if (event.matches) {
+        closeMobileNav();
+      }
+    });
+
+    document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
+    document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+  </script>
+</body>
+</html>

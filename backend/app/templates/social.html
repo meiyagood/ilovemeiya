@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing | Une vie pensée</title>
+  <meta name="description" content="写作 | Writing. Une vie pensée." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #2b4c63;
+      --ink: #1f2428;
+      --muted: #5a667d;
+      --line: #cdd5db;
+      --ease: 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #fcfaf6;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      line-height: 1.7;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px 72px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0;
+      border-bottom: none;
+      background: rgba(252, 250, 246, 0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: none;
+    }
+
+    .topbar-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 14px 0;
+      gap: 6px;
+    }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      color: #1f2428;
+      font-family: "Playfair Display", serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .nav-close {
+      display: none;
+    }
+
+    .logo-stack {
+      min-width: auto;
+      text-align: center;
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      line-height: 1.5;
+      letter-spacing: 0.15em;
+      text-transform: none;
+      color: #1f2428;
+      white-space: normal;
+      padding: 24px 0;
+      width: 100%;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 4px double #1f2428;
+    }
+
+    .nav-overlay {
+      display: none;
+    }
+
+    .nav a,
+    .lang button {
+      text-decoration: none;
+      color: #1f2428;
+      border-radius: 0;
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 400;
+      font-family: "Playfair Display", serif;
+      background: transparent;
+      cursor: pointer;
+      transition: opacity var(--ease);
+      letter-spacing: 0.08em;
+      text-transform: capitalize;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.2;
+    }
+
+    .nav a span {
+      font-size: 11px;
+      color: #575757;
+      font-weight: 400;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+      text-transform: none;
+      display: inline;
+    }
+
+    .nav a:hover {
+      opacity: 1;
+      transform: none;
+      border: none;
+      background: transparent;
+      text-decoration: underline;
+    }
+
+    .nav a.active-nav {
+      opacity: 0.6;
+      text-decoration: underline;
+    }
+
+    .lang {
+      display: flex;
+      gap: 4px;
+    }
+
+    .lang button {
+      padding: 0;
+      font-size: 12px;
+      font-family: "Crimson Text", serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #1f2428;
+      line-height: 1.2;
+    }
+
+    .lang button.active {
+      opacity: 1;
+    }
+
+    .lang button:not(.active) {
+      opacity: 0.5;
+    }
+
+    .lang button:hover {
+      opacity: 1;
+    }
+
+    .page-header {
+      text-align: center;
+      padding: 64px 0 48px;
+      border-bottom: 4px double #1f2428;
+      margin-bottom: 0;
+    }
+
+    .page-header h1 {
+      margin: 0 0 12px;
+      font-family: "Playfair Display", serif;
+      font-size: 42px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: #1f2428;
+      line-height: 1.2;
+    }
+
+    .page-header .page-sub {
+      font-size: 12px;
+      color: #a8a8a8;
+      font-weight: 400;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+    }
+
+    .article-body {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 56px 0;
+    }
+
+    .article-layout {
+      display: block;
+    }
+
+    /* 日志列表 */
+    .log-entries {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    /* 单条日志 */
+    .log-entry {
+      padding: 1.5rem 0;
+      transition: all 0.3s ease;
+    }
+
+    .log-entry:hover {
+      color: #1f2428;
+    }
+
+    /* 时间戳 - 极细边框模仿杂志边栏 */
+    .log-timestamp {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-weight: 500;
+      border: 0.5px solid #d0d0d0;
+      padding: 0.6rem 0.8rem;
+      display: inline-block;
+      background-color: #fafafa;
+      font-family: "Crimson Text", serif;
+    }
+
+    /* 日志内容 - 首字下沉效果 */
+    .log-content {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #333;
+      margin-bottom: 1rem;
+      font-family: "Crimson Text", serif;
+    }
+
+    /* 首字下沉 */
+    .log-content::first-letter {
+      float: left;
+      font-size: 2.2rem;
+      line-height: 1.2;
+      padding-right: 0.1em;
+      font-weight: 600;
+      color: #1f2428;
+    }
+
+    /* 分隔符 */
+    .log-divider {
+      height: 1px;
+      background-color: #e8e8e8;
+      width: 80px;
+      margin: 2rem auto;
+    }
+
+    /* 最后一条日志之后没有分隔符 */
+    .log-entry:last-child .log-divider {
+      display: none;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 960px) {
+      .article-body {
+        padding: 40px 0;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar-header {
+        justify-content: space-between;
+        padding: 10px 0;
+      }
+
+      .nav-toggle { display: inline-block; }
+
+      .logo-stack {
+        font-size: 14px;
+        padding: 16px 0;
+        letter-spacing: 0.1em;
+      }
+
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(62vw, 260px);
+        height: 100vh;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 84px 14px 20px;
+        border-bottom: none;
+        border-right: 1px solid #1f2428;
+        background: #fcfaf6;
+        transform: translateX(-110%);
+        transition: transform var(--ease);
+        z-index: 25;
+      }
+
+      .nav a { font-size: 14px; }
+      .nav a span { font-size: 12px; }
+
+      .nav-close {
+        display: inline-block;
+        border: none;
+        background: transparent;
+        color: #1f2428;
+        font-family: "Playfair Display", serif;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0;
+        margin-bottom: 8px;
+        cursor: pointer;
+      }
+
+      body.nav-open .nav { transform: translateX(0); }
+
+      .nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 20;
+      }
+
+      body.nav-open .nav-overlay { display: block; }
+      body.nav-open { overflow: hidden; }
+
+      .page-header h1 {
+        font-size: 32px;
+      }
+
+      .log-entry {
+        padding: 1.2rem 0;
+      }
+
+      .log-content {
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+
+      .log-timestamp {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.6rem;
+      }
+
+      .log-content::first-letter {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-header">
+        <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">Menu</button>
+        <div class="lang" aria-label="language switch">
+          <button id="btn-zh" class="active" type="button">ZH</button>
+          <button id="btn-en" type="button">EN</button>
+          <button id="btn-fr" type="button">FR</button>
+        </div>
+      </div>
+      <div class="logo-stack" data-zh="人们厌倦一切，除了懂得。" data-en="One grows weary of everything except knowing." data-fr="On se lasse de tout excepté de connaître.">On se lasse de tout excepté de connaître.</div>
+      <nav id="main-nav" class="nav" aria-label="main navigation">
+        <button id="nav-close" class="nav-close" type="button">Close</button>
+        <a href="news.html" data-zh="新闻" data-en="News" data-fr="News">News<span data-zh="新闻" data-en="News" data-fr="News">新闻</span></a>
+        <a href="travel.html" data-zh="旅行" data-en="Voyage" data-fr="Voyage">Voyage<span data-zh="旅行" data-en="Voyage" data-fr="Voyage">旅行</span></a>
+        <a href="reading.html" data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">Books & Culture<span data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">读书&文化</span></a>
+        <a href="social.html" class="active-nav" data-zh="写作" data-en="Writing" data-fr="Writing">Writing<span data-zh="写作" data-en="Writing" data-fr="Writing">写作</span></a>
+        <a href="french.html" data-zh="语言" data-en="Français" data-fr="Français">Français<span data-zh="法语" data-en="Français" data-fr="Français">法语</span></a>
+        <a href="vibe.html" data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">Vibe Coding<span data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">AI编程</span></a>
+      </nav>
+      <div class="nav-overlay" id="nav-overlay"></div>
+    </header>
+
+    <div class="page-header">
+      <h1 id="page-title" data-zh="写作" data-en="Writing" data-fr="Writing">Daily Log</h1>
+      <p class="page-sub" data-zh="思考碎片" data-en="Daily thoughts and reflections" data-fr="Pensées et réflexions quotidiennes">思考碎片</p>
+    </div>
+
+    <div class="article-body">
+      <div class="article-layout">
+        <!-- 日志列表 -->
+        <div class="log-entries">
+          {% if logs %}
+            {% for log in logs %}
+          <!-- 日志条目 -->
+          <div class="log-entry">
+            <div class="log-timestamp">{{ log.date }}</div>
+            <div class="log-content">
+              {{ log.content }}
+            </div>
+            {% if not loop.last %}<div class="log-divider"></div>{% endif %}
+          </div>
+            {% endfor %}
+          {% else %}
+          <!-- 暂无日志提示 -->
+          <div class="log-entry" style="text-align: center; color: #a8a8a8; padding: 2rem 0;">
+            <p style="font-style: italic;">暂无日志。</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

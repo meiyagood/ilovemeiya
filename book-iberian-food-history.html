@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>伊比利亚饮食史 | Books & Culture</title>
+  <meta name="description" content="玛利亚·何塞·塞维利亚《伊比利亚饮食史》阅读专页。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #333333;
+      background: #fbfaf8;
+      font-family: "Source Serif 4", "Noto Serif SC", serif;
+      line-height: 1.8;
+    }
+
+    .shell { max-width: 1080px; margin: 0 auto; padding: 0 18px 72px; }
+    .topbar {
+      border-bottom: 0.5px solid #e6e1d9;
+      padding: 18px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand {
+      font-family: "Playfair Display", serif;
+      letter-spacing: 0.08em;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: #262626;
+      text-decoration: none;
+    }
+    .breadcrumb { font-size: 13px; color: #6d6a63; letter-spacing: 0.03em; }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .lang-switch button {
+      border: none;
+      background: transparent;
+      color: #8b857b;
+      font-family: "Playfair Display", serif;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .lang-switch button.active {
+      color: #1d1a16;
+      font-weight: 700;
+    }
+
+    .hero { margin: 0; }
+
+    .lead-layout {
+      max-width: 980px;
+      margin: 46px auto 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 34px;
+      align-items: start;
+    }
+    .kicker {
+      margin: 0 0 10px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #7b766d;
+      font-family: "Playfair Display", serif;
+    }
+    h1 {
+      margin: 0;
+      font-family: "Playfair Display", "Noto Serif SC", serif;
+      font-size: clamp(34px, 6vw, 56px);
+      line-height: 1.15;
+      color: #101010;
+    }
+    .dek {
+      margin: 16px 0 18px;
+      font-size: clamp(19px, 2.3vw, 24px);
+      color: #3f3a33;
+      line-height: 1.55;
+    }
+    .byline {
+      margin: 0;
+      font-size: 12px;
+      color: #666056;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: "Playfair Display", serif;
+    }
+
+    .meta-row {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #7b766d;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: "Playfair Display", serif;
+    }
+
+    .lead-visual {
+      margin: 0;
+      max-width: 420px;
+      justify-self: end;
+    }
+    .lead-visual img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: contain;
+      background: #f3efe8;
+      border: 0.5px solid #e4dfd7;
+      display: block;
+    }
+    .caption { margin: 8px 0 0; font-size: 12px; color: #7a756d; }
+
+    .article,
+    .article-container {
+      max-width: 700px;
+      margin: 36px auto 0;
+      padding: 60px 20px;
+      background-color: #fbfaf8;
+      color: #333333;
+      font-family: "Source Serif 4", "Noto Serif SC", serif;
+      font-size: 19px;
+      line-height: 1.8;
+      text-align: justify;
+    }
+    .article p,
+    .article-container p { margin: 0 0 22px; }
+    .article p:first-of-type::first-letter,
+    .article-container p:first-of-type::first-letter,
+    .first-paragraph::first-letter {
+      float: left;
+      font-family: "STSong", "Songti SC", "Noto Serif SC", serif;
+      font-size: 5.6rem;
+      line-height: 1;
+      padding-right: 12px;
+      font-weight: 700;
+      color: #0f0f0f;
+    }
+
+    .pullquote,
+    .excerpt-text {
+      margin: 34px 0;
+      padding: 6px 0 6px 16px;
+      border-left: 1px solid #111111;
+      font-family: "Source Serif 4", "Noto Serif SC", serif;
+      font-size: 19px;
+      line-height: 1.8;
+      color: #333333;
+      letter-spacing: 0.02em;
+    }
+
+    .quote-source {
+      margin-top: 8px;
+      font-size: 11px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6b665f;
+    }
+
+    hr {
+      border: 0;
+      border-top: 0.5px solid #e0e0e0;
+      margin: 40px 0;
+    }
+
+    .back { max-width: 680px; margin: 40px auto 0; }
+    .back a { color: #5a554e; text-decoration: none; font-size: 0.95rem; }
+    .back a:hover { text-decoration: underline; }
+
+    .pager {
+      max-width: 680px;
+      margin: 28px auto 0;
+      padding-top: 18px;
+      border-top: 0.5px solid #e6e1d9;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      font-size: 0.95rem;
+    }
+
+    .pager a {
+      color: #5a554e;
+      text-decoration: none;
+      line-height: 1.5;
+    }
+
+    .pager a:hover {
+      text-decoration: underline;
+    }
+
+    .pager .next {
+      text-align: right;
+    }
+
+    @media (max-width: 680px) {
+      .article { font-size: 1.13rem; }
+      .pullquote { padding: 14px 0; }
+    }
+
+    @media (max-width: 900px) {
+      .lead-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .lead-visual {
+        max-width: 100%;
+        justify-self: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="reading.html">Books & Culture</a>
+      <div class="topbar-right">
+        <div class="breadcrumb" data-zh="阅读 / 深度书评" data-en="Reading / Under Review" data-fr="Lecture / Analyse">阅读 / 深度书评</div>
+        <div class="lang-switch" aria-label="language switch">
+          <button id="btn-zh" class="active" type="button">ZH</button>
+          <button id="btn-en" type="button">EN</button>
+          <button id="btn-fr" type="button">FR</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="lead-layout">
+      <div class="hero">
+        <p class="kicker" data-zh="深度书评" data-en="Under Review" data-fr="Analyse">深度书评</p>
+        <h1 data-zh="伊比利亚饮食史" data-en="A History of Iberian Food" data-fr="Histoire culinaire iberique">伊比利亚饮食史</h1>
+        <p class="dek" data-zh="从香料贸易到修道院厨房，这本书展示了半岛文明如何被味觉和权力共同塑造。" data-en="From spice routes to monastic kitchens, this book shows how Iberian civilization was shaped by taste and power." data-fr="Des routes des epices aux cuisines monastiques, ce livre montre comment la civilisation iberique a ete faconnee par le gout et le pouvoir.">从香料贸易到修道院厨房，这本书展示了半岛文明如何被味觉和权力共同塑造。</p>
+        <p class="byline" data-zh="作者：玛利亚·何塞·塞维利亚 · 读书笔记：Meiya" data-en="By Maria Jose Sevilla · Notes by Meiya" data-fr="Par Maria Jose Sevilla · Notes par Meiya">作者：玛利亚·何塞·塞维利亚 · 读书笔记：Meiya</p>
+        <p class="meta-row" data-zh="2026年4月30日 · 约7分钟阅读" data-en="April 30, 2026 · 7 min read" data-fr="30 avril 2026 · 7 min de lecture">2026年4月30日 · 约7分钟阅读</p>
+      </div>
+
+      <figure class="lead-visual">
+        <img src="images/cover-petit-prince.jpg" alt="伊比利亚饮食史 封面" loading="lazy" />
+        <figcaption class="caption" data-zh="封面图片来自个人藏书档案。" data-en="Cover image from personal library archive." data-fr="Image de couverture issue des archives personnelles.">封面图片来自个人藏书档案。</figcaption>
+      </figure>
+    </section>
+
+    <article class="article article-container">
+      <p class="first-paragraph">一开始我以为这是一本“好看又好吃”的文化小书，读下去才发现它更像一部社会史。食物并不只是餐桌上的结果，而是地理、宗教、战争、税制与贸易网络共同作用后的产物。每一道经典菜背后，都有复杂的权力痕迹。</p>
+
+      <blockquote class="pullquote excerpt-text">饮食史从来不是配方史，而是社会如何分配资源、记忆与身份的历史。<div class="quote-source" data-zh="摘自 玛利亚·何塞·塞维利亚" data-en="FROM MARIA JOSE SEVILLA" data-fr="EXTRAIT DE MARIA JOSE SEVILLA">摘自 玛利亚·何塞·塞维利亚</div></blockquote>
+
+      <p>作者在书里不断提醒我们，所谓“传统”往往并不古老。很多如今被认为理所当然的食材，其实是近代全球流通的结果。比如糖与可可的扩散，不仅改变了味觉，也改变了阶层想象和日常礼仪。</p>
+
+      <p>我特别喜欢这本书的叙述节奏：它在宫廷与街巷之间切换，在宏观与微观之间切换。你能看到帝国的路线图，也能看到普通家庭如何在紧缩年代调整一日三餐。这种写法让“饮食”真正回到“生活政治”的现场。</p>
+    </article>
+
+    <nav class="pager" aria-label="article navigation">
+      <a class="prev" href="book-world-understanding.html" data-zh="← 上一篇：我们如何理解这个世界" data-en="← Previous: How We Understand the World" data-fr="← Precedent : Comment comprendre le monde">← 上一篇：我们如何理解这个世界</a>
+      <a class="next" href="book-human-condition.html" data-zh="下一篇：人的境况 →" data-en="Next: The Human Condition →" data-fr="Suivant : La Condition de l'homme moderne →">下一篇：人的境况 →</a>
+    </nav>
+
+    <div class="back"><a href="reading.html" data-zh="← 返回 Books & Culture" data-en="← Back to Books & Culture" data-fr="← Retour a Books & Culture">← 返回 Books & Culture</a></div>
+  </div>
+
+  <script>
+    function setLanguage(lang) {
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+      document.querySelectorAll("[data-zh][data-en][data-fr]").forEach((node) => {
+        node.textContent = node.getAttribute(`data-${lang}`);
+      });
+      document.getElementById("btn-zh").classList.toggle("active", lang === "zh");
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+      document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
+    }
+
+    document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
+    document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+  </script>
+</body>
+</html>

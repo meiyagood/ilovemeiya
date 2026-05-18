@@ -1,0 +1,456 @@
+from __future__ import annotations
+
+import os
+import shutil
+import uuid
+from pathlib import Path
+from typing import Optional
+
+from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from .auth import verify_admin
+from .database import Base, engine, get_db
+from .models import Album, Article, Category, Photo
+from .schemas import (
+    AlbumCreate,
+    AlbumOut,
+    AlbumUpdate,
+    ArticleCreate,
+    ArticleOut,
+    ArticleUpdate,
+    CategoryCreate,
+    CategoryOut,
+    CategoryUpdate,
+    PhotoCreate,
+    PhotoOut,
+    PhotoUpdate,
+    UploadResponse,
+)
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+MEDIA_DIR = STATIC_DIR / "media"
+UPLOAD_DIR = BASE_DIR / "uploads"
+MEDIA_DIR.mkdir(parents=True, exist_ok=True)
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+app = FastAPI(title="Une vie pensee CMS API", version="0.2.0")
+
+templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
+
+origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",") if o.strip()]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins or ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+app.mount(
+    "/static",
+    StaticFiles(directory=str(STATIC_DIR)),
+    name="static",
+)
+
+
+@app.on_event("startup")
+def startup() -> None:
+    Base.metadata.create_all(bind=engine)
+    _ensure_category_columns()
+
+
+def _ensure_category_columns() -> None:
+    """Lightweight migration for existing SQLite DBs without Alembic."""
+    with engine.begin() as conn:
+        article_cols = {
+            row[1] for row in conn.execute(text("PRAGMA table_info(articles)"))
+        }
+        if "category_id" not in article_cols:
+            conn.execute(text("ALTER TABLE articles ADD COLUMN category_id INTEGER"))
+
+        album_cols = {
+            row[1] for row in conn.execute(text("PRAGMA table_info(albums)"))
+        }
+        if "category_id" not in album_cols:
+            conn.execute(text("ALTER TABLE albums ADD COLUMN category_id INTEGER"))
+
+        category_cols = {
+            row[1] for row in conn.execute(text("PRAGMA table_info(categories)"))
+        }
+        if "layout_type" not in category_cols:
+            conn.execute(text("ALTER TABLE categories ADD COLUMN layout_type VARCHAR(30) DEFAULT 'list'"))
+
+
+# ── Health ────────────────────────────────────────────────
+@app.get("/api/health")
+def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+# ── Categories ───────────────────────────────────────────
+@app.get("/api/categories", response_model=list[CategoryOut])
+def list_categories(db: Session = Depends(get_db)):
+    return db.query(Category).order_by(Category.name_fr.asc()).all()
+
+
+@app.post("/api/categories", response_model=CategoryOut)
+def create_category(
+    payload: CategoryCreate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    exists = db.query(Category).filter(Category.slug == payload.slug).first()
+    if exists:
+        raise HTTPException(status_code=409, detail="category slug already exists")
+    category = Category(**payload.model_dump())
+    db.add(category)
+    db.commit()
+    db.refresh(category)
+    return category
+
+
+@app.put("/api/categories/{category_id}", response_model=CategoryOut)
+def update_category(
+    category_id: int,
+    payload: CategoryUpdate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    category = db.query(Category).filter(Category.id == category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="category not found")
+    data = payload.model_dump(exclude_unset=True)
+    if "slug" in data:
+        exists = db.query(Category).filter(
+            Category.slug == data["slug"], Category.id != category_id
+        ).first()
+        if exists:
+            raise HTTPException(status_code=409, detail="category slug already exists")
+    for key, value in data.items():
+        setattr(category, key, value)
+    db.commit()
+    db.refresh(category)
+    return category
+
+
+@app.delete("/api/categories/{category_id}")
+def delete_category(
+    category_id: int,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    category = db.query(Category).filter(Category.id == category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="category not found")
+    db.query(Article).filter(Article.category_id == category_id).update(
+        {Article.category_id: None}
+    )
+    db.query(Album).filter(Album.category_id == category_id).update(
+        {Album.category_id: None}
+    )
+    db.delete(category)
+    db.commit()
+    return {"ok": True}
+
+
+# ── Travel (public) ───────────────────────────────────────
+@app.get("/api/travel")
+def travel_data(db: Session = Depends(get_db)):
+    """Return all albums with their photos, ordered for travel.html rendering."""
+    albums = db.query(Album).order_by(Album.created_at.asc()).all()
+    return [album.to_dict(include_photos=True) for album in albums]
+
+
+# ── Articles ──────────────────────────────────────────────
+@app.get("/api/articles", response_model=list[ArticleOut])
+def list_articles(
+    db: Session = Depends(get_db),
+    published: Optional[bool] = None,
+    category: Optional[str] = None,
+    limit: int = 100,
+    offset: int = 0,
+):
+    q = db.query(Article)
+    if published is not None:
+        q = q.filter(Article.is_published == published)
+    if category:
+        q = q.join(Category, Article.category_id == Category.id).filter(Category.slug == category)
+    return q.order_by(Article.created_at.desc()).offset(offset).limit(limit).all()
+
+
+@app.post("/api/articles", response_model=ArticleOut)
+def create_article(
+    payload: ArticleCreate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    exists = db.query(Article).filter(Article.slug == payload.slug).first()
+    if exists:
+        raise HTTPException(status_code=409, detail="slug already exists")
+    if payload.category_id is not None:
+        category = db.query(Category).filter(Category.id == payload.category_id).first()
+        if not category:
+            raise HTTPException(status_code=404, detail="category not found")
+    article = Article(**payload.model_dump())
+    db.add(article)
+    db.commit()
+    db.refresh(article)
+    return article
+
+
+@app.get("/api/articles/{article_id}", response_model=ArticleOut)
+def get_article(article_id: int, db: Session = Depends(get_db)):
+    article = db.query(Article).filter(Article.id == article_id).first()
+    if not article:
+        raise HTTPException(status_code=404, detail="article not found")
+    return article
+
+
+@app.put("/api/articles/{article_id}", response_model=ArticleOut)
+@app.patch("/api/articles/{article_id}", response_model=ArticleOut)
+def update_article(
+    article_id: int,
+    payload: ArticleUpdate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    article = db.query(Article).filter(Article.id == article_id).first()
+    if not article:
+        raise HTTPException(status_code=404, detail="article not found")
+    data = payload.model_dump(exclude_unset=True)
+    if "slug" in data:
+        exists = db.query(Article).filter(
+            Article.slug == data["slug"], Article.id != article_id
+        ).first()
+        if exists:
+            raise HTTPException(status_code=409, detail="slug already exists")
+    if "category_id" in data and data["category_id"] is not None:
+        category = db.query(Category).filter(Category.id == data["category_id"]).first()
+        if not category:
+            raise HTTPException(status_code=404, detail="category not found")
+    for key, value in data.items():
+        setattr(article, key, value)
+    db.commit()
+    db.refresh(article)
+    return article
+
+
+@app.delete("/api/articles/{article_id}")
+def delete_article(
+    article_id: int,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    article = db.query(Article).filter(Article.id == article_id).first()
+    if not article:
+        raise HTTPException(status_code=404, detail="article not found")
+    db.delete(article)
+    db.commit()
+    return {"ok": True}
+
+
+# ── Albums ────────────────────────────────────────────────
+@app.get("/api/albums", response_model=list[AlbumOut])
+def list_albums(db: Session = Depends(get_db), category: Optional[str] = None):
+    q = db.query(Album)
+    if category:
+        q = q.join(Category, Album.category_id == Category.id).filter(Category.slug == category)
+    return q.order_by(Album.created_at.desc()).all()
+
+
+@app.post("/api/albums", response_model=AlbumOut)
+def create_album(
+    payload: AlbumCreate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    if payload.category_id is not None:
+        category = db.query(Category).filter(Category.id == payload.category_id).first()
+        if not category:
+            raise HTTPException(status_code=404, detail="category not found")
+    album = Album(**payload.model_dump())
+    db.add(album)
+    db.commit()
+    db.refresh(album)
+    return album
+
+
+@app.get("/api/albums/{album_id}", response_model=AlbumOut)
+def get_album(album_id: int, db: Session = Depends(get_db)):
+    album = db.query(Album).filter(Album.id == album_id).first()
+    if not album:
+        raise HTTPException(status_code=404, detail="album not found")
+    return album
+
+
+@app.put("/api/albums/{album_id}", response_model=AlbumOut)
+@app.patch("/api/albums/{album_id}", response_model=AlbumOut)
+def update_album(
+    album_id: int,
+    payload: AlbumUpdate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    album = db.query(Album).filter(Album.id == album_id).first()
+    if not album:
+        raise HTTPException(status_code=404, detail="album not found")
+    data = payload.model_dump(exclude_unset=True)
+    if "category_id" in data and data["category_id"] is not None:
+        category = db.query(Category).filter(Category.id == data["category_id"]).first()
+        if not category:
+            raise HTTPException(status_code=404, detail="category not found")
+    for key, value in data.items():
+        setattr(album, key, value)
+    db.commit()
+    db.refresh(album)
+    return album
+
+
+@app.delete("/api/albums/{album_id}")
+def delete_album(
+    album_id: int,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    album = db.query(Album).filter(Album.id == album_id).first()
+    if not album:
+        raise HTTPException(status_code=404, detail="album not found")
+    db.delete(album)
+    db.commit()
+    return {"ok": True}
+
+
+# ── Photos ────────────────────────────────────────────────
+@app.get("/api/albums/{album_id}/photos", response_model=list[PhotoOut])
+def list_photos(album_id: int, db: Session = Depends(get_db)):
+    return (
+        db.query(Photo)
+        .filter(Photo.album_id == album_id)
+        .order_by(Photo.order.asc())
+        .all()
+    )
+
+
+@app.post("/api/albums/{album_id}/photos", response_model=PhotoOut)
+def create_photo(
+    album_id: int,
+    payload: PhotoCreate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    if not db.query(Album).filter(Album.id == album_id).first():
+        raise HTTPException(status_code=404, detail="album not found")
+    photo = Photo(album_id=album_id, **payload.model_dump())
+    db.add(photo)
+    db.commit()
+    db.refresh(photo)
+    return photo
+
+
+@app.put("/api/photos/{photo_id}", response_model=PhotoOut)
+@app.patch("/api/photos/{photo_id}", response_model=PhotoOut)
+def update_photo(
+    photo_id: int,
+    payload: PhotoUpdate,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    photo = db.query(Photo).filter(Photo.id == photo_id).first()
+    if not photo:
+        raise HTTPException(status_code=404, detail="photo not found")
+    for key, value in payload.model_dump(exclude_unset=True).items():
+        setattr(photo, key, value)
+    db.commit()
+    db.refresh(photo)
+    return photo
+
+
+@app.delete("/api/photos/{photo_id}")
+def delete_photo(
+    photo_id: int,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    photo = db.query(Photo).filter(Photo.id == photo_id).first()
+    if not photo:
+        raise HTTPException(status_code=404, detail="photo not found")
+    db.delete(photo)
+    db.commit()
+    return {"ok": True}
+
+
+# ── Upload ────────────────────────────────────────────────
+def _save_media_upload(file: UploadFile) -> UploadResponse:
+    suffix = Path(file.filename or "").suffix.lower()
+    if suffix not in {".jpg", ".jpeg", ".png"}:
+        raise HTTPException(status_code=400, detail="only .jpg/.jpeg/.png are supported")
+    filename = f"{uuid.uuid4().hex}{suffix}"
+    target = MEDIA_DIR / filename
+    with target.open("wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    return UploadResponse(url=f"/static/media/{filename}")
+
+
+@app.post("/admin/upload", response_model=UploadResponse)
+def admin_upload_image(
+    file: UploadFile = File(...),
+    _: str = Depends(verify_admin),
+):
+    return _save_media_upload(file)
+
+
+@app.post("/api/uploads", response_model=UploadResponse)
+def upload_image(
+    file: UploadFile = File(...),
+    _: str = Depends(verify_admin),
+):
+    return _save_media_upload(file)
+
+
+# ── Admin UI ──────────────────────────────────────────────
+@app.get("/admin", response_class=HTMLResponse)
+def admin_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    article_count = db.query(Article).count()
+    album_count = db.query(Album).count()
+    photo_count = db.query(Photo).count()
+    category_count = db.query(Category).count()
+    return templates.TemplateResponse(
+        request=request,
+        name="admin.html",
+        context={
+            "article_count": article_count,
+            "album_count": album_count,
+            "photo_count": photo_count,
+            "category_count": category_count,
+        },
+    )
+
+
+@app.get("/admin/data")
+def admin_data(
+    db: Session = Depends(get_db),
+    _: str = Depends(verify_admin),
+):
+    articles = db.query(Article).order_by(Article.created_at.desc()).limit(50).all()
+    albums = db.query(Album).order_by(Album.created_at.desc()).limit(50).all()
+    photos = db.query(Photo).order_by(Photo.order.asc()).limit(200).all()
+    categories = db.query(Category).order_by(Category.name_fr.asc()).all()
+    return {
+        "articles": [a.to_dict() for a in articles],
+        "albums": [al.to_dict() for al in albums],
+        "photos": [p.to_dict() for p in photos],
+        "categories": [c.to_dict() for c in categories],
+    }
+

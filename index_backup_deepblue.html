@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Une vie pensée | 审思而活</title>
+  <meta name="description" content="Une vie pensée | 审思而活。思考服务于行动。A reflective life in Chinese, English and French." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #1e4d8f;
+      --blue-deep: #123567;
+      --sky: #f5f8ff;
+      --white: #ffffff;
+      --ink: #172235;
+      --muted: #5a667d;
+      --line: #d4deef;
+      --line-soft: #e2e8f7;
+      --card-shadow: 0 16px 38px rgba(18, 53, 103, 0.14);
+      --radius: 18px;
+      --radius-lg: 24px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-7: 28px;
+      --ease: 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(1300px 520px at 8% -10%, rgba(30, 77, 143, 0.16), transparent 65%),
+        radial-gradient(900px 440px at 100% 4%, rgba(235, 124, 73, 0.14), transparent 62%),
+        repeating-linear-gradient(135deg, transparent 0 24px, rgba(30, 77, 143, 0.02) 24px 25px),
+        #f8f9fc;
+      font-family: "Source Sans 3", "Noto Serif SC", serif;
+      line-height: 1.65;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4) 72px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 10px;
+      z-index: 5;
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      box-shadow: var(--card-shadow);
+    }
+
+    .logo-stack {
+      min-width: 110px;
+      text-align: center;
+      font-family: "Playfair Display", serif;
+      font-size: 14px;
+      line-height: 1.05;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .nav a,
+    .lang button {
+      text-decoration: none;
+      color: var(--ink);
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      background: transparent;
+      cursor: pointer;
+      transition: transform var(--ease), border-color var(--ease), background-color var(--ease), color var(--ease);
+    }
+
+    .nav a:hover,
+    .lang button:hover,
+    .lang button.active {
+      border-color: var(--line-soft);
+      background: var(--white);
+      transform: translateY(-1px);
+    }
+
+    .nav a:focus-visible,
+    .lang button:focus-visible,
+    .hero-cta:focus-visible,
+    .panel .jump:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    .hero {
+      margin-top: var(--space-5);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(132deg, #f9fbff 0%, #fffaf6 68%);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 0;
+    }
+
+    .hero-main {
+      padding: 38px 32px;
+    }
+
+    .hero-main h1 {
+      margin: 0;
+      font-family: "Playfair Display", "Noto Serif SC", serif;
+      font-size: clamp(34px, 5.4vw, 60px);
+      line-height: 1.05;
+      color: var(--blue);
+      text-wrap: balance;
+    }
+
+    .hero-main h2 {
+      margin: 10px 0 0;
+      font-size: clamp(18px, 2.1vw, 28px);
+      font-weight: 600;
+      color: #1f3763;
+    }
+
+    .hero-actions {
+      margin-top: var(--space-6);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .hero-cta {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      transition: transform var(--ease), box-shadow var(--ease), background-color var(--ease), color var(--ease), border-color var(--ease);
+    }
+
+    .hero-cta.primary {
+      color: #ffffff;
+      background: linear-gradient(110deg, var(--blue), var(--blue-deep));
+      box-shadow: 0 12px 24px rgba(18, 53, 103, 0.28);
+    }
+
+    .hero-cta.secondary {
+      color: var(--blue-deep);
+      background: #fff4ee;
+      border: 1px solid var(--line-soft);
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-aside {
+      border-left: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(30, 77, 143, 0.08), rgba(255, 255, 255, 0.45)),
+        linear-gradient(120deg, rgba(235, 124, 73, 0.08), transparent 65%);
+      padding: 24px 24px 24px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-3);
+    }
+
+    .kicker {
+      color: var(--blue);
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .hero-aside p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .content-grid {
+      margin-top: var(--space-6);
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--card-shadow);
+      padding: 22px;
+      animation: rise 540ms ease both;
+      transition: transform var(--ease), box-shadow var(--ease), border-color var(--ease);
+    }
+
+    .panel:hover {
+      transform: translateY(-2px);
+      border-color: #bfd0ee;
+      box-shadow: 0 22px 38px rgba(18, 53, 103, 0.18);
+    }
+
+    .panel h3 {
+      margin: 0 0 var(--space-2);
+      font-family: "Playfair Display", "Noto Serif SC", serif;
+      font-size: 28px;
+      color: var(--blue);
+    }
+
+    .panel.span-4 {
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .panel .jump {
+      display: inline-block;
+      margin-top: var(--space-4);
+      color: var(--blue-deep);
+      border: 1px solid var(--line-soft);
+      background: var(--sky);
+      border-radius: 999px;
+      padding: 7px 12px;
+      text-decoration: none;
+      font-weight: 600;
+      line-height: 1;
+      transition: transform var(--ease), background-color var(--ease), border-color var(--ease);
+    }
+
+    .panel .jump:hover {
+      background: #edf3ff;
+      border-color: #bfd0ee;
+      transform: translateY(-1px);
+    }
+
+    .span-4 { grid-column: span 4; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .timeline {
+      margin: var(--space-4) 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      border-left: none;
+    }
+
+    .timeline li {
+      position: relative;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      background: var(--sky);
+      padding: 6px 12px;
+    }
+
+    .timeline li::before {
+      content: none;
+    }
+
+    .timeline time {
+      display: inline;
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .quotes {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .quotes li {
+      background: linear-gradient(145deg, #fbfcff, #f0f4ff);
+      border: 1px solid var(--line-soft);
+      border-radius: 12px;
+      padding: 14px;
+      font-style: italic;
+      color: #2b4066;
+      line-height: 1.55;
+    }
+
+    .quote-name {
+      margin-top: 5px;
+      display: block;
+      font-style: normal;
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .about {
+      margin-top: var(--space-6);
+      border-top: 1px dashed var(--line);
+      padding-top: var(--space-5);
+    }
+
+    .about p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .signature {
+      margin-top: var(--space-4);
+      padding: 16px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, rgba(30, 77, 143, 0.14), rgba(235, 124, 73, 0.1));
+      color: #24395e;
+      font-family: "Playfair Display", "Noto Serif SC", serif;
+      font-size: 20px;
+    }
+
+    .signature small {
+      display: block;
+      font-family: "Source Sans 3", "Noto Serif SC", serif;
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .content-grid .panel:nth-child(1) { animation-delay: 20ms; }
+    .content-grid .panel:nth-child(2) { animation-delay: 90ms; }
+    .content-grid .panel:nth-child(3) { animation-delay: 140ms; }
+    .content-grid .panel:nth-child(4) { animation-delay: 200ms; }
+    .content-grid .panel:nth-child(5) { animation-delay: 260ms; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-aside { border-left: none; border-top: 1px solid var(--line); }
+      .span-4, .span-8 { grid-column: span 12; }
+      .panel.span-4 { min-height: 140px; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar {
+        border-radius: 18px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .logo-stack {
+        text-align: left;
+      }
+
+      .hero-main {
+        padding: 28px 20px;
+      }
+
+      .hero-aside {
+        padding: 20px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-cta {
+        text-align: center;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="logo-stack">UNE<br />VIE<br />PENSÉE</div>
+      <nav class="nav" aria-label="main navigation">
+        <a href="#pensees" data-zh="思考" data-en="Thought" data-fr="Pensées">思考</a>
+        <a href="#pratiques" data-zh="实践" data-en="Practice" data-fr="Pratiques">实践</a>
+        <a href="#expressions" data-zh="表达" data-en="Expression" data-fr="Expressions">表达</a>
+        <a href="#lefil" data-zh="时间线" data-en="Le Fil" data-fr="Le Fil">时间线</a>
+        <a href="#citations" data-zh="引用集" data-en="Citations" data-fr="Citations">引用集</a>
+      </nav>
+      <div class="lang" aria-label="language switch">
+        <button id="btn-zh" class="active" type="button">中文</button>
+        <button id="btn-en" type="button">EN</button>
+        <button id="btn-fr" type="button">FR</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-main">
+          <h1 id="title-main">Une vie pensée | 审思而活</h1>
+          <h2 id="title-sub">La réflexion au service de l'action.</h2>
+          <div class="hero-actions">
+            <a class="hero-cta primary" href="reading.html" data-zh="进入 Pensées" data-en="Enter Pensées" data-fr="Entrer dans Pensées">进入 Pensées</a>
+            <a class="hero-cta secondary" href="travel.html" data-zh="进入 Expressions" data-en="Enter Expressions" data-fr="Entrer dans Expressions">进入 Expressions</a>
+          </div>
+        </div>
+        <aside class="hero-aside">
+          <p class="kicker" data-zh="主题" data-en="Theme" data-fr="Theme">主题</p>
+          <p id="theme-1">从观察到理解，从理解到行动。</p>
+          <p class="kicker" data-zh="路径" data-en="Path" data-fr="Parcours">路径</p>
+          <p id="theme-2">Pensées -> Pratiques -> Expressions</p>
+        </aside>
+      </div>
+    </section>
+
+    <main class="content-grid">
+      <section id="pensees" class="panel span-4">
+        <h3>Pensées</h3>
+        <a class="jump" href="reading.html" data-zh="阅读相关" data-en="Readings" data-fr="Lectures">阅读相关</a>
+      </section>
+
+      <section id="pratiques" class="panel span-4">
+        <h3>Pratiques</h3>
+        <a class="jump" href="vibe.html" data-zh="查看项目" data-en="See projects" data-fr="Voir les projets">查看项目</a>
+      </section>
+
+      <section id="expressions" class="panel span-4">
+        <h3>Expressions</h3>
+        <a class="jump" href="travel.html" data-zh="走进旅途" data-en="Enter travel" data-fr="Entrer dans le voyage">走进旅途</a>
+      </section>
+
+      <section id="lefil" class="panel span-8">
+        <h3>Le Fil</h3>
+        <ul class="timeline">
+          <li>
+            <time data-zh="2026 春" data-en="Spring 2026" data-fr="Printemps 2026">2026 春</time>
+          </li>
+          <li>
+            <time data-zh="2026 夏" data-en="Summer 2026" data-fr="Ete 2026">2026 夏</time>
+          </li>
+          <li>
+            <time data-zh="2026 秋" data-en="Autumn 2026" data-fr="Automne 2026">2026 秋</time>
+          </li>
+        </ul>
+      </section>
+
+      <section id="citations" class="panel span-4">
+        <h3>Citations</h3>
+        <ul class="quotes">
+          <li>
+            "On ne nait pas femme: on le devient."
+            <span class="quote-name">Simone de Beauvoir</span>
+          </li>
+          <li>
+            "Il faut porter en soi un chaos, pour mettre au monde une etoile dansante."
+            <span class="quote-name">Friedrich Nietzsche</span>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <section class="about" id="about">
+      <p id="about-line">这里是一个慢速更新、长期有效的个人现场。我记录的不只是经历，更是每一次思想转向。</p>
+      <div class="signature">
+        "Penser, c'est agir sur soi-même pour mieux agir sur le monde."
+        <small id="signature-translation">思考，是作用于自身，以便更好地作用于世界。</small>
+      </div>
+    </section>
+
+    <footer id="footer-text">© 2026 Une vie pensée. Blue, white, and lucid attention.</footer>
+  </div>
+
+  <script>
+    const languageStore = {
+      zh: {
+        htmlLang: "zh-CN",
+        titleMain: "Une vie pensée | 审思而活",
+        titleSub: "La réflexion au service de l'action.",
+        theme1: "从观察到理解，从理解到行动。",
+        theme2: "Pensées -> Pratiques -> Expressions",
+        aboutLine: "这里是一个慢速更新、长期有效的个人现场。我记录的不只是经历，更是每一次思想转向。",
+        signatureTranslation: "思考，是作用于自身，以便更好地作用于世界。",
+        footer: "© 2026 Une vie pensée. Blue, white, and lucid attention."
+      },
+      en: {
+        htmlLang: "en",
+        titleMain: "Une vie pensée | A life examined",
+        titleSub: "Reflection in service of action.",
+        theme1: "From observation to understanding, from understanding to action.",
+        theme2: "Pensées -> Pratiques -> Expressions",
+        aboutLine: "This is a slowly updated, long-lived personal field note. I document not only events, but shifts in thought.",
+        signatureTranslation: "To think is to work on oneself, so as to better work on the world.",
+        footer: "© 2026 Une vie pensée. Blue, white, and lucid attention."
+      },
+      fr: {
+        htmlLang: "fr",
+        titleMain: "Une vie pensée | Une vie examinée",
+        titleSub: "La réflexion au service de l'action.",
+        theme1: "De l'observation à la compréhension, de la compréhension à l'action.",
+        theme2: "Pensées -> Pratiques -> Expressions",
+        aboutLine: "Un espace personnel lent et durable: j'y note non seulement des faits, mais les inflexions de ma pensée.",
+        signatureTranslation: "Penser, c'est agir sur soi-même pour mieux agir sur le monde.",
+        footer: "© 2026 Une vie pensée. Bleu, blanc et clarté."
+      }
+    };
+
+    function setLanguage(lang) {
+      const pack = languageStore[lang];
+      document.documentElement.lang = pack.htmlLang;
+      document.getElementById("title-main").textContent = pack.titleMain;
+      document.getElementById("title-sub").textContent = pack.titleSub;
+      document.getElementById("theme-1").textContent = pack.theme1;
+      document.getElementById("theme-2").textContent = pack.theme2;
+      document.getElementById("about-line").textContent = pack.aboutLine;
+      document.getElementById("signature-translation").textContent = pack.signatureTranslation;
+      document.getElementById("footer-text").textContent = pack.footer;
+
+      document.querySelectorAll("[data-zh][data-en][data-fr]").forEach((node) => {
+        node.textContent = node.getAttribute(`data-${lang}`);
+      });
+
+      document.getElementById("btn-zh").classList.toggle("active", lang === "zh");
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+      document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
+    }
+
+    document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
+    document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+  </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+{% extends "news_base.html" %}
+
+{% block title %}NEWS | Une vie pensee{% endblock %}
+{% block page_title %}NEWS{% endblock %}
+{% block page_sub %}{% if is_admin %}后台新闻总览{% else %}近期文章{% endif %}{% endblock %}
+
+{% block content %}
+<style>
+  .news-grid-wrap {
+    border-top: 2px solid #1f2428;
+    padding-top: 28px;
+  }
+
+  .articles-list.news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 34px 30px;
+  }
+
+  .news-card {
+    border: 1px solid rgba(31, 36, 40, 0.14);
+    border-radius: 8px;
+    background: #fffdfa;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(31, 36, 40, 0.05);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .news-card-image-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .news-card-image-wrap {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: #f2ede5;
+    border-bottom: 1px solid rgba(31, 36, 40, 0.12);
+    overflow: hidden;
+  }
+
+  .news-card-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  }
+
+  .news-card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: #7d7468;
+    font-family: "Crimson Text", serif;
+    letter-spacing: 0.08em;
+    font-size: 0.84rem;
+    text-transform: uppercase;
+  }
+
+  .news-card-body {
+    padding: 16px 16px 18px;
+    text-align: center;
+    display: grid;
+    gap: 10px;
+  }
+
+  .news-card-title {
+    margin: 0;
+    font-family: "EB Garamond", "Times New Roman", serif;
+    font-size: 1.28rem;
+    font-weight: 800;
+    line-height: 1.28;
+    color: #191d21;
+  }
+
+  .news-card-meta {
+    margin: 0;
+    color: #73695f;
+    font-family: "Crimson Text", serif;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+  }
+
+  .news-card-summary {
+    margin: 0;
+    color: #322f2a;
+    font-family: "Georgia", "Crimson Text", serif;
+    font-size: 1rem;
+    line-height: 1.65;
+    text-align: center;
+    white-space: pre-wrap;
+  }
+
+  .news-card-summary.first-drop::first-letter {
+    float: left;
+    font-family: "EB Garamond", serif;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 0.9;
+    margin: 2px 7px 0 0;
+    color: #1f2428;
+  }
+
+  .read-more {
+    text-decoration: underline;
+  }
+
+  .news-empty {
+    text-align: center;
+    padding: 36px 20px;
+  }
+
+  @media (max-width: 1040px) {
+    .articles-list.news-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .articles-list.news-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+</style>
+
+<main class="news-grid-wrap">
+  <section class="articles-list news-grid">
+  {% for item in items %}
+  <article class="news-card">
+    {% set detail_url = '/admin/news/' ~ item.id if is_admin else '/news/' ~ item.id %}
+    <a class="news-card-image-link" href="{{ detail_url }}">
+      <div class="news-card-image-wrap">
+        {% if item.image_path %}
+        <img src="{{ item.image_path }}" alt="{{ item.image_caption or item.title }}">
+        {% else %}
+        <div class="news-card-placeholder">No Cover</div>
+        {% endif %}
+      </div>
+    </a>
+
+    <div class="news-card-body">
+      <h2 class="news-card-title">
+        {{ item.title }}
+        {% if is_admin and not item.is_public %}
+        <span style="color:#b54708; font-size:0.72em; letter-spacing:0.08em;">[私密]</span>
+        {% endif %}
+      </h2>
+      <p class="news-card-meta">
+        <span>{{ item.date.strftime('%Y-%m-%d') }}</span>
+        <span class="meta-sep">/</span>
+        <span>Une vie pensee</span>
+      </p>
+      <p class="news-card-summary first-drop">{{ item.summary_cn }}</p>
+      <a href="{{ detail_url }}" class="read-more">继续阅读</a>
+    </div>
+  </article>
+  {% else %}
+  <article class="news-card news-empty">
+    <div class="news-card-body">
+      <h2 class="news-card-title">暂无新闻</h2>
+      <p class="news-card-summary first-drop">数据库中还没有新闻数据。</p>
+    </div>
+  </article>
+  {% endfor %}
+  </section>
+</main>
+{% endblock %}

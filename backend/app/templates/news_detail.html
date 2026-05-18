@@ -1,0 +1,310 @@
+{% extends "news_base.html" %}
+
+{% block title %}{{ item.title }} | News{% endblock %}
+{% block page_title %}News{% endblock %}
+{% block page_sub %}{% if is_admin %}新闻编辑{% else %}新闻详情{% endif %}{% endblock %}
+
+{% block content %}
+<style>
+  .editor-wrap {
+    display: grid;
+    gap: 16px;
+  }
+
+  .editor-toolbar {
+    position: sticky;
+    top: 132px;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid rgba(31, 36, 40, 0.12);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px rgba(31, 36, 40, 0.08);
+  }
+
+  .editor-toolbar-title {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+
+  .editor-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .editor-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    min-height: 38px;
+    border-radius: 999px;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #1f2428;
+    text-decoration: none;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .editor-btn:hover {
+    opacity: 0.9;
+  }
+
+  .editor-btn-save {
+    border-color: #1f2d2a;
+    background: #1f2d2a;
+    color: #f8fafc;
+    font-weight: 700;
+  }
+
+  .editor-card {
+    border: 1px solid #e8e4de;
+    border-radius: 12px;
+    background: #fff;
+    padding: 18px;
+  }
+
+  .editor-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .editor-row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .editor-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #6b7280;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+  }
+
+  .editor-field input,
+  .editor-field textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    color: #1f2428;
+    font: inherit;
+    padding: 10px 12px;
+  }
+
+  .editor-field textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  .editor-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: #334155;
+  }
+
+  .editor-status input {
+    width: 16px;
+    height: 16px;
+  }
+
+  .editor-msg {
+    min-height: 1.2em;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 680px) {
+    .editor-toolbar {
+      top: 96px;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .editor-toolbar-title {
+      width: 100%;
+      font-size: 0.8rem;
+    }
+
+    .editor-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .editor-btn {
+      min-width: 96px;
+      min-height: 42px;
+      padding: 10px 14px;
+    }
+
+    .editor-card {
+      padding: 14px;
+    }
+
+    .editor-row-2 {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
+</style>
+
+{% if is_admin %}
+<section class="editor-wrap">
+  <div class="editor-toolbar">
+    <p class="editor-toolbar-title">编辑新闻 #{{ item.id }}</p>
+    <div class="editor-actions">
+      <a class="editor-btn" href="/admin/news">返回</a>
+      <button type="button" id="save-btn" class="editor-btn editor-btn-save">保存修改</button>
+    </div>
+  </div>
+
+  <article class="editor-card">
+    <form id="editor-form" class="editor-grid">
+      <div class="editor-row-2">
+        <div class="editor-field">
+          <label for="title">标题</label>
+          <input id="title" name="title" value="{{ item.title }}" required>
+        </div>
+        <div class="editor-field">
+          <label for="date">日期</label>
+          <input id="date" name="date" type="date" value="{{ item.date.strftime('%Y-%m-%d') }}" required>
+        </div>
+      </div>
+
+      <div class="editor-field">
+        <label for="summary_cn">中文摘要</label>
+        <textarea id="summary_cn" name="summary_cn">{{ item.summary_cn }}</textarea>
+      </div>
+
+      <div class="editor-field">
+        <label for="content_cn">中文正文</label>
+        <textarea id="content_cn" name="content_cn">{{ item.content_cn }}</textarea>
+      </div>
+
+      <div class="editor-field">
+        <label for="content_en">English Content</label>
+        <textarea id="content_en" name="content_en">{{ item.content_en }}</textarea>
+      </div>
+
+      <div class="editor-row-2">
+        <div class="editor-field">
+          <label for="image_path">图片 URL</label>
+          <input id="image_path" name="image_path" value="{{ item.image_path or '' }}" placeholder="/uploads/...">
+        </div>
+        <div class="editor-field">
+          <label for="image_caption">图片说明</label>
+          <input id="image_caption" name="image_caption" value="{{ item.image_caption or '' }}">
+        </div>
+      </div>
+
+      <label class="editor-status" for="is_public">
+        <input id="is_public" name="is_public" type="checkbox" {% if item.is_public %}checked{% endif %}>
+        公开发布
+      </label>
+
+      <div class="editor-msg" id="save-msg"></div>
+    </form>
+  </article>
+</section>
+
+<script>
+  const newsId = {{ item.id }};
+
+  async function saveNews() {
+    const saveBtn = document.getElementById('save-btn');
+    const saveMsg = document.getElementById('save-msg');
+    saveBtn.disabled = true;
+    saveBtn.textContent = '保存中...';
+    saveMsg.textContent = '';
+
+    const payload = {
+      title: document.getElementById('title').value.trim(),
+      date: document.getElementById('date').value,
+      summary_cn: document.getElementById('summary_cn').value,
+      content_cn: document.getElementById('content_cn').value,
+      content_en: document.getElementById('content_en').value,
+      image_path: document.getElementById('image_path').value.trim(),
+      image_caption: document.getElementById('image_caption').value.trim(),
+      is_public: document.getElementById('is_public').checked,
+    };
+
+    try {
+      const resp = await fetch(`/api/news/${newsId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!resp.ok) {
+        saveMsg.style.color = '#9f1239';
+        saveMsg.textContent = '保存失败，请检查后重试';
+        return;
+      }
+
+      saveMsg.style.color = '#166534';
+      saveMsg.textContent = '保存成功';
+      setTimeout(() => {
+        window.location.href = '/admin/news';
+      }, 450);
+    } catch (err) {
+      saveMsg.style.color = '#9f1239';
+      saveMsg.textContent = '网络异常，保存失败';
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = '保存修改';
+    }
+  }
+
+  document.getElementById('save-btn').addEventListener('click', saveNews);
+  document.getElementById('editor-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    saveNews();
+  });
+</script>
+{% else %}
+<main class="articles-list">
+  <article class="article-item">
+    <h2>{{ item.title }}</h2>
+    <div class="article-meta">
+      <span>{{ item.date.strftime('%Y-%m-%d') }}</span>
+      <span class="meta-sep">/</span>
+      <span>Une vie pensee</span>
+    </div>
+
+    {% if item.image_path %}
+    <figure class="article-image-wrap">
+      <img class="article-image" src="{{ item.image_path }}" alt="{{ item.title }}">
+      {% if item.image_caption %}
+      <figcaption class="article-caption">{{ item.image_caption }}</figcaption>
+      {% endif %}
+    </figure>
+    {% endif %}
+
+    <div class="article-meta">中文</div>
+    <p class="first-drop">{{ item.content_cn }}</p>
+
+    <div class="article-meta">English</div>
+    <p>{{ item.content_en }}</p>
+  </article>
+</main>
+
+<div class="back-home">
+  <a href="{% if is_admin %}/admin/news{% else %}/news{% endif %}">返回新闻列表</a>
+</div>
+{% endif %}
+{% endblock %}

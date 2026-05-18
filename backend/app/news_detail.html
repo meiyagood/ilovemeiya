@@ -1,0 +1,37 @@
+{% extends "news_base.html" %}
+
+{% block title %}{{ item.title }} | News{% endblock %}
+{% block page_title %}News{% endblock %}
+{% block page_sub %}{% if is_admin %}后台预览{% else %}新闻详情{% endif %}{% endblock %}
+
+{% block content %}
+<main class="articles-list">
+  <article class="article-item">
+    <h2>{{ item.title }}</h2>
+    <div class="article-meta">
+      <span>{{ item.date.strftime('%Y-%m-%d') }}</span>
+      <span class="meta-sep">/</span>
+      <span>Une vie pensee</span>
+    </div>
+
+    {% if item.image_path %}
+    <figure class="article-image-wrap">
+      <img class="article-image" src="{{ item.image_path }}" alt="{{ item.title }}">
+      {% if item.image_caption %}
+      <figcaption class="article-caption">{{ item.image_caption }}</figcaption>
+      {% endif %}
+    </figure>
+    {% endif %}
+
+    <div class="article-meta">中文</div>
+    <p class="first-drop">{{ item.content_cn }}</p>
+
+    <div class="article-meta">English</div>
+    <p>{{ item.content_en }}</p>
+  </article>
+</main>
+
+<div class="back-home">
+  <a href="{% if is_admin %}/admin/news{% else %}/news{% endif %}">返回新闻列表</a>
+</div>
+{% endblock %}

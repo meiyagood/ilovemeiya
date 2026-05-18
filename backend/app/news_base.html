@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}News | Une vie pensee{% endblock %}</title>
+  <meta name="description" content="新闻 | News. Une vie pensee." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1f2428;
+      --ease: 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #fcfaf6;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      line-height: 1.7;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px 72px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0;
+      background: rgba(252, 250, 246, 0.95);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 14px 0;
+    }
+
+    .logo-stack {
+      text-align: center;
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      line-height: 1.5;
+      letter-spacing: 0.15em;
+      color: #1f2428;
+      white-space: normal;
+      padding: 24px 0;
+      width: 100%;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 4px double #1f2428;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #1f2428;
+      padding: 0;
+      font-size: 13px;
+      font-family: "Playfair Display", serif;
+      background: transparent;
+      transition: opacity var(--ease);
+      letter-spacing: 0.08em;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.2;
+    }
+
+    .nav a span {
+      font-size: 11px;
+      color: #575757;
+      font-family: "Crimson Text", serif;
+    }
+
+    .nav a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    .page-header {
+      text-align: center;
+      padding: 64px 0 48px;
+      border-bottom: 4px double #1f2428;
+      margin-bottom: 0;
+    }
+
+    .page-header h1 {
+      margin: 0 0 12px;
+      font-family: "Playfair Display", serif;
+      font-size: 48px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #1f2428;
+      line-height: 1.2;
+    }
+
+    .page-header .page-sub {
+      font-size: 12px;
+      color: #a8a8a8;
+      font-family: "Crimson Text", serif;
+    }
+
+    .article-body {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 56px 0;
+    }
+
+    .article-layout {
+      display: block;
+    }
+
+    .articles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    .article-item {
+      border-bottom: 1px solid #e8e4de;
+      padding-bottom: 56px;
+    }
+
+    .article-item:last-child {
+      border-bottom: none;
+    }
+
+    .article-item h2 {
+      margin: 0 0 18px;
+      font-family: "Playfair Display", serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #1f2428;
+      line-height: 1.4;
+    }
+
+    .article-meta {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 20px;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0.05em;
+      font-style: italic;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .meta-sep {
+      opacity: 0.45;
+    }
+
+    .article-item p {
+      margin: 0 0 20px;
+      color: #1f2428;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .article-item p.first-drop::first-letter {
+      float: left;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2.6rem, 8vw, 4.2rem);
+      font-weight: 700;
+      line-height: 0.82;
+      margin: 6px 10px 0 0;
+      color: #1f2428;
+    }
+
+    .article-bilingual-note {
+      margin: 4px 0 8px;
+      color: #7b7b7b;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-family: "Playfair Display", serif;
+    }
+
+    .summary-divider {
+      margin: 20px 0 0;
+      border: 0;
+      border-top: 1px solid rgba(31, 36, 40, 0.08);
+    }
+
+    .article-image-wrap {
+      margin: 0 0 24px;
+    }
+
+    .article-image {
+      display: block;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid rgba(31, 36, 40, 0.12);
+      background: #f5f1eb;
+    }
+
+    .article-caption {
+      margin: 10px 0 0;
+      text-align: center;
+      color: #9a9a9a;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .news-sidebar {
+      display: none;
+      border-left: 1px solid rgba(31, 36, 40, 0.1);
+      padding-left: 28px;
+    }
+
+    .sidebar-block + .sidebar-block {
+      margin-top: 28px;
+    }
+
+    .sidebar-kicker {
+      margin: 0 0 12px;
+      color: #7a7a7a;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-family: "Playfair Display", serif;
+    }
+
+    .sidebar-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .sidebar-list li {
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .sidebar-quote {
+      margin: 0;
+      color: #5f5f5f;
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .article-link {
+      display: inline-block;
+      color: #1f2428;
+      text-decoration: underline;
+      font-family: "Crimson Text", serif;
+      font-size: 1rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .article-link:hover {
+      opacity: 0.7;
+    }
+
+    .back-home {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 0 48px;
+    }
+
+    .back-home a {
+      color: #a8a8a8;
+      text-decoration: none;
+      font-family: "Crimson Text", serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .back-home a:hover {
+      color: #1f2428;
+    }
+
+    .back-home a::before {
+      content: "←";
+      font-size: 1rem;
+    }
+
+    footer {
+      margin-top: 0;
+      padding-top: 20px;
+      border-top: 1px solid #1f2428;
+      text-align: center;
+      color: #1f2428;
+      font-size: 0.9rem;
+      font-family: "Crimson Text", serif;
+    }
+
+    @media (min-width: 1040px) {
+      .article-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 700px) 220px;
+        gap: 48px;
+        align-items: start;
+      }
+
+      .news-sidebar {
+        display: block;
+        position: sticky;
+        top: 132px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .page-header h1 { font-size: 32px; }
+      .article-item h2 { font-size: 22px; }
+      .article-body { padding: 40px 0; }
+    }
+
+    @media (max-width: 520px) {
+      .article-item p.first-drop::first-letter {
+        font-size: 2.35rem;
+        line-height: 0.92;
+        margin: 3px 8px 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-header"></div>
+      <div class="logo-stack">On se lasse de tout excepte de connaitre.</div>
+      <nav class="nav" aria-label="main navigation">
+        <a href="/news">News<span>新闻</span></a>
+        {% if is_admin %}
+        <a href="/admin">Admin<span>后台</span></a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <div class="page-header">
+      <h1>{% block page_title %}News{% endblock %}</h1>
+      <p class="page-sub">{% block page_sub %}近期文章{% endblock %}</p>
+    </div>
+
+    <div class="article-body">
+      <div class="article-layout">
+        {% block content %}{% endblock %}
+        <aside class="news-sidebar" aria-label="news sidebar">
+          <section class="sidebar-block">
+            <p class="sidebar-kicker">Hot Topics</p>
+            <ul class="sidebar-list">
+              {% for topic in hot_topics %}
+              <li>{{ topic }}</li>
+              {% else %}
+              <li>近期内容正在整理中。</li>
+              {% endfor %}
+            </ul>
+          </section>
+          <section class="sidebar-block">
+            <p class="sidebar-kicker">Philosophy Note</p>
+            <p class="sidebar-quote">{{ sidebar_quote }}</p>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <footer>Une vie pensee</footer>
+  </div>
+</body>
+</html>

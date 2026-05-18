@@ -1,0 +1,310 @@
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=EB+Garamond:wght@500;700&display=swap");
+
+:root {
+  /* New Yorker-like editorial palette */
+  --color-paper: #F7F8F9;
+  --color-title: #111111;
+  --color-ink: #1f1f1f;
+  --color-muted: #575757;
+
+  /* Rule and border system */
+  --color-rule: #1a1a1a;
+  --color-rule-soft: #b9b3a8;
+  --rule-thin: 1px;
+  --rule-thick: 2px;
+
+  /* Signature double-rule style */
+  --border-double-width: 3px;
+  --border-double-style: double;
+  --border-double-color: var(--color-rule);
+  --border-double: var(--border-double-width) var(--border-double-style) var(--border-double-color);
+
+  /* Type system */
+  --font-body: "Crimson Text", "Times New Roman", Georgia, serif;
+  --font-title: "Playfair Display", "Times New Roman", Georgia, serif;
+
+  /* Rhythms */
+  --text-body-size: 1.0625rem;
+  --text-body-line-height: 1.72;
+  --text-title-line-height: 1.2;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-title);
+  font-family: var(--font-title);
+  line-height: var(--text-title-line-height);
+}
+
+/* Reusable double-rule helpers */
+.double-rule-top {
+  border-top: var(--border-double);
+}
+
+.double-rule-bottom {
+  border-bottom: var(--border-double);
+}
+
+.double-rule-y {
+  border-top: var(--border-double);
+  border-bottom: var(--border-double);
+}
+
+/* Drop cap for first paragraph - New Yorker style */
+.article-content p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-title);
+  font-size: 5.2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-right: 10px;
+  margin-top: -2px;
+  color: var(--color-title);
+  /* Approximately 3 lines of text */
+  height: 3.1em;
+}
+
+/* Responsive article layout - centered content with side whitespace */
+.article-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 0;
+  width: 100%;
+}
+
+.article-main {
+  grid-column: 2 / 5;
+  padding: 0 32px;
+}
+
+.article-content {
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line-height);
+  color: var(--color-ink);
+}
+
+.article-content p {
+  margin: 0 0 1.5em;
+}
+
+.article-content h2,
+.article-content h3 {
+  margin: 1.8em 0 0.8em;
+}
+
+/* Article subtitle with thin divider line */
+.article-subtitle {
+  margin: 0 0 16px;
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--color-rule-soft);
+  font-size: 1.25rem;
+  color: var(--color-muted);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Newspaper end-of-article symbol (small black square) */
+article::after {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  background: var(--color-title);
+  margin: 32px 0 0;
+}
+
+/* Tablet responsive adjustment */
+@media (max-width: 1024px) {
+  .article-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .article-main {
+    grid-column: 1 / 4;
+    padding: 0 24px;
+  }
+}
+
+/* Mobile responsive - full width */
+@media (max-width: 768px) {
+  .article-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .article-main {
+    grid-column: 1;
+    padding: 0 16px;
+  }
+
+  .article-content {
+    font-size: 1rem;
+  }
+
+  .article-content p {
+    margin: 0 0 1.2em;
+  }
+}
+
+/* Simulate New Yorker paper texture and type hierarchy */
+body {
+  background-color: #F7F8F9;
+  color: #1a1a1a;
+  font-family: "EB Garamond", serif;
+  line-height: 1.7;
+  padding: 5% 10%;
+}
+
+/* IPA annotation style for French learning content */
+.ipa-text {
+  font-family: Arial, sans-serif;
+  color: #666;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1px dotted #ccc;
+}
+
+/* Illustration block with subtle vintage tone and hover motion */
+.illustration-container {
+  max-width: 600px;
+  margin: 40px auto;
+  filter: sepia(10%);
+  transition: transform 0.5s ease;
+}
+
+.illustration-container:hover {
+  transform: scale(1.02);
+}
+
+/* 引入 Google Fonts（如果本地没有字体） */
+/* 全局默认：保持 Crimson Text */
+body {
+  background-color: #F7F8F9;
+  color: #222222;
+  font-family: "Crimson Text", serif;
+  font-size: 18px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+
+/* 标题区：专用 EB Garamond */
+/* 这里包括了主标题、二级标题以及特定的动态图标题 */
+h1,
+h2,
+h3,
+.site-title,
+.article-title {
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #000000;
+  margin-bottom: 0.5em;
+}
+
+/* 针对 french.html 的特殊排版 */
+.french-entry-title {
+  font-family: "EB Garamond", serif;
+  font-size: 2.2rem;
+  font-style: italic;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* 分类标签：保持极简无衬线，作为视觉跳跃 */
+.category-label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 12px;
+  color: #cc0000;
+}
+
+/* New Yorker-inspired asymmetric page rhythm */
+.page-spread {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.page-block {
+  max-width: 760px;
+}
+
+.page-block--lead {
+  margin-left: 0;
+  margin-right: auto;
+  padding-right: 48px;
+}
+
+.page-block--offset {
+  margin-left: auto;
+  margin-right: 0;
+  padding-left: 64px;
+}
+
+.page-block--balanced {
+  margin-left: 8%;
+  margin-right: auto;
+  padding-right: 24px;
+}
+
+@media (max-width: 768px) {
+  .page-block,
+  .page-block--lead,
+  .page-block--offset,
+  .page-block--balanced {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Site-wide visual unification */
+html,
+body {
+  background-color: #F7F8F9 !important;
+}
+
+.topbar,
+.nav {
+  background: #F7F8F9 !important;
+}
+
+.container,
+.wrapper,
+.content,
+.content-wrapper,
+.module,
+.shell,
+.article-body,
+.article-container,
+.article-main,
+.article-grid,
+.articles-list,
+.article-item,
+.content-grid,
+.panel,
+.page-header {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Replaces inline style in social page */
+.social-links-wrap {
+  margin-top: 8px;
+}
