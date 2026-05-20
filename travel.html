@@ -13,7 +13,6 @@
     html { scroll-behavior: smooth; }
 
     body {
-      overflow-x: hidden; /* prevent page-level horizontal scroll */
       margin: 0;
       color: #1f2428;
       background: #fcfaf6;
@@ -30,7 +29,6 @@
     .topbar {
       position: sticky;
       top: 0;
-      overflow: clip;        /* clip nav overflow without breaking sticky */
       z-index: 5;
       display: flex;
       flex-direction: column;
@@ -623,58 +621,51 @@
 
     @media (max-width: 680px) {
       .topbar-header { justify-content: space-between; padding: 10px 0; }
-            /* ── Method A: horizontal-scroll nav (no hamburger) ── */
-      .nav-toggle { display: none; }
-      .nav-close   { display: none; }
-
+      .nav-toggle { display: inline-block; }
+      .logo-stack { font-size: 14px; padding: 16px 0; letter-spacing: 0.1em; }
       .nav {
-        width: 100%;          /* must be explicit to enable overflow scroll */
-        min-width: 0;         /* override flex item min-width: auto */
-        position: static;
-        width: auto;
-        height: auto;
-        flex-direction: row;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(62vw, 260px);
+        height: 100vh;
+        flex-direction: column;
         flex-wrap: nowrap;
+        align-items: flex-start;
         justify-content: flex-start;
-        align-items: center;
-        gap: 20px;
-        padding: 12px 0;
-        border-bottom: 4px double #1f2428;
-        border-right: none;
+        gap: 12px;
+        padding: 84px 14px 20px;
+        border-bottom: none;
+        border-right: 1px solid #1f2428;
+        background: #fcfaf6;
+        transform: translateX(-110%);
+        transition: transform 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+        z-index: 25;
+      }
+      .nav a { font-size: 14px; }
+      .nav a span { font-size: 12px; }
+      .nav-close {
+        display: inline-block;
+        border: none;
         background: transparent;
-        transform: none;
-        transition: none;
-        z-index: auto;
-        /* hide scrollbar, keep scrollability */
-        overflow-x: auto;
-        overflow-y: visible;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+        color: #1f2428;
+        font-family: "Playfair Display", serif;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0;
+        margin-bottom: 8px;
+        cursor: pointer;
       }
-      .nav::-webkit-scrollbar { display: none; }
-
-      .nav a {
-        font-size: 13px;
-        white-space: nowrap;
-        flex-shrink: 0;
+      body.nav-open .nav { transform: translateX(0); }
+      .nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 20;
       }
-      .nav a span { display: none; }
-
-      /* separator dots between items */
-      .nav a:not(:last-of-type)::after {
-        content: "·";
-        margin-left: 20px;
-        color: #bbb;
-        font-size: 14px;
-        pointer-events: none;
-      }
-
-      .nav-overlay { display: none !important; }
-      body.nav-open .nav { transform: none; }
-      body.nav-open .nav-overlay { display: none; }
-      body.nav-open { overflow: auto; }
+      body.nav-open .nav-overlay { display: block; }
+      body.nav-open { overflow: hidden; }
       .page-header h1 { font-size: 32px; }
       .article-item h2 { font-size: 22px; }
       .south-france-module {

@@ -13,7 +13,6 @@
     <style>
       body {
         margin: 0;
-        overflow-x: hidden; /* prevent page-level horizontal scroll */
         background: #f9f7f2;
         color: #1a1a1a;
         font-family: "Source Serif 4", "Crimson Text", serif;
@@ -56,7 +55,6 @@
         padding: 14px 0;
         background: rgba(249, 247, 242, 0.96);
         backdrop-filter: blur(8px);
-        overflow: clip;        /* clip nav overflow without breaking sticky */
       }
 
       .brand {
@@ -191,53 +189,53 @@
           gap: 12px;
         }
 
-        /* ── Method A: horizontal-scroll nav (no hamburger) ── */
-        .nav-toggle { display: none; }
-        .nav-close   { display: none; }
-        .search-button, .lang { /* keep visible on mobile */ }
-
         .nav {
-          position: static;
-          width: 100%;          /* must be explicit to enable overflow scroll */
-          min-width: 0;         /* override flex item min-width: auto */
-          height: auto;
-          flex-direction: row;
-          flex-wrap: nowrap;
+          position: fixed;
+          top: 0;
+          right: 0;
+          width: min(84vw, 320px);
+          height: 100vh;
+          padding: 92px 20px 24px;
+          flex-direction: column;
+          align-items: flex-start;
           justify-content: flex-start;
-          align-items: center;
           gap: 18px;
-          padding: 12px 0;
-          background: transparent;
-          border-left: none;
-          transform: none;
-          transition: none;
-          z-index: auto;
-          overflow-x: auto;
-          overflow-y: visible;
-          -webkit-overflow-scrolling: touch;
-          overscroll-behavior-x: contain;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        .nav::-webkit-scrollbar { display: none; }
-
-        .nav a {
-          white-space: nowrap;
-          flex-shrink: 0;
+          background: #f9f7f2;
+          border-left: 1px solid #1a1a1a;
+          transform: translateX(110%);
+          transition: transform 180ms ease;
+          z-index: 40;
         }
 
-        .nav a:not(:last-of-type)::after {
-          content: "·";
-          margin-left: 18px;
-          color: #bbb;
-          font-size: 14px;
-          pointer-events: none;
+        .nav-toggle {
+          display: inline-flex;
+          align-items: center;
         }
 
-        .nav-overlay { display: none !important; }
-        body.nav-open .nav { transform: none; }
-        body.nav-open .nav-overlay { display: none; }
-        body.nav-open { overflow: auto; }
+        .nav-close {
+          display: inline-flex;
+        }
+
+        .search-button,
+        .lang {
+          display: none;
+        }
+
+        body.nav-open .nav {
+          transform: translateX(0);
+        }
+
+        body.nav-open .nav-overlay {
+          display: block;
+          position: fixed;
+          inset: 0;
+          background: rgba(26, 26, 26, 0.18);
+          z-index: 35;
+        }
+
+        body.nav-open {
+          overflow: hidden;
+        }
       }
     </style>
     <link rel="stylesheet" href="./vibe.css" />
