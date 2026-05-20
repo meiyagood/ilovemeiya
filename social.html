@@ -13,6 +13,7 @@
     html { scroll-behavior: smooth; }
 
     body {
+      overflow-x: hidden; /* prevent page-level horizontal scroll */
       margin: 0;
       color: #1f2428;
       background: #fcfaf6;
@@ -29,6 +30,7 @@
     .topbar {
       position: sticky;
       top: 0;
+      overflow: clip;        /* clip nav overflow without breaking sticky */
       z-index: 5;
       display: flex;
       flex-direction: column;
@@ -271,6 +273,8 @@
       .nav-close   { display: none; }
 
       .nav {
+        width: 100%;          /* must be explicit to enable overflow scroll */
+        min-width: 0;         /* override flex item min-width: auto */
         position: static;
         width: auto;
         height: auto;
