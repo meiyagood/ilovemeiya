@@ -7,7 +7,7 @@
   <meta name="description" content="Une vie pensée | 审思而活。思考服务于行动。A reflective life in Chinese, English and French." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
   <style>
     :root {
       --blue: #2b4c63;
@@ -36,7 +36,7 @@
     body {
       margin: 0;
       color: var(--ink);
-      background: #fcfaf6;
+      background: #F7F8F9;
       font-family: "Crimson Text", "Noto Serif SC", serif;
       line-height: 1.7;
     }
@@ -45,12 +45,20 @@
       max-width: 1120px;
       margin: 0 auto;
       padding: 0 var(--space-4) 72px;
+      /* offset for fixed navbar — approximate header height */
+      padding-top: 220px;
     }
 
     .topbar {
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 5;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      z-index: 1000;
       display: flex;
       flex-direction: column;
       gap: 0;
@@ -58,17 +66,90 @@
       justify-content: flex-start;
       padding: 0;
       border-bottom: none;
-      background: rgba(252, 250, 246, 0.95);
+      background: rgba(247, 248, 249, 0.97);
       backdrop-filter: blur(8px);
       box-shadow: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .topbar-header {
+    /* ── Shrunk state: single row, nav centered, lang absolute-right ── */
+    .topbar.navbar-shrunk {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       display: flex;
-      justify-content: flex-end;
+      flex-direction: row;
       align-items: center;
-      padding: 14px 0;
-      gap: 6px;
+      justify-content: center;
+      padding: 12px 40px;
+      position: fixed;
+      overflow: visible;
+      height: auto;
+    }
+
+    .topbar.navbar-shrunk .logo-stack {
+      display: none;
+    }
+
+    .topbar.navbar-shrunk .nav {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      padding: 0;
+      margin: 0;
+      border-bottom: none;
+      float: none;
+      width: auto;
+      max-width: calc(100vw - 120px);
+      position: static;
+      left: auto;
+      transform: none;
+      overflow: visible;
+    }
+
+    .topbar.navbar-shrunk .nav a {
+      white-space: nowrap;
+      flex-direction: row;
+      align-items: baseline;
+    }
+
+    .topbar.navbar-shrunk .nav a span {
+      display: none;
+    }
+
+    .topbar.navbar-shrunk .topbar-nav-rule {
+      display: none;
+    }
+
+    .topbar.navbar-shrunk .topbar-header {
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0;
+      justify-content: flex-end;
+      z-index: 1001;
+    }
+
+    .topbar.navbar-shrunk .hero-slogan-inline {
+      display: none;
+    }
+
+    /* ── Static topbar header: lang floats absolute-right, out of flow ── */
+    .topbar-header {
+      position: absolute;
+      top: 14px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1001;
+    }
+
+    /* Brand hidden in all states */
+    .topbar-brand {
+      display: none;
     }
 
     .nav-toggle {
@@ -124,9 +205,27 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      gap: 30px;
       padding: 16px 0;
+      border-bottom: none;
+    }
+
+    /* Full-width double rule — 100vw break-out ensures viewport coverage */
+    .topbar-nav-rule {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      border: none;
       border-bottom: 4px double #1f2428;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      display: block;
+      clear: both;
     }
 
     .nav-overlay {
@@ -179,13 +278,13 @@
       font-family: "Crimson Text", serif;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: #bbb;
+      color: #444444;
     }
 
     .lang button:hover {
       border-color: transparent;
       background: transparent;
-      color: #888;
+      color: #1f2428;
       transform: none;
     }
 
@@ -203,12 +302,14 @@
     }
 
     .hero {
-      min-height: 88vh;
+      min-height: unset;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow: hidden;
+      padding: 80px 0;
+      background: none;
     }
 
     .hero-main {
@@ -228,12 +329,13 @@
 
     .hero-main h1 {
       margin: 0;
-      font-family: "Playfair Display", "Noto Serif SC", serif;
-      font-size: clamp(40px, 5.5vw, 62px);
-      line-height: 1.28;
-      font-weight: 900;
-      color: #1f2428;
-      letter-spacing: -0.02em;
+      font-family: 'EB Garamond', serif;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      font-weight: 400;
+      font-style: italic;
+      color: #555;
+      letter-spacing: 0.25em;
     }
 
     .hero-scroll {
@@ -258,6 +360,10 @@
       width: 1px;
       height: 38px;
       background: currentColor;
+    }
+
+    .hero {
+      transition: opacity 0.3s ease, max-height 0.4s ease, padding 0.4s ease;
     }
 
     .content-grid {
@@ -442,6 +548,115 @@
       line-height: 1.7;
     }
 
+    /* ── Author Anchor ── */
+    /* ── Author Bio Container ── */
+    .author-bio-container {
+      background: #F2F3F4;
+      padding: 80px 0;
+      margin-top: 80px;
+    }
+
+    .author-bio-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .author-avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: grayscale(20%);
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .author-avatar-fallback {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'EB Garamond', serif;
+      font-size: 2.5rem;
+      color: #888;
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+
+    .author-name {
+      font-family: 'EB Garamond', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: #1A1A1A;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .author-role {
+      font-family: 'EB Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: #444444;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .author-bio-text {
+      font-family: 'Crimson Text', serif;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #666;
+      margin-bottom: 28px;
+    }
+
+    /* Social matrix */
+    .social-matrix-layout {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 24px;
+      margin-top: 4px;
+      border-top: 1px solid #DCDCDC;
+      width: 100%;
+      margin-bottom: 28px;
+    }
+
+    .social-matrix-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: #1A1A1A;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .social-matrix-item:hover { opacity: 0.6; }
+
+    .social-matrix-item svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .social-id-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: #888;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+
     footer {
       margin-top: 48px;
       padding-top: 20px;
@@ -476,9 +691,25 @@
       .logo-stack .logo-main { font-size: 80px; letter-spacing: -0.1em; transform: scale(0.65, 1.4); }
     }
 
+    /* Mobile lang inside nav — hidden on desktop */
+    .lang-in-nav { display: none; }
+
     @media (max-width: 680px) {
       .topbar { flex-direction: column; align-items: stretch; }
-      .topbar-header { justify-content: space-between; padding: 10px 0; }
+      .topbar-header {
+        position: static;
+        justify-content: space-between;
+        padding: 10px 0;
+      }
+      /* Hide lang switcher from header row on mobile — it lives in the nav panel */
+      .topbar-header .lang { display: none; }
+      .lang-in-nav {
+        display: flex;
+        gap: 16px;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #e8e4de;
+      }
       .nav-toggle { display: inline-block; }
       .logo-stack { padding: 14px 0; }
       .logo-stack .logo-top { font-size: 11px; letter-spacing: 0.8em; }
@@ -503,10 +734,11 @@
         z-index: 25;
       }
       .nav a {
-        font-size: 14px;
+        font-size: 13px;
+        white-space: nowrap;
       }
       .nav a span {
-        font-size: 12px;
+        font-size: 11px;
       }
       .nav-close {
         display: inline-block;
@@ -539,6 +771,617 @@
       .hero-main { padding: 48px 20px; }
     }
 
+    /* ── Homepage dual-column ───────────────────────────────── */
+    .front-page-sections {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 60px;
+      max-width: 1100px;
+      margin: 80px auto 60px;
+      padding: 0 16px;
+    }
+
+    /* ── News: left text / right image ── */
+    .main-news-featured {
+      flex: 0 0 65%;
+      min-width: 0;
+    }
+
+    .main-news-featured .news-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+    }
+
+    .main-news-featured .news-text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .main-news-featured .news-label {
+      font-family: sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .main-news-featured h2 {
+      font-family: 'EB Garamond', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1.2;
+      color: #000;
+      margin: 0 0 16px;
+    }
+
+    .main-news-featured .news-preview {
+      font-family: 'Crimson Text', serif;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #555;
+      margin: 0 0 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .main-news-featured .read-more-hp {
+      font-family: sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #1f2428;
+      text-decoration: none;
+    }
+
+    .main-news-featured .read-more-hp:hover { color: #666; }
+
+    .main-news-featured .news-art-wrap {
+      flex: 0 0 40%;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+
+    .main-news-featured .news-art {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      border-radius: 2px;
+      transition: transform 0.6s ease;
+    }
+
+    .main-news-featured:hover .news-art {
+      transform: scale(1.03);
+    }
+
+    .front-page-sections .news-skeleton {
+      color: #bbb;
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+    }
+
+    /* ── French sidebar: video card ── */
+    .fr-sidebar {
+      flex: 0 0 28%;
+      min-width: 0;
+      background: transparent;
+    }
+
+    .fr-video-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: #F7F8F9;
+    }
+
+    .fr-video-card:hover .fr-cover-img { transform: scale(1.03); }
+
+    .fr-cover-wrap {
+      overflow: hidden;
+      border-radius: 2px;
+      margin-bottom: 16px;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .fr-cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .fr-cover-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .fr-cover-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .fr-cover-play svg {
+      width: 44px;
+      height: 44px;
+      opacity: 0.75;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+    }
+
+    .fr-sidebar .label {
+      font-family: sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #999;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .fr-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      font-weight: 400;
+      color: #1f2428;
+      display: block;
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+
+    .fr-ipa {
+      font-family: 'Crimson Text', serif;
+      font-size: 0.85rem;
+      color: #999;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .fr-caption {
+      font-family: 'Crimson Text', serif;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #555;
+      margin: 0 0 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .fr-link {
+      font-family: sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #1f2428;
+      text-decoration: none;
+    }
+
+    .fr-link:hover { color: #666; }
+
+    @media (max-width: 860px) {
+      .front-page-sections {
+        flex-direction: column;
+        gap: 40px;
+        margin: 48px auto;
+      }
+      .main-news-featured,
+      .fr-sidebar { flex: none; width: 100%; }
+      .main-news-featured .news-inner { flex-direction: column; }
+      .main-news-featured .news-art-wrap { flex: none; width: 100%; }
+    }
+
+    @media (max-width: 600px) {
+      .main-news-featured h2 { font-size: 1.6rem; }
+    }
+    /* ── Voyage section ─────────────────────────────────────── */
+    .hp-voyage {
+      max-width: 1100px;
+      margin: 120px auto;
+      padding: 0 16px;
+    }
+
+    .hp-section-label {
+      font-family: sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #999;
+      display: block;
+      margin-bottom: 40px;
+    }
+
+    .voyage-layout {
+      display: grid;
+      grid-template-columns: 62% 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px 28px;
+      align-items: start;
+    }
+
+    .voyage-hero-img {
+      grid-column: 1;
+      grid-row: 1 / 3;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+
+    .voyage-hero-img img {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.8s ease;
+    }
+
+    .voyage-hero-img:hover img { transform: scale(1.03); }
+
+    .voyage-text {
+      grid-column: 2;
+      grid-row: 1;
+      padding-top: 40px;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .voyage-text h2 {
+      font-family: 'EB Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      font-style: italic;
+      color: #1A1A1A;
+      line-height: 1.2;
+      margin: 0 0 14px;
+    }
+
+    .voyage-text h3 {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: #1A1A1A;
+      line-height: 1.4;
+      margin: 0 0 20px;
+    }
+
+    .voyage-text p {
+      font-family: 'Crimson Text', serif;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #555;
+      margin: 0 0 24px;
+    }
+
+    .voyage-secondary-img {
+      grid-column: 2;
+      grid-row: 2;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+
+    .voyage-secondary-img img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.8s ease;
+    }
+
+    .voyage-secondary-img:hover img { transform: scale(1.04); }
+
+    .hp-link {
+      font-family: sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #1f2428;
+      text-decoration: none;
+    }
+
+    .hp-link:hover { color: #777; }
+
+    /* ── Reading / Marginalia section ───────────────────────── */
+    .hp-reading {
+      max-width: 1100px;
+      margin: 120px auto;
+      padding: 0 16px;
+      background: #F7F8F9;
+    }
+
+    .reading-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 52px;
+      align-items: start;
+    }
+
+    .reading-cover {
+      position: sticky;
+      top: 80px;
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.08));
+    }
+
+    .reading-cover img {
+      width: 100%;
+      display: block;
+      border-radius: 2px;
+    }
+
+    .reading-cover .cover-caption {
+      font-family: sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #aaa;
+      display: block;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .reading-body blockquote {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      line-height: 1.5;
+      color: #1a1a1a;
+      margin: 0 0 40px;
+      padding: 0 0 32px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .reading-body blockquote cite {
+      display: block;
+      font-style: normal;
+      font-size: 0.85rem;
+      font-family: sans-serif;
+      letter-spacing: 0.1em;
+      color: #aaa;
+      margin-top: 16px;
+      text-transform: uppercase;
+    }
+
+    .reading-list-label {
+      font-family: sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #999;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .book-entry-new {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 0.5px solid #EAEAEA;
+    }
+
+    .book-entry-new:last-of-type { border-bottom: none; }
+
+    .book-entry-new .ben-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #1a1a1a;
+    }
+
+    .book-entry-new .ben-author {
+      font-family: 'Crimson Text', serif;
+      font-size: 0.9rem;
+      color: #999;
+      text-align: right;
+      white-space: nowrap;
+      margin-left: 16px;
+    }
+
+    @media (max-width: 860px) {
+      .voyage-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+      .voyage-hero-img { grid-row: 1; }
+      .voyage-text     { grid-row: 2; grid-column: 1; padding-top: 0; }
+      .voyage-secondary-img { grid-row: 3; grid-column: 1; }
+      .voyage-hero-img img { height: 320px; }
+
+      .reading-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .reading-cover { position: static; display: flex; gap: 20px; align-items: flex-start; }
+      .reading-cover img { width: 120px; }
+    }
+
+    /* ── Reading Log section ────────────────────────────────── */
+    .reading-log {
+      max-width: 1100px;
+      margin: 120px auto;
+      padding: 0 16px;
+      border-top: 1px solid #1A1A1A;
+      padding-top: 48px;
+    }
+
+    .reading-log-inner {
+      display: grid;
+      grid-template-columns: 30% 1fr;
+      gap: 60px;
+      align-items: start;
+      margin-top: 3rem; /* ~2 blank lines */
+    }
+
+    /* Left: current read card */
+    .rl-current {
+      position: sticky;
+      top: 80px;
+    }
+
+    .rl-current .rl-card-label {
+      font-family: sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #CC0000;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .rl-current img {
+      width: 100%;
+      display: block;
+      border-radius: 2px;
+      box-shadow: 3px 6px 20px rgba(0,0,0,0.10);
+      margin-bottom: 18px;
+    }
+
+    .rl-current .rl-book-title {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: #1f2428;
+      display: block;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .rl-current .rl-book-author {
+      font-family: 'Crimson Text', serif;
+      font-size: 0.95rem;
+      color: #888;
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .rl-archive .rl-author em,
+    .rl-current .rl-book-author em {
+      font-style: italic;
+      font-family: 'EB Garamond', serif;
+      font-size: 1em;
+      color: #aaa;
+      margin-right: 4px;
+    }
+
+    .rl-current .rl-progress {
+      font-family: sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #bbb;
+    }
+
+    .rl-current .rl-progress-bar {
+      width: 100%;
+      height: 2px;
+      background: #e8e8e8;
+      margin-top: 8px;
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .rl-current .rl-progress-fill {
+      height: 100%;
+      background: #1f2428;
+      border-radius: 1px;
+      transition: width 1s ease;
+    }
+
+    /* Right: archive list */
+    .rl-archive {}
+
+    .rl-archive .rl-year-group {
+      margin-bottom: 40px;
+    }
+
+    .rl-archive .rl-year {
+      font-family: sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #bbb;
+      display: block;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .rl-archive .rl-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 11px 0;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 20px;
+      line-height: 1.8;
+    }
+
+    .rl-archive .rl-entry:last-child { border-bottom: none; }
+
+    .rl-entry-left {}
+
+    .rl-entry .rl-title {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: #1f2428;
+      display: block;
+    }
+
+    .rl-entry .rl-author {
+      font-family: 'Crimson Text', serif;
+      font-size: 0.9rem;
+      color: #888;
+      display: block;
+    }
+
+    .rl-entry .rl-tag {
+      font-family: sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #bbb;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 860px) {
+      .reading-log-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .rl-current {
+        position: static;
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      .rl-current img { margin-bottom: 0; }
+    }
+
+    @media (max-width: 600px) {
+      .reading-log { margin: 72px auto; }
+      .rl-current { grid-template-columns: 1fr; }
+    }
   </style>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -565,33 +1408,288 @@
         <a href="social.html" data-zh="写作" data-en="Writing" data-fr="Writing">Writing<span data-zh="写作" data-en="Writing" data-fr="Writing">写作</span></a>
         <a href="french.html" data-zh="语言" data-en="Français" data-fr="Français">Français<span data-zh="法语" data-en="Français" data-fr="Français">法语</span></a>
         <a href="vibe.html" data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">Vibe Coding<span data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">AI编程</span></a>
+        <div class="lang lang-in-nav" aria-label="language switch">
+          <button id="btn-zh-m" type="button">ZH</button>
+          <button id="btn-en-m" type="button">EN</button>
+          <button id="btn-fr-m" type="button">FR</button>
+        </div>
       </nav>
       <div class="nav-overlay" id="nav-overlay"></div>
+      <div class="topbar-nav-rule" aria-hidden="true"></div>
     </header>
 
     <section class="hero">
       <div class="hero-main">
-        <p class="hero-epigraph" data-zh="经思考的生活" data-en="A reflective life" data-fr="Une vie réfléchie">经思考的生活</p>
+        <p class="hero-epigraph" data-zh="Une vie pensée" data-en="Une vie pensée" data-fr="Une vie pensée">Une vie pensée</p>
         <h1 id="title-main" data-zh="「经过思考的生活，是一种自由的实践。」" data-en="“A considered life is a practice of freedom.”" data-fr="“Une vie pensée est une pratique de liberté.”">「经过思考的生活，是一种自由的实践。」</h1>
       </div>
       <div class="hero-scroll" data-zh="向下" data-en="Scroll" data-fr="Défiler">向下</div>
     </section>
 
-    <main class="content-grid">
-      <section id="citations" class="panel span-4">
-        <ul class="quotes">
-          <li>
-            "On ne naît pas femme&nbsp;: on le devient."
-            <span class="quote-name">— Simone de Beauvoir</span>
-          </li>
-        </ul>
-      </section>
-    </main>
+    <!-- ── Front-page dual column: News + French ── -->
+    <div class="front-page-sections">
+
+      <!-- Left: News featured (65%) -->
+      <div class="main-news-featured" id="homepage-news">
+        <span class="news-skeleton">正在加载新闻…</span>
+      </div>
+
+      <!-- Right: French sidebar (30%) -->
+      <aside class="fr-sidebar">
+        <span class="label">FRANÇAIS · VIDÉO DU JOUR</span>
+        <a class="fr-video-card" href="french.html" id="fr-video-card">
+          <div class="fr-cover-wrap">
+            <video id="fr-cover-video" muted loop playsinline
+              src="/media/marilyn-monroe-consumed-by-myths.mp4"
+              poster="/media/nice-01.jpg"
+              style="width:100%;height:100%;object-fit:cover;display:block;">
+            </video>
+            <div class="fr-cover-play">
+              <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="30" cy="30" r="29" fill="rgba(255,255,255,0.25)" stroke="white" stroke-width="1.5"/>
+                <polygon points="24,18 46,30 24,42" fill="white"/>
+              </svg>
+            </div>
+          </div>
+          <span class="fr-title" id="fr-word">sérendipité</span>
+          <span class="fr-ipa" id="fr-ipa">/se.ʁɑ̃.di.pi.te/</span>
+          <p class="fr-caption" id="fr-def">偶然发现美好事物的能力——仿佛世界决定对你展示善意。</p>
+        </a>
+        <a class="fr-link" href="french.html">EXPLORER LE FRANÇAIS →</a>
+      </aside>
+
+    </div>
+
+    <!-- ── Voyage section ── -->
+    <section class="hp-voyage">
+      <span class="hp-section-label">Voyage · 旅行</span>
+      <div class="voyage-layout">
+
+        <div class="voyage-hero-img">
+          <img src="/media/provence-06.jpg" alt="普罗旺斯旅途" loading="lazy">
+        </div>
+
+        <div class="voyage-text">
+          <h2><em>Je ne cherche pas,<br>je trouve.</em></h2>
+          <h3>我不刻意寻找，只是刚好发现。</h3>
+          <p>旅行不是刻意寻找美和灵感，只是刚好遇见。</p>
+          <a class="hp-link" href="travel.html">VOIR LE VOYAGE →</a>
+        </div>
+
+        <div class="voyage-secondary-img">
+          <img src="/media/cinqueterre-06.jpg" alt="五渔村" loading="lazy">
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Reading Log ── -->
+    <section class="reading-log">
+      <span class="hp-section-label" style="display:block;max-width:1100px;margin:0 auto;padding:0 16px;">Books &amp; Culture · 读书与文化</span>
+      <div class="reading-log-inner">
+
+        <!-- Left 30%: Current Read -->
+        <div class="rl-current">
+          <img src="/cover-sartre.jpg" alt="萨特《存在与虚无》" loading="lazy">
+          <img src="/cover-world-understanding.jpg" alt="我们如何理解这个世界" loading="lazy"
+            onerror="this.style.display='none'" style="margin-top:16px">
+          <span class="rl-book-title">我们如何理解这个世界</span>
+          <span class="rl-book-author"><em>By</em> 齐格蒙特·鲍曼</span>
+          <span class="rl-card-label" style="margin-top:12px;">Current Read · 正在阅读</span>
+          <span class="rl-progress">社会学对谈录 · 进行中</span>
+          <div class="rl-progress-bar"><div class="rl-progress-fill" style="width:22%"></div></div>
+          <a class="hp-link" href="reading.html" style="display:block;margin-top:20px;font-size:0.75rem">VIEW ALL BOOKS →</a>
+        </div>
+
+        <!-- Right 70%: Archive -->
+        <div class="rl-archive">
+
+          <div class="rl-year-group">
+            <span class="rl-year">2026</span>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">我走不出我的黑夜</span>
+                <span class="rl-author"><em>By</em> Annie Ernaux &amp; Marc Marie</span>
+              </div>
+              <span class="rl-tag">Annie Ernaux · 随笔</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">伊比利亚的味道</span>
+                <span class="rl-author"><em>By</em> David Gentilcore</span>
+              </div>
+              <span class="rl-tag">饮食文化史</span>
+            </div>
+          </div>
+
+          <div class="rl-year-group">
+            <span class="rl-year">2025</span>
+
+            <!-- Annie Ernaux works grouped -->
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">简单的激情</span>
+                <span class="rl-author"><em>By</em> 安妮·埃尔诺 [法]</span>
+              </div>
+              <span class="rl-tag">Annie Ernaux · 自传</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">年轻男人</span>
+                <span class="rl-author"><em>By</em> 安妮·埃尔诺 [法]</span>
+              </div>
+              <span class="rl-tag">Annie Ernaux · 自传</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">一个女人的故事</span>
+                <span class="rl-author"><em>By</em> 安妮·埃尔诺 [法]</span>
+              </div>
+              <span class="rl-tag">Annie Ernaux · 自传</span>
+            </div>
+
+            <!-- Other 2025 books -->
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">后殖民主义</span>
+                <span class="rl-author"><em>By</em> 牛津通识系列 [英]</span>
+              </div>
+              <span class="rl-tag">文化理论</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">汉娜·阿伦特与以赛亚·柏林——自由、政治与人性</span>
+                <span class="rl-author"><em>By</em> 蛭田圭 [日]</span>
+              </div>
+              <span class="rl-tag">政治思想</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">山居岁月——普罗旺斯的一年</span>
+                <span class="rl-author"><em>By</em> 彼得·梅尔 [英]</span>
+              </div>
+              <span class="rl-tag">生活随笔</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">吃懂法兰西</span>
+                <span class="rl-author"><em>By</em> 彼得·梅尔 [英]</span>
+              </div>
+              <span class="rl-tag">饮食文化</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">裸露的尺度——泳衣文化史</span>
+                <span class="rl-author"><em>By</em> 奥黛莉·米耶 [法]</span>
+              </div>
+              <span class="rl-tag">文化史</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">实现自我：神经症与人的成长</span>
+                <span class="rl-author"><em>By</em> 卡伦·霍妮 [美]</span>
+              </div>
+              <span class="rl-tag">心理学</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">音乐与生命</span>
+                <span class="rl-author"><em>By</em> 坂本龙一 &amp; 福冈申一 [日]</span>
+              </div>
+              <span class="rl-tag">文化随笔</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">穿衣自由？时尚背后的文化与抗争</span>
+                <span class="rl-author"><em>By</em> 韦罗妮克·海兰 [美]</span>
+              </div>
+              <span class="rl-tag">文化批评</span>
+            </div>
+            <div class="rl-entry">
+              <div class="rl-entry-left">
+                <span class="rl-title">人的境况</span>
+                <span class="rl-author"><em>By</em> 汉娜·阿伦特 [美]</span>
+              </div>
+              <span class="rl-tag">政治哲学</span>
+            </div>
+          </div>
+
+          <a class="hp-link" href="reading.html">VIEW FULL READING LIST →</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Author Bio Container ── -->
+    <div class="author-bio-container">
+      <div class="author-bio-inner">
+        <img class="author-avatar" id="author-avatar-img" src="/static/assets/avatar/meiya_current.jpg" alt="美芽 MeiYa"
+          onerror="this.style.display='none';document.getElementById('author-avatar-fallback').style.display='flex'">
+        <div class="author-avatar-fallback" id="author-avatar-fallback" style="display:none">M</div>
+
+        <span class="author-name">美芽 MeiYa</span>
+        <span class="author-role">Vibe Coder · 氛围编程者</span>
+        <p class="author-bio-text">在流动中记录生活。</p>
+
+        <div class="social-matrix-layout">
+          <!-- 小红书 -->
+          <a class="social-matrix-item" id="xhs-link" href="#" aria-label="小红书" title="小红书">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.59 7.13c-.16-.41-.4-.78-.7-1.09a3.27 3.27 0 0 0-1.09-.7A3.36 3.36 0 0 0 16.5 5H12V3h-2v2H7.5c-.45 0-.89.08-1.3.24a3.27 3.27 0 0 0-1.09.7c-.3.31-.54.68-.7 1.09A3.36 3.36 0 0 0 4.17 8.5v7c0 .45.08.89.24 1.3.16.41.4.78.7 1.09.31.3.68.54 1.09.7.41.16.85.24 1.3.24h9c.45 0 .89-.08 1.3-.24a3.27 3.27 0 0 0 1.09-.7c.3-.31.54-.68.7-1.09.16-.41.24-.85.24-1.3v-7c0-.45-.08-.89-.24-1.3zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.5-8.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-4.5 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+            </svg>
+            <span class="social-id-label" id="xhs-id">186323681</span>
+          </a>
+          <!-- Bilibili -->
+          <a class="social-matrix-item" id="bili-link" href="https://space.bilibili.com/15076025/upload/video" aria-label="Bilibili" title="Bilibili">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+            </svg>
+            <span class="social-id-label" id="bili-id">zaoanmeiya</span>
+          </a>
+          <!-- Instagram -->
+          <a class="social-matrix-item" id="ig-link" href="#" aria-label="Instagram" title="Instagram">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+            <span class="social-id-label" id="ig-id">meiyagao00</span>
+          </a>
+        </div>
+
+        <a class="hp-link" href="about.html">READ MORE →</a>
+      </div>
+    </div>
 
     <footer id="footer-text">© 2026 Une vie pensée. Chez Meiya.</footer>
   </div>
 
   <script>
+    // Navbar shrink on scroll
+    (function() {
+      const topbar = document.querySelector('.topbar');
+      const hero = document.querySelector('.hero');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          topbar.classList.add('navbar-shrunk');
+          if (hero) {
+            hero.style.opacity = '0';
+            hero.style.pointerEvents = 'none';
+            hero.style.maxHeight = '0';
+            hero.style.overflow = 'hidden';
+            hero.style.padding = '0';
+          }
+        } else {
+          topbar.classList.remove('navbar-shrunk');
+          if (hero) {
+            hero.style.opacity = '';
+            hero.style.pointerEvents = '';
+            hero.style.maxHeight = '';
+            hero.style.overflow = '';
+            hero.style.padding = '';
+          }
+        }
+      }, { passive: true });
+    })();
+
     const languageStore = {
       zh: {
         htmlLang: "zh-CN",
@@ -620,7 +1718,8 @@
       const pack = languageStore[lang];
       document.documentElement.lang = pack.htmlLang;
       document.getElementById("title-main").textContent = pack.titleMain;
-      document.getElementById("signature-translation").textContent = pack.signatureTranslation;
+      const sigEl = document.getElementById("signature-translation");
+      if (sigEl) sigEl.textContent = pack.signatureTranslation;
       document.getElementById("footer-text").textContent = pack.footer;
 
       document.querySelectorAll("[data-zh][data-en][data-fr]").forEach((node) => {
@@ -630,6 +1729,13 @@
       document.getElementById("btn-zh").classList.toggle("active", lang === "zh");
       document.getElementById("btn-en").classList.toggle("active", lang === "en");
       document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
+      // Sync mobile nav lang buttons
+      const mZh = document.getElementById("btn-zh-m");
+      const mEn = document.getElementById("btn-en-m");
+      const mFr = document.getElementById("btn-fr-m");
+      if (mZh) mZh.classList.toggle("active", lang === "zh");
+      if (mEn) mEn.classList.toggle("active", lang === "en");
+      if (mFr) mFr.classList.toggle("active", lang === "fr");
     }
 
     const navToggle = document.getElementById("nav-toggle");
@@ -686,6 +1792,112 @@
     document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
     document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
     document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+
+    // Mobile nav lang buttons
+    const btnZhM = document.getElementById("btn-zh-m");
+    const btnEnM = document.getElementById("btn-en-m");
+    const btnFrM = document.getElementById("btn-fr-m");
+    if (btnZhM) btnZhM.addEventListener("click", () => { setLanguage("zh"); closeMobileNav(); });
+    if (btnEnM) btnEnM.addEventListener("click", () => { setLanguage("en"); closeMobileNav(); });
+    if (btnFrM) btnFrM.addEventListener("click", () => { setLanguage("fr"); closeMobileNav(); });
+
+    /* ── Homepage news fetch ── */
+    (async function loadHomepageNews() {
+      const container = document.getElementById("homepage-news");
+      try {
+        const res = await fetch("/api/news/public");
+        if (!res.ok) throw new Error("API error");
+        const items = await res.json();
+        const article = items[0];
+        if (!article) { container.innerHTML = '<span class="news-skeleton">暂无新闻</span>'; return; }
+
+        const date = article.date
+          ? new Date(article.date).toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })
+          : "";
+        const imgHtml = article.image_path
+          ? `<div class="news-art-wrap"><img class="news-art" src="${article.image_path}" alt="${article.title}" loading="lazy"></div>`
+          : "";
+        const rawPreview = article.summary_cn || article.content_cn || "";
+        const preview = rawPreview.replace(/Source:.*?(\n|$)/g, "").replace(/Link:.*?(\n|$)/g, "").trim();
+
+        container.innerHTML = `
+          <div class="news-inner">
+            <div class="news-text">
+              <span class="news-label">${date}</span>
+              <h2>${article.title}</h2>
+              <p class="news-preview">${preview}</p>
+              <a class="read-more-hp" href="news.html?id=${article.id}">READ FULL ARTICLE →</a>
+            </div>
+            ${imgHtml}
+          </div>
+        `;
+      } catch (e) {
+        container.innerHTML = '<span class="news-skeleton">新闻加载失败，请刷新重试。</span>';
+      }
+    })();
+
+    /* ── French video card: daily word rotation ── */
+    const frWords = [
+      { word: "sérendipité",  ipa: "/se.ʁɑ̃.di.pi.te/",  caption: "偶然发现美好事物的能力——仿佛世界决定对你展示善意。" },
+      { word: "dépaysement",  ipa: "/de.pei.iz.mɑ̃/",     caption: "离开熟悉环境后那种令人愉悦的迷失感，让精神得以松绑。" },
+      { word: "flâner",       ipa: "/flɑ.ne/",            caption: "漫无目的地闲逛，让城市的街巷与光影向你说话。" },
+      { word: "mélancolie",   ipa: "/me.lɑ̃.kɔ.li/",      caption: "一种温柔的忧郁——它悖论地包含着某种美感与深度。" },
+      { word: "ineffable",    ipa: "/i.nɛ.fabl/",         caption: "超越语言之物——那些美丽或真理，词语只能无限趋近。" },
+      { word: "lumière",      ipa: "/ly.mjɛʁ/",           caption: "字面是照亮黑暗的光；引申为驱散心灵遮蔽的知识。" },
+      { word: "nostalgie",    ipa: "/nɔs.tal.ʒi/",        caption: "对被理想化的过去的忧思——不是渴望回到那个地方，而是渴望回到那个自己。" },
+    ];
+    const today = new Date();
+    const dayIndex = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000) % frWords.length;
+    const fw = frWords[dayIndex];
+    document.getElementById("fr-word").textContent = fw.word;
+    document.getElementById("fr-ipa").textContent = fw.ipa;
+    document.getElementById("fr-def").textContent = fw.caption;
+
+    /* autoplay video on hover */
+    const frVideo = document.getElementById("fr-cover-video");
+    const frCard  = document.getElementById("fr-video-card");
+    if (frVideo && frCard) {
+      frCard.addEventListener("mouseenter", () => frVideo.play().catch(() => {}));
+      frCard.addEventListener("mouseleave", () => { frVideo.pause(); frVideo.currentTime = 0; });
+    }
+
+    /* ── Load branding settings from API ── */
+    (async function loadBranding() {
+      try {
+        const res = await fetch("/api/branding/public");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.avatar_path) {
+          const img = document.getElementById("author-avatar-img");
+          const fallback = document.getElementById("author-avatar-fallback");
+          if (img) {
+            // Reset in case onerror already fired on initial load
+            img.style.display = "block";
+            if (fallback) fallback.style.display = "none";
+            // Cache-bust so browser always fetches the latest uploaded avatar
+            img.src = data.avatar_path + "?t=" + Date.now();
+          }
+        }
+        if (data.bilibili_id) {
+          const el = document.getElementById("bili-id");
+          if (el) el.textContent = data.bilibili_id;
+          const link = document.getElementById("bili-link");
+          if (link) link.href = `https://space.bilibili.com/${data.bilibili_id}/upload/video`;
+        }
+        if (data.instagram_id) {
+          const el = document.getElementById("ig-id");
+          if (el) el.textContent = data.instagram_id;
+          const link = document.getElementById("ig-link");
+          if (link) link.href = `https://instagram.com/${data.instagram_id}`;
+        }
+        if (data.xiaohongshu_id) {
+          const el = document.getElementById("xhs-id");
+          if (el) el.textContent = data.xiaohongshu_id;
+          const link = document.getElementById("xhs-link");
+          if (link) link.href = `https://www.xiaohongshu.com/user/profile/${data.xiaohongshu_id}`;
+        }
+      } catch (e) { /* silent fail - defaults shown */ }
+    })();
   </script>
 </body>
 </html>
