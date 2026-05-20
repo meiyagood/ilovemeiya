@@ -770,47 +770,10 @@
       }
       .hero-main { padding: 48px 20px; }
 
-      /* ── 手机端收缩态：覆盖桌面收缩规则，保持手机布局 ── */
+      /* ── 手机端收缩态：直接隐藏导航栏 ── */
       .topbar.navbar-shrunk {
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-start;
-        padding: 0;
-      }
-      .topbar.navbar-shrunk .topbar-header {
-        position: static;
-        justify-content: space-between;
-        padding: 10px 0;
-        transform: none;
-        right: auto;
-        top: auto;
-      }
-      .topbar.navbar-shrunk .nav-toggle {
-        display: inline-block;
-      }
-      .topbar.navbar-shrunk .nav {
-        /* 保持抽屉菜单不变 */
-        max-width: none;
-        overflow: visible;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: min(62vw, 260px);
-        height: 100vh;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: 12px;
-        padding: 84px 14px 20px;
-        border-bottom: none;
-        border-right: 1px solid #1f2428;
-        background: #fcfaf6;
-        transform: translateX(-110%);
-        z-index: 25;
-      }
-      body.nav-open .topbar.navbar-shrunk .nav {
-        transform: translateX(0);
+        transform: translateY(-110%);
+        pointer-events: none;
       }
     }
 
@@ -1710,9 +1673,22 @@
     (function() {
       const topbar = document.querySelector('.topbar');
       const hero = document.querySelector('.hero');
+      const isMobile = () => window.innerWidth <= 680;
+
       window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
-          topbar.classList.add('navbar-shrunk');
+          if (isMobile()) {
+            // 手机端：直接隐藏整个导航栏
+            topbar.style.transform = 'translateY(-100%)';
+            topbar.style.opacity = '0';
+            topbar.style.pointerEvents = 'none';
+          } else {
+            // 桌面端：收缩效果
+            topbar.style.transform = '';
+            topbar.style.opacity = '';
+            topbar.style.pointerEvents = '';
+            topbar.classList.add('navbar-shrunk');
+          }
           if (hero) {
             hero.style.opacity = '0';
             hero.style.pointerEvents = 'none';
@@ -1721,6 +1697,10 @@
             hero.style.padding = '0';
           }
         } else {
+          // 回到顶部：恢复导航栏
+          topbar.style.transform = '';
+          topbar.style.opacity = '';
+          topbar.style.pointerEvents = '';
           topbar.classList.remove('navbar-shrunk');
           if (hero) {
             hero.style.opacity = '';
