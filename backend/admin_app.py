@@ -242,6 +242,70 @@ def api_quote_current():
 
 
 # ──────────────────────────────────────────────────────────
+# Post 路由：动态管理
+# ──────────────────────────────────────────────────────────
+
+@app.route("/une-vie-admin/post/create", methods=["POST"])
+@login_required
+def post_create():
+    """发布新动态，写入 DailyLog 表。"""
+    from app.models import DailyLog
+    content = request.form.get("content", "").strip()
+    title   = request.form.get("title", "").strip()
+
+    if not content:
+        flash("内容不能为空。", "error")
+        return redirect(url_for("admin_dashboard"))
+
+    db = SessionLocal()
+    try:
+        log = DailyLog(title=title, content=content, is_published=True)
+        db.add(log)
+        db.commit()
+        flash("动态已发布！", "success")
+    except Exception as e:
+        db.rollback()
+        flash(f"发布失败：{e}", "error")
+    finally:
+        db.close()
+
+    return redirect(url_for("admin_dashboard"))
+
+
+@app.route("/une-vie-admin/post/<int:post_id>/delete", methods=["POST"])
+@login_required
+def post_delete(post_id: int):
+    """删除指定动态。"""
+    from app.models import DailyLog
+    db = SessionLocal()
+    try:
+        post = db.query(DailyLog).filter(DailyLog.id == post_id).first()
+        if post:
+            db.delete(post)
+            db.commit()
+            flash("动态已删除。", "success")
+        else:
+            flash("动态不存在。", "error")
+    except Exception as e:
+        db.rollback()
+        flash(f"删除失败：{e}", "error")
+    finally:
+        db.close()
+    return redirect(url_for("admin_dashboard"))
+
+
+# ──────────────────────────────────────────────────────────
+# Miniapp 路由：小程序其他配置（占位）
+# ──────────────────────────────────────────────────────────
+
+@app.route("/une-vie-admin/miniapp/save", methods=["POST"])
+@login_required
+def miniapp_save():
+    flash("小程序配置已保存。", "success")
+    return redirect(url_for("admin_dashboard") + "#miniapp")
+
+
+# ──────────────────────────────────────────────────────────
 # 入口
 # ──────────────────────────────────────────────────────────
 
