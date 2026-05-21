@@ -590,14 +590,62 @@
     <!-- ══ PANEL: Mini Program Config ══ -->
     <section class="panel" id="panel-miniapp">
 
-      <p class="section-label">Focus &amp; Milestone 小程序配置</p>
+      <p class="section-label">添加新语录</p>
+
+      <form method="post" action="/une-vie-admin/quote/add">
+        <div class="form-group">
+          <label class="form-label" for="q-content">语录内容</label>
+          <textarea id="q-content" name="content" placeholder="真正的秩序，从自我观察开始。" required style="min-height:80px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="q-source">来源 / 作者（可选）</label>
+          <input type="text" id="q-source" name="source" placeholder="萨特 / 个人反思" />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">添加语录</button>
+        </div>
+      </form>
+
+      <hr class="section-rule" />
+      <p class="section-label">语录库（点击「设为展示」激活前台）</p>
+
+      <div class="posts-list">
+        {% if quotes %}
+          {% for q in quotes %}
+          <div class="post-item">
+            <div class="post-body">
+              {% if q.is_current %}
+                <p class="post-category" style="color:#2a6e4a;">▶ 当前展示中</p>
+              {% else %}
+                <p class="post-category">语录</p>
+              {% endif %}
+              <p class="post-excerpt">{{ q.content }}</p>
+              {% if q.source %}
+                <p class="post-date">— {{ q.source }}</p>
+              {% endif %}
+            </div>
+            <div class="post-actions">
+              {% if not q.is_current %}
+              <form method="post" action="/une-vie-admin/quote/toggle/{{ q.id }}">
+                <button type="submit" class="btn btn-ghost" style="font-size:9px;padding:5px 12px;white-space:nowrap;">设为展示</button>
+              </form>
+              {% endif %}
+              <form method="post" action="/une-vie-admin/quote/delete/{{ q.id }}" onsubmit="return confirm('确认删除此语录？')">
+                <button type="submit" class="btn btn-danger">删除</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p style="color:var(--muted);font-size:14px;padding:20px 0;">暂无语录，请在上方表单中添加第一条。</p>
+        {% endif %}
+      </div>
+
+      <hr class="section-rule" />
+      <p class="section-label">小程序其他配置</p>
 
       <form method="post" action="/une-vie-admin/miniapp/save">
         <table class="config-table">
-          <tr>
-            <td>每日语录</td>
-            <td><input type="text" name="daily_quote" placeholder="今日语录：真正的秩序，从自我观察开始。" /></td>
-          </tr>
           <tr>
             <td>当前里程碑</td>
             <td><input type="text" name="milestone" placeholder="荷德法之旅 · July 2026" /></td>
@@ -616,7 +664,6 @@
             </td>
           </tr>
         </table>
-
         <div class="form-actions" style="margin-top: 32px;">
           <button type="submit" class="btn btn-primary">保存配置</button>
         </div>

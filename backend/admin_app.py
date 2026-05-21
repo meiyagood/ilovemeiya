@@ -11,6 +11,7 @@ FastAPI 主服务（port 8000）负责 JSON API；本应用负责服务端渲染
 from __future__ import annotations
 
 import os
+import sys
 from datetime import timedelta
 from functools import wraps
 
@@ -19,6 +20,7 @@ import secrets
 from flask import (
     Flask,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
@@ -26,11 +28,19 @@ from flask import (
     url_for,
 )
 
+# 将 backend/ 加入路径，以便导入 app 包（models, database）
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, BASE_DIR)
+
+from app.database import SessionLocal, engine
+from app.models import Base, Quote
+
+# 确保表存在（仅建新表，不删旧表）
+Base.metadata.create_all(bind=engine)
+
 # ──────────────────────────────────────────────────────────
 # 应用初始化
 # ──────────────────────────────────────────────────────────
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(
     __name__,
@@ -44,6 +54,19 @@ app.permanent_session_lifetime = timedelta(hours=24)
 
 # 后台通行密码（单密码极简模式）
 ADMIN_PASSPHRASE: str | None = os.getenv("ADMIN_PASSPHRASE")
+
+
+# ──────────────────────────────────────────────────────────
+# 数据库辅助
+# ──────────────────────────────────────────────────────────
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 # ──────────────────────────────────────────────────────────
 # 登录保护装饰器
@@ -59,15 +82,24 @@ def login_required(f):
 
 
 # ──────────────────────────────────────────────────────────
-# 路由
+# 后台主页
 # ──────────────────────────────────────────────────────────
 
 @app.route("/une-vie-admin")
 @login_required
 def admin_dashboard():
     """后台主页——未登录时自动跳转到登录页。"""
-    return render_template("admin_dashboard.html", posts=[])
+    db = SessionLocal()
+    try:
+        quotes = db.query(Quote).order_by(Quote.created_at.desc()).all()
+    finally:
+        db.close()
+    return render_template("admin_dashboard.html", posts=[], quotes=quotes)
 
+
+# ──────────────────────────────────────────────────────────
+# 登录 / 退出
+# ──────────────────────────────────────────────────────────
 
 @app.route("/une-vie-admin/login", methods=["GET"])
 def admin_login():
@@ -101,6 +133,112 @@ def admin_logout():
     session.clear()
     flash("已安全退出后台。", "info")
     return redirect(url_for("admin_login"))
+
+
+# ──────────────────────────────────────────────────────────
+# Quote 路由：Focus & Milestone 语录管理
+# ──────────────────────────────────────────────────────────
+
+@app.route("/une-vie-admin/quote/add", methods=["POST"])
+@login_required
+def quote_add():
+    """添加新语录。表单字段：content（必填）、source（可选）。"""
+    content = request.form.get("content", "").strip()
+    source = request.form.get("source", "").strip()
+
+    if not content:
+        flash("语录内容不能为空。", "error")
+        return redirect(url_for("admin_dashboard") + "#miniapp")
+
+    db = SessionLocal()
+    try:
+        quote = Quote(content=content, source=source, is_current=False)
+        db.add(quote)
+        db.commit()
+        flash(f"语录已添加：{content[:40]}…" if len(content) > 40 else f"语录已添加：{content}", "success")
+    except Exception as e:
+        db.rollback()
+        flash(f"添加失败：{e}", "error")
+    finally:
+        db.close()
+
+    return redirect(url_for("admin_dashboard") + "#miniapp")
+
+
+@app.route("/une-vie-admin/quote/toggle/<int:quote_id>", methods=["POST"])
+@login_required
+def quote_toggle(quote_id: int):
+    """
+    将指定语录设为前台激活（is_current=True），
+    同时将其他所有语录的 is_current 设为 False，保证唯一性。
+    支持 JSON（AJAX）和表单（form）两种请求方式。
+    """
+    db = SessionLocal()
+    try:
+        target = db.query(Quote).filter(Quote.id == quote_id).first()
+        if not target:
+            if request.is_json:
+                return jsonify({"ok": False, "error": "语录不存在"}), 404
+            flash("语录不存在。", "error")
+            return redirect(url_for("admin_dashboard") + "#miniapp")
+
+        # 清空所有 is_current，再激活目标
+        db.query(Quote).update({"is_current": False})
+        target.is_current = True
+        db.commit()
+
+        if request.is_json:
+            return jsonify({"ok": True, "active_id": quote_id})
+
+        flash(f"「{target.content[:30]}」已设为今日展示。", "success")
+    except Exception as e:
+        db.rollback()
+        if request.is_json:
+            return jsonify({"ok": False, "error": str(e)}), 500
+        flash(f"操作失败：{e}", "error")
+    finally:
+        db.close()
+
+    return redirect(url_for("admin_dashboard") + "#miniapp")
+
+
+@app.route("/une-vie-admin/quote/delete/<int:quote_id>", methods=["POST"])
+@login_required
+def quote_delete(quote_id: int):
+    """删除指定语录。"""
+    db = SessionLocal()
+    try:
+        quote = db.query(Quote).filter(Quote.id == quote_id).first()
+        if not quote:
+            flash("语录不存在。", "error")
+        else:
+            db.delete(quote)
+            db.commit()
+            flash("语录已删除。", "success")
+    except Exception as e:
+        db.rollback()
+        flash(f"删除失败：{e}", "error")
+    finally:
+        db.close()
+
+    return redirect(url_for("admin_dashboard") + "#miniapp")
+
+
+# ──────────────────────────────────────────────────────────
+# 公开 API：前台获取当前激活语录
+# ──────────────────────────────────────────────────────────
+
+@app.route("/api/quote/current")
+def api_quote_current():
+    """返回当前激活语录（JSON），供前台 vibe.html 动态加载。"""
+    db = SessionLocal()
+    try:
+        quote = db.query(Quote).filter(Quote.is_current == True).first()
+        if quote:
+            return jsonify(quote.to_dict())
+        return jsonify({"content": "今日语录：真正的秩序，从自我观察开始。", "source": ""})
+    finally:
+        db.close()
 
 
 # ──────────────────────────────────────────────────────────
