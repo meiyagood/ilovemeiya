@@ -44,7 +44,7 @@ Base.metadata.create_all(bind=engine)
 
 app = Flask(
     __name__,
-    template_folder=os.path.join(BASE_DIR, "app"),   # admin.html 在 backend/app/
+    template_folder=os.path.join(BASE_DIR, "app", "templates"),
     static_folder=os.path.join(BASE_DIR, "app", "static"),
 )
 
