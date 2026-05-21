@@ -267,38 +267,6 @@ class DailyLog(Base):
         }
 
 
-# ──────────────────────────────────────────────────────────
-# Focus & Milestone 小程序 — 语录
-# ──────────────────────────────────────────────────────────
-
-class Quote(Base):
-    """
-    哲学语录模型，对应 vibe.html 前台手机模型的卡片内容。
-    is_current=True 的唯一一条语录会在前台展示为"今日语录"。
-    """
-    __tablename__ = "quotes"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-
-    content: Mapped[str] = mapped_column(Text, nullable=False)          # 语录正文
-    source: Mapped[str] = mapped_column(String(300), default="")        # 来源/作者
-    is_current: Mapped[bool] = mapped_column(Boolean, default=False, index=True)  # 前台激活展示
-
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
-
-    def to_dict(self) -> dict:
-        return {
-            "id": self.id,
-            "content": self.content,
-            "source": self.source,
-            "is_current": self.is_current,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
-
-
 class Photo(Base):
     """照片模型 - 属于某个相册"""
     __tablename__ = "photos"

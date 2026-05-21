@@ -36,7 +36,7 @@ from app.database import SessionLocal, engine
 from app.models import Base, Quote
 
 # 确保表存在（仅建新表，不删旧表）
-Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine, checkfirst=True)
 
 # ──────────────────────────────────────────────────────────
 # 应用初始化
