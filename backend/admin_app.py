@@ -66,7 +66,7 @@ def login_required(f):
 @login_required
 def admin_dashboard():
     """后台主页——未登录时自动跳转到登录页。"""
-    return render_template("admin.html")
+    return render_template("admin_dashboard.html", posts=[])
 
 
 @app.route("/une-vie-admin/login", methods=["GET"])

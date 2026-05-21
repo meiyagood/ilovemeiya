@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>后台管理 · Chez Meiya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════════
+       RESET & BASE
+    ══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #1A1A1A;
+      --mid:     #555555;
+      --muted:   #999999;
+      --rule:    #E8E8E8;
+      --rule-dk: #C8C8C8;
+      --bg:      #F9F8F6;
+      --white:   #FFFFFF;
+      --nav-w:   200px;
+      --ease:    200ms cubic-bezier(0.2, 0.75, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Crimson Text", "EB Garamond", Georgia, serif;
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════════════════════════════════════════════
+       LAYOUT: SIDEBAR + MAIN
+    ══════════════════════════════════════════════ */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--nav-w);
+      flex-shrink: 0;
+      background: var(--white);
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 36px 24px 28px;
+      border-bottom: 4px double var(--ink);
+    }
+    .sidebar-brand .brand-top {
+      display: block;
+      font-family: "Inter", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .sidebar-brand .brand-main {
+      display: block;
+      font-family: "Playfair Display", serif;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .sidebar-brand .brand-sub {
+      display: block;
+      font-family: "Inter", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 24px 0;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 10px 24px;
+      font-family: "Inter", sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      border-left: 2px solid transparent;
+      transition: color var(--ease), border-color var(--ease);
+      cursor: pointer;
+      background: transparent;
+      border-right: none;
+      border-top: none;
+      border-bottom: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover { color: var(--ink); border-left-color: var(--rule-dk); }
+    .nav-item.active { color: var(--ink); border-left-color: var(--ink); font-weight: 500; }
+
+    .sidebar-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--rule);
+    }
+    .logout-btn {
+      display: block;
+      width: 100%;
+      padding: 8px 0;
+      background: transparent;
+      border: 1px solid var(--rule-dk);
+      font-family: "Inter", sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all var(--ease);
+    }
+    .logout-btn:hover {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+
+    /* ── Main content ── */
+    .main {
+      flex: 1;
+      margin-left: var(--nav-w);
+      max-width: 840px;
+      padding: 56px 60px 80px;
+    }
+
+    /* ══════════════════════════════════════════════
+       PAGE HEADER
+    ══════════════════════════════════════════════ */
+    .page-header {
+      border-bottom: 4px double var(--ink);
+      padding-bottom: 20px;
+      margin-bottom: 48px;
+    }
+    .page-header .section-eyebrow {
+      font-family: "Inter", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .page-header h1 {
+      font-family: "Playfair Display", serif;
+      font-weight: 900;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    /* ══════════════════════════════════════════════
+       SECTION PANELS
+    ══════════════════════════════════════════════ */
+    .panel {
+      display: none;
+    }
+    .panel.active {
+      display: block;
+    }
+
+    .section-rule {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 40px 0;
+    }
+
+    .section-label {
+      font-family: "Inter", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    /* ══════════════════════════════════════════════
+       FLASH MESSAGES
+    ══════════════════════════════════════════════ */
+    .flash {
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      padding: 12px 16px;
+      margin-bottom: 28px;
+      border-left: 3px solid;
+    }
+    .flash.success { border-color: #2a6e4a; color: #2a6e4a; background: #f0f9f4; }
+    .flash.error   { border-color: #8b3a3a; color: #8b3a3a; background: #fdf4f4; }
+    .flash.info    { border-color: var(--muted); color: var(--mid); background: var(--white); }
+
+    /* ══════════════════════════════════════════════
+       FORM
+    ══════════════════════════════════════════════ */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      font-family: "Inter", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    textarea,
+    select,
+    input[type="text"] {
+      width: 100%;
+      background: var(--white);
+      border: none;
+      border-bottom: 1px solid var(--rule-dk);
+      font-family: "Crimson Text", Georgia, serif;
+      font-size: 16px;
+      color: var(--ink);
+      padding: 8px 0;
+      outline: none;
+      resize: none;
+      transition: border-color var(--ease);
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    textarea:focus,
+    select:focus,
+    input[type="text"]:focus {
+      border-bottom-color: var(--ink);
+    }
+
+    textarea { min-height: 120px; resize: vertical; padding: 8px 0; line-height: 1.7; }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 4px center;
+      padding-right: 20px;
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .btn {
+      font-family: "Inter", sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      cursor: pointer;
+      transition: all var(--ease);
+      border: 1px solid;
+    }
+    .btn-primary {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+    .btn-primary:hover { background: #333; border-color: #333; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border-color: var(--rule-dk);
+    }
+    .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
+
+    .btn-danger {
+      background: transparent;
+      color: #8b3a3a;
+      border-color: #c8a0a0;
+      font-size: 9px;
+      padding: 5px 12px;
+    }
+    .btn-danger:hover { background: #8b3a3a; color: var(--white); border-color: #8b3a3a; }
+
+    .form-actions { margin-top: 28px; display: flex; gap: 12px; align-items: center; }
+
+    /* ══════════════════════════════════════════════
+       POSTS LIST
+    ══════════════════════════════════════════════ */
+    .posts-list { margin-top: 8px; }
+
+    .post-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .post-item:first-child { border-top: 1px solid var(--rule); }
+
+    .post-body {}
+    .post-category {
+      font-family: "Inter", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .post-excerpt {
+      font-size: 15px;
+      color: var(--ink);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .post-date {
+      font-family: "Inter", sans-serif;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .post-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+      padding-top: 4px;
+    }
+
+    /* ══════════════════════════════════════════════
+       SYSTEM STATUS PANEL
+    ══════════════════════════════════════════════ */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      border: 1px solid var(--rule);
+      margin-bottom: 32px;
+    }
+    .status-cell {
+      background: var(--white);
+      padding: 20px 24px;
+      border-right: 1px solid var(--rule);
+    }
+    .status-cell:last-child { border-right: none; }
+    .status-cell .s-label {
+      font-family: "Inter", sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .status-cell .s-value {
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .status-cell .s-sub {
+      font-family: "Inter", sans-serif;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .dot-green { background: #2a6e4a; }
+    .dot-gray  { background: var(--muted); }
+
+    /* ══════════════════════════════════════════════
+       MINI PROGRAM CONFIG PANEL
+    ══════════════════════════════════════════════ */
+    .config-table { width: 100%; border-collapse: collapse; }
+    .config-table tr { border-bottom: 1px solid var(--rule); }
+    .config-table td {
+      padding: 14px 0;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+    .config-table td:first-child {
+      font-family: "Inter", sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      width: 40%;
+    }
+    .config-table input[type="text"] {
+      font-size: 14px;
+      border-bottom: 1px solid var(--rule);
+      padding: 4px 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════ */
+    @media (max-width: 860px) {
+      .main { padding: 40px 32px 60px; }
+    }
+    @media (max-width: 680px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        flex-direction: row;
+        align-items: center;
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+      .sidebar-brand { padding: 16px 20px; border-bottom: none; border-right: 1px solid var(--rule); }
+      .sidebar-nav { display: flex; flex-direction: row; padding: 0; overflow-x: auto; }
+      .nav-item { white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; }
+      .nav-item.active { border-bottom-color: var(--ink); border-left: none; }
+      .sidebar-footer { display: none; }
+      .layout { flex-direction: column; }
+      .main { margin-left: 0; padding: 28px 20px 60px; }
+      .form-row { grid-template-columns: 1fr; gap: 16px; }
+      .status-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-top">Chez</span>
+      <span class="brand-main">Meiya</span>
+      <span class="brand-sub">Admin</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-panel="posts" onclick="switchPanel('posts', this)">动态管理</button>
+      <button class="nav-item" data-panel="miniapp" onclick="switchPanel('miniapp', this)">小程序配置</button>
+      <button class="nav-item" data-panel="status" onclick="switchPanel('status', this)">系统状态</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <form method="post" action="/une-vie-admin/logout">
+        <button type="submit" class="logout-btn">退出后台</button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <p class="section-eyebrow">Une vie pensée</p>
+      <h1 id="page-title">动态管理</h1>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <!-- ══ PANEL: Posts ══ -->
+    <section class="panel active" id="panel-posts">
+
+      <p class="section-label">快速发布新动态</p>
+
+      <form method="post" action="/une-vie-admin/post/create">
+        <div class="form-group">
+          <label class="form-label" for="content">内容</label>
+          <textarea id="content" name="content" placeholder="写下新动态……" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="title">标题（可选）</label>
+            <input type="text" id="title" name="title" placeholder="留空则仅显示内容" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="category">分类</label>
+            <select id="category" name="category">
+              <option value="news">新闻</option>
+              <option value="travel">旅行</option>
+              <option value="reading">读书&amp;文化</option>
+              <option value="writing">写作</option>
+              <option value="language">语言</option>
+              <option value="vibe">AI编程</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">发布动态</button>
+          <button type="reset" class="btn btn-ghost">清空</button>
+        </div>
+      </form>
+
+      <hr class="section-rule" />
+      <p class="section-label">已发布动态</p>
+
+      <div class="posts-list">
+        {% if posts %}
+          {% for post in posts %}
+          <div class="post-item">
+            <div class="post-body">
+              <p class="post-category">{{ post.category }}</p>
+              <p class="post-excerpt">{{ post.content }}</p>
+              <p class="post-date">{{ post.created_at }}</p>
+            </div>
+            <div class="post-actions">
+              <a href="/une-vie-admin/post/{{ post.id }}/edit" class="btn btn-ghost" style="font-size:9px;padding:5px 12px;">编辑</a>
+              <form method="post" action="/une-vie-admin/post/{{ post.id }}/delete" onsubmit="return confirm('确认删除？')">
+                <button type="submit" class="btn btn-danger">删除</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <!-- 示例占位行（无数据时显示） -->
+          <div class="post-item">
+            <div class="post-body">
+              <p class="post-category">旅行</p>
+              <p class="post-excerpt">五月抵达普罗旺斯，薰衣草田尚未盛放，却在小镇市集里找到了那种被时间遗忘的安静。</p>
+              <p class="post-date">May 2026</p>
+            </div>
+            <div class="post-actions">
+              <button class="btn btn-ghost" style="font-size:9px;padding:5px 12px;" disabled>编辑</button>
+              <button class="btn btn-danger" disabled>删除</button>
+            </div>
+          </div>
+          <div class="post-item">
+            <div class="post-body">
+              <p class="post-category">AI编程</p>
+              <p class="post-excerpt">完成 Focus &amp; Milestone 小程序第一版迭代，把里程碑追踪与语录输入整合进同一界面。</p>
+              <p class="post-date">April 2026</p>
+            </div>
+            <div class="post-actions">
+              <button class="btn btn-ghost" style="font-size:9px;padding:5px 12px;" disabled>编辑</button>
+              <button class="btn btn-danger" disabled>删除</button>
+            </div>
+          </div>
+          <div class="post-item">
+            <div class="post-body">
+              <p class="post-category">读书&amp;文化</p>
+              <p class="post-excerpt">重读萨特《存在与虚无》第三章——他关于"他者目光"的论述，在今天仍然有一种令人不安的准确。</p>
+              <p class="post-date">March 2026</p>
+            </div>
+            <div class="post-actions">
+              <button class="btn btn-ghost" style="font-size:9px;padding:5px 12px;" disabled>编辑</button>
+              <button class="btn btn-danger" disabled>删除</button>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+    </section>
+
+    <!-- ══ PANEL: Mini Program Config ══ -->
+    <section class="panel" id="panel-miniapp">
+
+      <p class="section-label">Focus &amp; Milestone 小程序配置</p>
+
+      <form method="post" action="/une-vie-admin/miniapp/save">
+        <table class="config-table">
+          <tr>
+            <td>每日语录</td>
+            <td><input type="text" name="daily_quote" placeholder="今日语录：真正的秩序，从自我观察开始。" /></td>
+          </tr>
+          <tr>
+            <td>当前里程碑</td>
+            <td><input type="text" name="milestone" placeholder="荷德法之旅 · July 2026" /></td>
+          </tr>
+          <tr>
+            <td>公告文字</td>
+            <td><input type="text" name="notice" placeholder="小程序暂停维护，预计 6 月恢复。" /></td>
+          </tr>
+          <tr>
+            <td>维护模式</td>
+            <td>
+              <select name="maintenance_mode" style="width:auto;">
+                <option value="off">关闭</option>
+                <option value="on">开启</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+
+        <div class="form-actions" style="margin-top: 32px;">
+          <button type="submit" class="btn btn-primary">保存配置</button>
+        </div>
+      </form>
+
+    </section>
+
+    <!-- ══ PANEL: System Status ══ -->
+    <section class="panel" id="panel-status">
+
+      <p class="section-label">服务概览</p>
+
+      <div class="status-grid">
+        <div class="status-cell">
+          <p class="s-label">API 服务</p>
+          <p class="s-value">
+            <span class="status-dot dot-green"></span>运行中
+          </p>
+          <p class="s-sub">FastAPI · port 8000</p>
+        </div>
+        <div class="status-cell">
+          <p class="s-label">Admin UI</p>
+          <p class="s-value">
+            <span class="status-dot dot-green"></span>运行中
+          </p>
+          <p class="s-sub">Flask · port 8001</p>
+        </div>
+        <div class="status-cell">
+          <p class="s-label">数据库</p>
+          <p class="s-value">
+            <span class="status-dot dot-green"></span>正常
+          </p>
+          <p class="s-sub">SQLite</p>
+        </div>
+      </div>
+
+      <hr class="section-rule" />
+      <p class="section-label">站点信息</p>
+
+      <table class="config-table">
+        <tr>
+          <td>域名</td>
+          <td>zaoanmeiya.com</td>
+        </tr>
+        <tr>
+          <td>服务器 IP</td>
+          <td>47.98.235.65</td>
+        </tr>
+        <tr>
+          <td>Web 服务器</td>
+          <td>Nginx</td>
+        </tr>
+        <tr>
+          <td>当前版本</td>
+          <td>1.0.0</td>
+        </tr>
+      </table>
+
+      <hr class="section-rule" />
+
+      <div class="form-actions">
+        <form method="post" action="/une-vie-admin/logout">
+          <button type="submit" class="btn btn-ghost">安全退出后台</button>
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const PANEL_TITLES = {
+    posts:   '动态管理',
+    miniapp: '小程序配置',
+    status:  '系统状态',
+  };
+
+  function switchPanel(name, btn) {
+    // Hide all panels
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+
+    // Show target
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('page-title').textContent = PANEL_TITLES[name] || name;
+  }
+</script>
+
+</body>
+</html>
