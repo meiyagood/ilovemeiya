@@ -4,6 +4,9 @@ uvicorn[standard]==0.32.1
 python-multipart==0.0.19
 jinja2==3.1.4
 
+# Admin UI (Flask)
+flask==3.1.1
+
 # Database
 sqlalchemy==2.0.36
 

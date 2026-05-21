@@ -55,15 +55,15 @@
       margin-top: 6px;
     }
 
-    .error-msg {
-      background: #fff4f4;
-      border-left: 3px solid #cc4444;
-      color: #cc4444;
+    .flash-msg {
+      font-family: "Inter", sans-serif;
       font-size: 13px;
       padding: 10px 14px;
       margin-bottom: 20px;
-      font-family: "Inter", sans-serif;
+      border-left: 3px solid;
     }
+    .flash-msg.error { background: #fff4f4; border-color: #cc4444; color: #cc4444; }
+    .flash-msg.info  { background: #f0f7ff; border-color: #4488cc; color: #4488cc; }
 
     label {
       display: block;
@@ -75,7 +75,6 @@
       margin-bottom: 6px;
     }
 
-    input[type="text"],
     input[type="password"] {
       width: 100%;
       border: none;
@@ -116,17 +115,15 @@
       <span class="brand-sub">Admin</span>
     </div>
 
-    {% if error %}
-    <div class="error-msg">{{ error }}</div>
-    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash-msg {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
 
     <form method="post" action="/une-vie-admin/login" autocomplete="off">
-      <label for="username">用户名</label>
-      <input id="username" name="username" type="text" required autofocus />
-
-      <label for="password">密码</label>
-      <input id="password" name="password" type="password" required />
-
+      <label for="passphrase">通行密码</label>
+      <input id="passphrase" name="passphrase" type="password" required autofocus />
       <button type="submit">进入后台</button>
     </form>
   </div>
