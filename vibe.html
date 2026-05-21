@@ -669,6 +669,38 @@
 
     </div><!-- /.shell -->
 
+    <!-- ── 后台动态（从数据库实时加载） ── -->
+    <div id="db-posts-container" style="display:none;">
+      <div id="db-posts-list"></div>
+    </div>
+
+    <script>
+      /* ── 从后台 API 加载动态 ── */
+      (function loadPosts() {
+        fetch('http://localhost:8001/api/posts')
+          .then(function(r) { return r.ok ? r.json() : []; })
+          .then(function(posts) {
+            if (!posts.length) return;
+            var container = document.getElementById('db-posts-container');
+            var list = document.getElementById('db-posts-list');
+            posts.forEach(function(p) {
+              var date = p.posted_at
+                ? new Date(p.posted_at).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })
+                : '';
+              var html = '<div class="timeline-note" style="border-top:1px solid #E8E8E8;padding:28px 0;">'
+                + '<span class="timeline-date">' + date + '</span>'
+                + '<div>'
+                + (p.title ? '<strong>' + p.title + '</strong><br>' : '')
+                + '<p>' + p.content + '</p>'
+                + '</div></div>';
+              list.insertAdjacentHTML('beforeend', html);
+            });
+            container.style.display = 'block';
+          })
+          .catch(function() { /* 后台未启动时静默失败，不影响页面 */ });
+      })();
+    </script>
+
     <script>
       /* ── Language switcher ── */
       function setLanguage(lang) {

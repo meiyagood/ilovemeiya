@@ -305,6 +305,24 @@ def miniapp_save():
     return redirect(url_for("admin_dashboard") + "#miniapp")
 
 
+@app.route("/api/posts")
+def api_posts():
+    """返回已发布动态列表（JSON），供前台 vibe.html 动态加载。"""
+    from app.models import DailyLog
+    db = SessionLocal()
+    try:
+        logs = (
+            db.query(DailyLog)
+            .filter(DailyLog.is_published == True)
+            .order_by(DailyLog.posted_at.desc())
+            .limit(20)
+            .all()
+        )
+        return jsonify([l.to_dict() for l in logs])
+    finally:
+        db.close()
+
+
 # ──────────────────────────────────────────────────────────
 # 入口
 # ──────────────────────────────────────────────────────────
