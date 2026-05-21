@@ -280,8 +280,10 @@ body {
 }
 
 .topbar,
-.nav {
-  background: #F7F8F9 !important;
+.nav,
+  .navbar,
+  .site-header { /* 修正了这里多余的 } */
+  background: #F7F8F9 !important; /* 仅设置背景色，不影响定位和显示 */
 }
 
 .container,

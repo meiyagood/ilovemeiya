@@ -371,22 +371,7 @@
         .replace(/'/g, "&#39;");
     }
 
-    const pinnedDailyLogs = [
-      {
-        posted_at: "2025-05-13T12:59:00",
-        posted_display: "2025.05.13 12:59 美芽【并非“对欲望让步”，而是“在欲望上让步”】",
-        author: "美芽",
-        title: "并非“对欲望让步”，而是“在欲望上让步”",
-        content: "真正关切的问题不是是否幸福，而是“是否忠于自己的欲望”。并不克制欲望，就可以解决罪恶感的问题。罪恶感不是被欲望奴役，而是在看见欲望的路上“半途而废”，才产生罪恶感。"
-      },
-      {
-        posted_at: "2026-05-14T09:32:00",
-        posted_display: "2026.05.14 09:32 美芽《交流欲让人着迷》",
-        author: "美芽",
-        title: "交流欲让人着迷",
-        content: "在咖啡店，在路上，在湖边，去说完整的句子，去描述自己的感受，去拥抱真实的内心，同时允许对方表达，不打断不忽视不评判。目光落在彼此脸上，语速不急不慢，自然，松弛，始终发生，交流不是为了达成共识，而是让彼此更靠近一点点。"
-      }
-    ];
+    const pinnedDailyLogs = [];
 
     function normalizeLogKey(item) {
       return [item.posted_at || '', item.posted_display || '', item.author || '', item.title || '', item.content || ''].join('||');
