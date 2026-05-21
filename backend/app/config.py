@@ -33,6 +33,9 @@ CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:3
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "change-me")
 
+# Session 配置（用于 /une-vie-admin 网页后台 cookie）
+SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "change-this-secret-in-production")
+
 # JWT 配置（可选，如需升级认证）
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
 JWT_ALGORITHM = "HS256"

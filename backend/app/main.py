@@ -12,6 +12,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy import text
 
 from .config import (
@@ -19,6 +20,7 @@ from .config import (
     APP_TITLE,
     APP_VERSION,
     CORS_ORIGINS,
+    SESSION_SECRET_KEY,
     STATIC_DIR,
     UPLOAD_DIR,
 )
@@ -30,6 +32,7 @@ from .routes import (
     daily_logs_router,
     categories_router,
     admin_router,
+    admin_ui_router,
 )
 
 
@@ -85,6 +88,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Session 中间件（用于 /une-vie-admin 网页后台）
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=SESSION_SECRET_KEY,
+    session_cookie="une_vie_session",
+    max_age=86400,          # 24 小时
+    same_site="lax",
+    https_only=False,       # 生产环境建议设为 True（HTTPS）
+)
+
 # 挂载静态文件
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 if STATIC_DIR.exists():
@@ -98,8 +111,11 @@ if STATIC_DIR.exists():
 # 公开 API
 app.include_router(public_router)
 
-# 管理员 API（通用）
+# 管理员 API（JSON）
 app.include_router(admin_router)
+
+# 管理员网页后台（/une-vie-admin）
+app.include_router(admin_ui_router)
 
 # 资源 API（需要认证）
 app.include_router(articles_router)

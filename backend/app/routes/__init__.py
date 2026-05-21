@@ -9,6 +9,7 @@ from .albums import router as albums_router
 from .daily_logs import router as daily_logs_router
 from .categories import router as categories_router
 from .admin import router as admin_router
+from .admin_ui import router as admin_ui_router
 
 __all__ = [
     "public_router",
@@ -17,4 +18,5 @@ __all__ = [
     "daily_logs_router",
     "categories_router",
     "admin_router",
+    "admin_ui_router",
 ]
