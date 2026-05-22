@@ -677,7 +677,7 @@
     <script>
       /* ── 从后台 API 加载动态 ── */
       (function loadPosts() {
-        fetch('http://localhost:8001/api/posts')
+        fetch('http://zaoanmeiya.com:8001/api/posts')
           .then(function(r) { return r.ok ? r.json() : []; })
           .then(function(posts) {
             if (!posts.length) return;

@@ -27,6 +27,7 @@ from flask import (
     session,
     url_for,
 )
+from flask_cors import CORS
 
 # 将 backend/ 加入路径，以便导入 app 包（models, database）
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -47,6 +48,9 @@ app = Flask(
     template_folder=os.path.join(BASE_DIR, "app", "templates"),
     static_folder=os.path.join(BASE_DIR, "app", "static"),
 )
+
+# 允许前台域名跨域访问 /api/* 接口
+CORS(app, resources={r"/api/*": {"origins": ["https://zaoanmeiya.com", "http://zaoanmeiya.com", "http://localhost:*"]}})
 
 # Session 签名密钥（必须在生产环境中通过环境变量设置）
 app.secret_key = os.getenv("SESSION_SECRET_KEY", "default-fallback-key-please-change")
