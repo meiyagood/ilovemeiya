@@ -599,53 +599,13 @@
         <p>在项目迭代间隙完成"法语视频翻译网页"的交互雏形，用最少界面承接语言转换。</p>
       </div>
 
-      <!-- Project Card 2: EVEN (text left, visual right) -->
-      <article class="project-card card-even">
-        <div class="card-visual">
-          <div class="project-embed translator-embed" aria-label="French translation interaction model">
-            <p class="embed-title">French Translation Console</p>
-            <label for="fr-input" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">法语输入</label>
-            <input id="fr-input" type="text" placeholder="Entrez une phrase française..." autocomplete="off" />
-            <button id="translate-button" type="button">Translate</button>
-            <p id="translation-output" class="translation-output">中文译文将显示在这里。</p>
-          </div>
-        </div>
-        <div class="card-body">
-          <span class="project-date">April 2026</span>
-          <h2>法语翻译工具（网页）</h2>
-          <p>
-            当视频成为语言学习入口，翻译就不再只是"结果"，而是一种观看方式。
-            我把字幕提取、短句对照与注释放在同一视野里，让理解这件事变得更慢，也更清晰。
-          </p>
-        </div>
-      </article>
-
-      <!-- Project Card 3: ODD (visual left, text right) -->
-      <article class="project-card card-odd">
-        <div class="card-visual">
-          <div class="project-embed map-embed" aria-label="Europe transportation map canvas">
-            <p class="embed-title">Europe Mobility Canvas</p>
-            <canvas id="eu-route-canvas" width="900" height="360" aria-label="Europe route canvas"></canvas>
-            <p class="canvas-caption">可替换为真实轨迹数据；当前为示意路径层。</p>
-          </div>
-        </div>
-        <div class="card-body">
-          <span class="project-date">May 2026</span>
-          <h2>欧洲旅行交通地图爬虫</h2>
-          <p>
-            为七月十五天的荷德法之行，我编写路线与交通信息工具，把城市间的换乘逻辑折叠为
-            可阅读、可比较的路径图。技术在此不只是准备工作，而是一种提前抵达的方式。
-          </p>
-        </div>
-      </article>
-
       <!-- ── 后台动态（从数据库实时加载） ── -->
       <div id="db-posts-list"></div>
 
     </div><!-- /.shell -->
 
     <script>
-      /* ── 从后台 API 加载动态 ── */
+      /* ── 从后台 API 加载动态，按 category 分支渲染 ── */
       (function loadPosts() {
         var url = 'http://zaoanmeiya.com:8001/api/posts?_t=' + Date.now();
         fetch(url)
@@ -653,17 +613,127 @@
           .then(function(posts) {
             if (!Array.isArray(posts) || !posts.length) return;
             var list = document.getElementById('db-posts-list');
-            posts.forEach(function(p) {
-              var note = document.createElement('div');
-              note.className = 'timeline-note';
-              note.innerHTML =
-                (p.author ? '<span class="timeline-date">' + p.author + '</span>' : '') +
-                '<p>' + (p.content || '') + '</p>';
-              list.appendChild(note);
+            posts.forEach(function(p, idx) {
+              var el;
+              if (p.category === '语言') {
+                el = buildTranslatorCard(p, idx);
+              } else if (p.category === '旅行') {
+                el = buildMapCard(p, idx);
+              } else {
+                el = buildTimelineNote(p);
+              }
+              list.appendChild(el);
             });
           })
           .catch(function() { /* 后台未启动时静默失败，不影响页面 */ });
       })();
+
+      /* ── 普通时间线条目 ── */
+      function buildTimelineNote(p) {
+        var div = document.createElement('div');
+        div.className = 'timeline-note';
+        div.innerHTML =
+          (p.author ? '<span class="timeline-date">' + escHtml(p.author) + '</span>' : '') +
+          '<p>' + escHtml(p.content || '') + '</p>';
+        return div;
+      }
+
+      /* ── 语言类：法语翻译 Console 卡片 ── */
+      function buildTranslatorCard(p, idx) {
+        var inputId  = 'fr-input-'  + idx;
+        var btnId    = 'fr-btn-'    + idx;
+        var outputId = 'fr-out-'    + idx;
+        var article  = document.createElement('article');
+        article.className = 'project-card card-even';
+        article.innerHTML =
+          '<div class="card-visual">' +
+            '<div class="project-embed translator-embed" aria-label="French translation interaction model">' +
+              '<p class="embed-title">French Translation Console</p>' +
+              '<label for="' + inputId + '" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">法语输入</label>' +
+              '<input id="' + inputId + '" type="text" placeholder="Entrez une phrase française..." autocomplete="off" />' +
+              '<button id="' + btnId + '" type="button">Translate</button>' +
+              '<p id="' + outputId + '" class="translation-output">中文译文将显示在这里。</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="card-body">' +
+            (p.author ? '<span class="project-date">' + escHtml(p.author) + '</span>' : '') +
+            '<h2>' + escHtml(p.title || '语言工具') + '</h2>' +
+            '<p>' + escHtml(p.content || '') + '</p>' +
+          '</div>';
+
+        /* 挂载翻译逻辑 */
+        var dict = {
+          'bonjour':'你好','merci':'谢谢','au revoir':'再见',
+          'je t\'aime':'我爱你','paris':'巴黎','liberté':'自由',
+          'la vie':'生活','le temps':'时间','sérendipité':'意外发现美好之事的能力'
+        };
+        setTimeout(function() {
+          var btn = document.getElementById(btnId);
+          var inp = document.getElementById(inputId);
+          var out = document.getElementById(outputId);
+          if (!btn) return;
+          function translate() {
+            var k = inp.value.trim().toLowerCase();
+            out.textContent = dict[k] || (k ? '（示意译文：' + k + '）' : '中文译文将显示在这里。');
+          }
+          btn.addEventListener('click', translate);
+          inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') translate(); });
+        }, 0);
+
+        return article;
+      }
+
+      /* ── 旅行类：地图路径 Canvas 卡片 ── */
+      function buildMapCard(p, idx) {
+        var canvasId = 'eu-canvas-' + idx;
+        var article  = document.createElement('article');
+        article.className = 'project-card card-odd';
+        article.innerHTML =
+          '<div class="card-visual">' +
+            '<div class="project-embed map-embed" aria-label="Europe transportation map canvas">' +
+              '<p class="embed-title">Europe Mobility Canvas</p>' +
+              '<canvas id="' + canvasId + '" width="900" height="360" aria-label="Europe route canvas"></canvas>' +
+              '<p class="canvas-caption">可替换为真实轨迹数据；当前为示意路径层。</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="card-body">' +
+            (p.author ? '<span class="project-date">' + escHtml(p.author) + '</span>' : '') +
+            '<h2>' + escHtml(p.title || '旅行地图') + '</h2>' +
+            '<p>' + escHtml(p.content || '') + '</p>' +
+          '</div>';
+
+        /* 绘制 Canvas */
+        setTimeout(function() {
+          var canvas = document.getElementById(canvasId);
+          if (!canvas) return;
+          var ctx = canvas.getContext('2d');
+          var W = canvas.width, H = canvas.height;
+          var cities = [
+            { name:'Amsterdam', x:0.25, y:0.22 }, { name:'Cologne',    x:0.35, y:0.38 },
+            { name:'Frankfurt', x:0.42, y:0.44 }, { name:'Strasbourg', x:0.47, y:0.52 },
+            { name:'Paris',     x:0.32, y:0.62 }, { name:'Lyon',       x:0.40, y:0.76 }
+          ];
+          ctx.fillStyle = '#FAFAF8'; ctx.fillRect(0, 0, W, H);
+          ctx.beginPath(); ctx.strokeStyle = '#BBBAB5'; ctx.lineWidth = 1.5; ctx.setLineDash([6,4]);
+          cities.forEach(function(c,i){ i===0 ? ctx.moveTo(c.x*W,c.y*H) : ctx.lineTo(c.x*W,c.y*H); });
+          ctx.stroke(); ctx.setLineDash([]);
+          cities.forEach(function(c){
+            ctx.beginPath(); ctx.arc(c.x*W,c.y*H,5,0,Math.PI*2);
+            ctx.fillStyle='#1A1A1A'; ctx.fill();
+            ctx.font='11px Inter,sans-serif'; ctx.fillStyle='#555';
+            ctx.fillText(c.name, c.x*W+10, c.y*H+4);
+          });
+        }, 0);
+
+        return article;
+      }
+
+      /* ── XSS 防护：转义 HTML 特殊字符 ── */
+      function escHtml(s) {
+        return String(s)
+          .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+          .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
     </script>
 
     <script>
@@ -713,65 +783,6 @@
       window.addEventListener('scroll', function() {
         topbar.classList.toggle('navbar-shrunk', window.scrollY > 50);
       }, { passive: true });
-
-      /* ── Translation demo ── */
-      var dict = {
-        'bonjour': '你好', 'merci': '谢谢', 'au revoir': '再见',
-        'je t\'aime': '我爱你', 'paris': '巴黎', 'liberté': '自由',
-        'la vie': '生活', 'le temps': '时间', 'sérendipité': '意外发现美好之事的能力'
-      };
-      var btn = document.getElementById('translate-button');
-      var inp = document.getElementById('fr-input');
-      var out = document.getElementById('translation-output');
-      if (btn && inp && out) {
-        btn.addEventListener('click', function() {
-          var key = inp.value.trim().toLowerCase();
-          out.textContent = dict[key] || (key ? '（示意译文：' + key + '）' : '中文译文将显示在这里。');
-        });
-        inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') btn.click(); });
-      }
-
-      /* ── Europe route canvas ── */
-      var canvas = document.getElementById('eu-route-canvas');
-      if (canvas) {
-        var ctx = canvas.getContext('2d');
-        var W = canvas.width, H = canvas.height;
-
-        var cities = [
-          { name: 'Amsterdam', x: 0.25, y: 0.22 },
-          { name: 'Cologne',   x: 0.35, y: 0.38 },
-          { name: 'Frankfurt', x: 0.42, y: 0.44 },
-          { name: 'Strasbourg',x: 0.47, y: 0.52 },
-          { name: 'Paris',     x: 0.32, y: 0.62 },
-          { name: 'Lyon',      x: 0.40, y: 0.76 }
-        ];
-
-        ctx.fillStyle = '#FAFAF8';
-        ctx.fillRect(0, 0, W, H);
-
-        /* route line */
-        ctx.beginPath();
-        ctx.strokeStyle = '#BBBAB5';
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([6, 4]);
-        cities.forEach(function(c, i) {
-          i === 0 ? ctx.moveTo(c.x * W, c.y * H) : ctx.lineTo(c.x * W, c.y * H);
-        });
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        /* dots + labels */
-        cities.forEach(function(c) {
-          ctx.beginPath();
-          ctx.arc(c.x * W, c.y * H, 5, 0, Math.PI * 2);
-          ctx.fillStyle = '#1A1A1A';
-          ctx.fill();
-
-          ctx.font = '11px Inter, sans-serif';
-          ctx.fillStyle = '#555';
-          ctx.fillText(c.name, c.x * W + 10, c.y * H + 4);
-        });
-      }
     </script>
   </body>
 </html>
