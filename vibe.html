@@ -592,7 +592,7 @@
     <script>
       /* ── 从后台 API 加载动态，按 category 分支渲染 ── */
       (function loadPosts() {
-        var url = 'http://zaoanmeiya.com:8001/api/posts?_t=' + Date.now();
+        var url = 'https://www.zaoanmeiya.com/api/posts?_t=' + Date.now();
         fetch(url)
           .then(function(r) { return r.ok ? r.json() : []; })
           .then(function(posts) {
