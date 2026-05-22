@@ -593,34 +593,6 @@
         </p>
       </div>
 
-      <!-- Project Card 1: ODD (visual left, text right) -->
-      <article class="project-card card-odd">
-        <div class="card-visual">
-          <div class="project-embed wechat-mockup" aria-label="WeChat Mini Program mockup">
-            <p class="embed-title">WeChat Mini Program Demo</p>
-            <div class="phone-frame">
-              <div class="phone-notch"></div>
-              <div class="phone-screen">
-                <div class="phone-header">Focus &amp; Milestone</div>
-                <div class="phone-line"></div>
-                <div class="phone-line short"></div>
-                <div id="wechat-card" class="phone-card">今日语录：真正的秩序，从自我观察开始。</div>
-                <p id="wechat-caption" class="phone-caption">Scene 1 / 3</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <span class="project-date">April 2026</span>
-          <h2>Focus &amp; Milestone 小程序</h2>
-          <p>
-            这不是一款关于"效率"的应用，而是一次关于注意力的手工装订。
-            我用它记录哲学语录与日常反思，让每次输入都成为节律校准。
-            从灵感捕捉到里程碑追踪，它更像一本持续增订的思辨手账。
-          </p>
-        </div>
-      </article>
-
       <!-- Timeline: Minor note -->
       <div class="timeline-note">
         <span class="timeline-date">April 2026</span>
@@ -741,28 +713,6 @@
       window.addEventListener('scroll', function() {
         topbar.classList.toggle('navbar-shrunk', window.scrollY > 50);
       }, { passive: true });
-
-      /* ── WeChat card carousel ── */
-      var quotes = [
-        '今日语录：真正的秩序，从自我观察开始。',
-        '里程碑不是终点，而是节奏的标记。',
-        '每一次输入，都是对注意力的校准。'
-      ];
-      var idx = 0;
-      var card = document.getElementById('wechat-card');
-      var caption = document.getElementById('wechat-caption');
-      if (card) {
-        setInterval(function() {
-          idx = (idx + 1) % quotes.length;
-          card.style.opacity = '0';
-          setTimeout(function() {
-            card.textContent = quotes[idx];
-            caption.textContent = 'Scene ' + (idx + 1) + ' / ' + quotes.length;
-            card.style.opacity = '1';
-          }, 300);
-        }, 3000);
-        card.style.transition = 'opacity 0.3s ease';
-      }
 
       /* ── Translation demo ── */
       var dict = {
