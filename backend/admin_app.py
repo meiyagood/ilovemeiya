@@ -93,12 +93,14 @@ def login_required(f):
 @login_required
 def admin_dashboard():
     """后台主页——未登录时自动跳转到登录页。"""
+    from app.models import DailyLog
     db = SessionLocal()
     try:
+        posts  = db.query(DailyLog).order_by(DailyLog.id.desc()).all()
         quotes = db.query(Quote).order_by(Quote.created_at.desc()).all()
     finally:
         db.close()
-    return render_template("admin_dashboard.html", posts=[], quotes=quotes)
+    return render_template("admin_dashboard.html", posts=posts, quotes=quotes)
 
 
 # ──────────────────────────────────────────────────────────
@@ -254,8 +256,9 @@ def api_quote_current():
 def post_create():
     """发布新动态，写入 DailyLog 表。"""
     from app.models import DailyLog
-    content = request.form.get("content", "").strip()
-    title   = request.form.get("title", "").strip()
+    content  = request.form.get("content", "").strip()
+    title    = request.form.get("title", "").strip()
+    category = request.form.get("category", "").strip()
 
     if not content:
         flash("内容不能为空。", "error")
@@ -263,7 +266,7 @@ def post_create():
 
     db = SessionLocal()
     try:
-        log = DailyLog(title=title, content=content, is_published=True)
+        log = DailyLog(title=title, content=content, category=category, is_published=True)
         db.add(log)
         db.commit()
         flash("动态已发布！", "success")

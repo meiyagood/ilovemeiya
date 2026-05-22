@@ -238,6 +238,7 @@ class DailyLog(Base):
     # 状态
     is_published: Mapped[bool] = mapped_column(Boolean, default=True)
     mood: Mapped[str] = mapped_column(String(50), default="")  # 心情标签：calm, thoughtful, happy 等
+    category: Mapped[str] = mapped_column(String(50), default="")  # 分类：新闻/旅行/读书&文化/写作/语言/AI编程
     
     # 时间戳
     posted_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)  # 发布时间（用于排序和显示）

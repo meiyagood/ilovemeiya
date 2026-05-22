@@ -535,9 +535,9 @@
           {% for post in posts %}
           <div class="post-item">
             <div class="post-body">
-              <p class="post-category">{{ post.category }}</p>
+              <p class="post-category">{{ post.category or '—' }}</p>
               <p class="post-excerpt">{{ post.content }}</p>
-              <p class="post-date">{{ post.created_at }}</p>
+              <p class="post-date">{{ post.posted_at.strftime('%Y-%m-%d') if post.posted_at else '' }}</p>
             </div>
             <div class="post-actions">
               <a href="/une-vie-admin/post/{{ post.id }}/edit" class="btn btn-ghost" style="font-size:9px;padding:5px 12px;">编辑</a>
