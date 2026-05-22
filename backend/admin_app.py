@@ -14,6 +14,7 @@ import os
 import sys
 from datetime import timedelta
 from functools import wraps
+from pathlib import Path
 
 import secrets
 
@@ -57,6 +58,23 @@ app.secret_key = os.getenv("SESSION_SECRET_KEY", "default-fallback-key-please-ch
 app.permanent_session_lifetime = timedelta(hours=24)
 
 # 后台通行密码（单密码极简模式）
+# 优先读环境变量，其次从同目录 .env 文件兜底加载
+def _load_env_file(path: Path) -> None:
+    """简易 .env 解析：KEY=VALUE，忽略注释行。"""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:   # 不覆盖已设置的环境变量
+            os.environ[key] = value
+
+_load_env_file(Path(BASE_DIR) / ".env")
+
 ADMIN_PASSPHRASE: str | None = os.getenv("ADMIN_PASSPHRASE")
 
 
