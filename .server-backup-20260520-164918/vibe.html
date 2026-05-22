@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vibe Coding · Chronicle Snippets | Meiya</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --ease: 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+        --bg: #F7F8F9;
+        --ink: #1A1A1A;
+        --mid: #555;
+        --rule: #EAEAEA;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Crimson Text", "EB Garamond", Georgia, serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ══════════════════════════════════════════════
+         NAVBAR — exact copy of index.html
+         ══════════════════════════════════════════════ */
+      .topbar {
+        position: fixed;
+        top: 0;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 0;
+        border-bottom: none;
+        background: rgba(247, 248, 249, 0.97);
+        backdrop-filter: blur(8px);
+        box-shadow: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .topbar.navbar-shrunk {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 40px;
+        position: fixed;
+      }
+      .topbar.navbar-shrunk .logo-stack { display: none; }
+      .topbar.navbar-shrunk .nav {
+        display: flex; flex-direction: row;
+        justify-content: center; align-items: center;
+        gap: 30px; padding: 0; margin: 0;
+        border-bottom: none; float: none; width: auto;
+        position: static; left: auto; transform: none;
+      }
+      .topbar.navbar-shrunk .topbar-nav-rule { display: none; }
+      .topbar.navbar-shrunk .topbar-header {
+        position: absolute; right: 40px; top: 50%;
+        transform: translateY(-50%); padding: 0;
+        justify-content: flex-end; z-index: 1001;
+      }
+
+      .topbar-header {
+        position: absolute;
+        top: 14px;
+        right: 40px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 1001;
+      }
+
+      .topbar-brand { display: none; }
+
+      .nav-toggle {
+        display: none;
+        border: none;
+        background: transparent;
+        color: #1f2428;
+        font-family: "Playfair Display", serif;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .nav-close { display: none; }
+
+      .logo-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin: 60px 0;
+      }
+      .logo-stack .logo-top {
+        font-family: "Playfair Display", serif;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 0.8em;
+        text-transform: uppercase;
+        margin-bottom: -10px;
+        color: #000;
+      }
+      .logo-stack .logo-main {
+        font-family: "Playfair Display", serif;
+        font-weight: 900;
+        font-size: 100px;
+        text-transform: uppercase;
+        letter-spacing: -0.1em;
+        display: inline-block;
+        transform: scale(0.65, 1.4);
+        transform-origin: top center;
+        line-height: 1;
+        color: #000;
+      }
+
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        gap: 30px;
+        padding: 16px 0;
+        border-bottom: none;
+      }
+
+      .topbar-nav-rule {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        border: none;
+        border-bottom: 4px double #1f2428;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: block;
+        clear: both;
+      }
+
+      .nav-overlay { display: none; }
+
+      .nav a,
+      .lang button {
+        text-decoration: none;
+        color: #1f2428;
+        border-radius: 0;
+        border: none;
+        padding: 0;
+        font-size: 13px;
+        font-weight: 400;
+        font-family: "Playfair Display", serif;
+        background: transparent;
+        cursor: pointer;
+        transition: opacity var(--ease);
+        letter-spacing: 0.08em;
+        text-transform: capitalize;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        gap: 8px;
+        line-height: 1.2;
+      }
+
+      .nav a span {
+        font-size: 11px;
+        color: #575757;
+        font-weight: 400;
+        font-family: "Crimson Text", serif;
+        letter-spacing: 0;
+        text-transform: none;
+        display: inline;
+      }
+
+      .nav a:hover { opacity: 1; transform: none; border: none; background: transparent; text-decoration: underline; }
+
+      .lang button {
+        padding: 0;
+        font-size: 12px;
+        font-family: "Crimson Text", serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #444444;
+      }
+      .lang button:hover { color: #1f2428; background: transparent; transform: none; }
+      .lang button.active { color: #1f2428; font-weight: 700; }
+
+      .lang-in-nav { display: none; }
+
+      /* ══════════════════════════════════════════════
+         PAGE SHELL
+         ══════════════════════════════════════════════ */
+      .shell {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 16px 72px;
+        padding-top: 220px;
+      }
+
+      /* ══════════════════════════════════════════════
+         PAGE HERO
+         ══════════════════════════════════════════════ */
+      .vibe-hero {
+        text-align: center;
+        padding: 72px 20px 60px;
+        border-bottom: 1px solid var(--rule);
+        margin-bottom: 72px;
+      }
+
+      .vibe-hero-label {
+        font-family: "Inter", sans-serif;
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #999;
+        margin-bottom: 24px;
+      }
+
+      .vibe-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+        margin-bottom: 20px;
+      }
+
+      .vibe-hero-subtitle {
+        font-family: "EB Garamond", serif;
+        font-size: 1.1rem;
+        font-style: italic;
+        color: #666;
+        letter-spacing: 0.06em;
+        line-height: 1.7;
+      }
+
+      /* ══════════════════════════════════════════════
+         TIMELINE MINOR ITEMS
+         ══════════════════════════════════════════════ */
+      .timeline-note {
+        display: flex;
+        align-items: baseline;
+        gap: 28px;
+        padding: 28px 0;
+        border-top: 1px solid var(--rule);
+      }
+
+      .timeline-note:first-child { border-top: none; }
+
+      .timeline-date {
+        font-family: "Inter", sans-serif;
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #aaa;
+        white-space: nowrap;
+        min-width: 90px;
+      }
+
+      .timeline-note p {
+        font-size: 1rem;
+        color: var(--mid);
+        line-height: 1.75;
+      }
+
+      /* ══════════════════════════════════════════════
+         PROJECT CARDS — ALTERNATING LAYOUT
+         ══════════════════════════════════════════════ */
+      .project-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: center;
+        padding: 64px 0;
+        border-top: 1px solid var(--rule);
+      }
+
+      /* Even cards: flip order */
+      .project-card.card-even .card-visual { order: 2; }
+      .project-card.card-even .card-body   { order: 1; }
+
+      .card-visual {
+        filter: grayscale(20%);
+        transition: filter 0.3s ease;
+      }
+      .card-visual:hover { filter: grayscale(0%); }
+
+      .project-date {
+        display: inline-block;
+        font-family: "Inter", sans-serif;
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #aaa;
+        margin-bottom: 14px;
+      }
+
+      .card-body h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.3;
+        margin-bottom: 18px;
+      }
+
+      .card-body p {
+        font-family: "Crimson Text", serif;
+        font-size: 1.1rem;
+        color: var(--mid);
+        line-height: 1.85;
+      }
+
+      /* ══════════════════════════════════════════════
+         EMBEDDED DEMOS (the "visual" side of cards)
+         ══════════════════════════════════════════════ */
+      .project-embed {
+        background: #fff;
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        padding: 24px;
+      }
+
+      .embed-title {
+        font-family: "Inter", sans-serif;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #bbb;
+        margin-bottom: 16px;
+      }
+
+      /* Phone mockup */
+      .phone-frame {
+        background: #1a1a1a;
+        border-radius: 24px;
+        padding: 16px;
+        max-width: 200px;
+        margin: 0 auto;
+      }
+
+      .phone-notch {
+        width: 60px;
+        height: 6px;
+        background: #333;
+        border-radius: 3px;
+        margin: 0 auto 12px;
+      }
+
+      .phone-screen {
+        background: #f0ede8;
+        border-radius: 12px;
+        padding: 16px;
+        min-height: 200px;
+      }
+
+      .phone-header {
+        font-family: "Playfair Display", serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: #333;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 6px;
+      }
+
+      .phone-line {
+        height: 6px;
+        background: #d5d0c8;
+        border-radius: 3px;
+        margin-bottom: 8px;
+      }
+
+      .phone-line.short { width: 60%; }
+
+      .phone-card {
+        background: #fff;
+        border-left: 2px solid #aaa;
+        padding: 10px 12px;
+        margin-top: 12px;
+        font-family: "Crimson Text", serif;
+        font-size: 12px;
+        color: #444;
+        line-height: 1.5;
+        border-radius: 0 4px 4px 0;
+      }
+
+      .phone-caption {
+        font-size: 10px;
+        color: #bbb;
+        text-align: right;
+        margin-top: 8px;
+        font-family: "Inter", sans-serif;
+        letter-spacing: 0.1em;
+      }
+
+      /* Translation console */
+      .translator-embed input {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid var(--rule);
+        background: transparent;
+        font-family: "Crimson Text", serif;
+        font-size: 1rem;
+        color: var(--ink);
+        padding: 8px 0;
+        outline: none;
+        margin-bottom: 12px;
+      }
+
+      .translator-embed input::placeholder { color: #ccc; }
+
+      .translator-embed button {
+        background: transparent;
+        border: 1px solid #ccc;
+        color: #666;
+        font-family: "Inter", sans-serif;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 6px 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .translator-embed button:hover {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+
+      .translation-output {
+        margin-top: 16px;
+        font-family: "Crimson Text", serif;
+        font-size: 1rem;
+        color: var(--mid);
+        font-style: italic;
+        min-height: 40px;
+        border-top: 1px solid var(--rule);
+        padding-top: 12px;
+      }
+
+      /* Canvas embed */
+      .map-embed canvas {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 2px;
+      }
+
+      .canvas-caption {
+        font-family: "Inter", sans-serif;
+        font-size: 10px;
+        color: #bbb;
+        letter-spacing: 0.12em;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      @media (max-width: 960px) {
+        .nav { gap: 12px; }
+        .logo-stack .logo-top { font-size: 12px; letter-spacing: 0.8em; }
+        .logo-stack .logo-main { font-size: 80px; letter-spacing: -0.1em; transform: scale(0.65, 1.4); }
+      }
+
+      @media (max-width: 680px) {
+        .topbar { flex-direction: column; align-items: stretch; }
+        .topbar-header {
+          position: static;
+          justify-content: space-between;
+          padding: 10px 0;
+        }
+        .topbar-header .lang { display: none; }
+        .lang-in-nav {
+          display: flex;
+          gap: 16px;
+          margin-top: 20px;
+          padding-top: 16px;
+          border-top: 1px solid #e8e4de;
+        }
+        .nav-toggle { display: inline-block; }
+        .logo-stack { padding: 14px 0; }
+        .logo-stack .logo-top { font-size: 11px; letter-spacing: 0.8em; }
+        .logo-stack .logo-main { font-size: 60px; letter-spacing: -0.1em; transform: scale(0.65, 1.4); }
+        .nav {
+          position: fixed;
+          top: 0; left: 0;
+          width: min(62vw, 260px); height: 100vh;
+          flex-direction: column; flex-wrap: nowrap;
+          align-items: flex-start; justify-content: flex-start;
+          gap: 12px; padding: 84px 14px 20px;
+          border-bottom: none;
+          border-right: 1px solid #1f2428;
+          background: #fcfaf6;
+          transform: translateX(-110%);
+          transition: transform var(--ease);
+          z-index: 25;
+        }
+        .nav a { font-size: 14px; }
+        .nav a span { font-size: 12px; }
+        .nav-close {
+          display: inline-block;
+          border: none; background: transparent;
+          color: #1f2428; font-family: "Playfair Display", serif;
+          font-size: 12px; letter-spacing: 0.12em;
+          text-transform: uppercase; padding: 0;
+          margin-bottom: 8px; cursor: pointer;
+        }
+        body.nav-open .nav { transform: translateX(0); }
+        .nav-overlay {
+          position: fixed; inset: 0;
+          background: rgba(0,0,0,0.2); z-index: 20;
+        }
+        body.nav-open .nav-overlay { display: block; }
+        body.nav-open { overflow: hidden; }
+
+        .shell { padding-top: 80px; padding-left: 16px; padding-right: 16px; }
+        .vibe-hero { padding: 48px 0 40px; margin-bottom: 48px; }
+        .vibe-hero h1 { font-size: 2rem; }
+        .project-card {
+          grid-template-columns: 1fr;
+          gap: 32px; padding: 48px 0;
+        }
+        .project-card.card-even .card-visual { order: 0; }
+        .project-card.card-even .card-body   { order: 0; }
+        .timeline-note { gap: 16px; flex-direction: column; }
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <!-- ══ NAVBAR ══ -->
+    <header class="topbar">
+      <div class="topbar-header">
+        <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">Menu</button>
+        <div class="lang" aria-label="language switch">
+          <button id="btn-zh" class="active" type="button">ZH</button>
+          <button id="btn-en" type="button">EN</button>
+          <button id="btn-fr" type="button">FR</button>
+        </div>
+      </div>
+      <div class="logo-stack">
+        <span class="logo-top">Chez</span>
+        <span class="logo-main">Meiya</span>
+      </div>
+      <nav id="main-nav" class="nav" aria-label="main navigation">
+        <button id="nav-close" class="nav-close" type="button">Close</button>
+        <a href="news.html" data-zh="新闻" data-en="News" data-fr="News">News<span data-zh="新闻" data-en="News" data-fr="News">新闻</span></a>
+        <a href="travel.html" data-zh="旅行" data-en="Voyage" data-fr="Voyage">Voyage<span data-zh="旅行" data-en="Voyage" data-fr="Voyage">旅行</span></a>
+        <a href="reading.html" data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">Books & Culture<span data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">读书&文化</span></a>
+        <a href="social.html" data-zh="写作" data-en="Writing" data-fr="Writing">Writing<span data-zh="写作" data-en="Writing" data-fr="Writing">写作</span></a>
+        <a href="french.html" data-zh="语言" data-en="Français" data-fr="Français">Français<span data-zh="法语" data-en="Français" data-fr="Français">法语</span></a>
+        <a href="vibe.html" data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">Vibe Coding<span data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">AI编程</span></a>
+        <div class="lang lang-in-nav" aria-label="language switch">
+          <button id="btn-zh-m" type="button">ZH</button>
+          <button id="btn-en-m" type="button">EN</button>
+          <button id="btn-fr-m" type="button">FR</button>
+        </div>
+      </nav>
+      <div class="nav-overlay" id="nav-overlay"></div>
+      <div class="topbar-nav-rule" aria-hidden="true"></div>
+    </header>
+
+    <!-- ══ PAGE CONTENT ══ -->
+    <div class="shell">
+
+      <!-- Page Hero -->
+      <section class="vibe-hero">
+        <h1>Vibe Coding</h1>
+        <p class="vibe-hero-subtitle">氛围编程</p>
+      </section>
+
+      <!-- Timeline: Minor note -->
+      <div class="timeline-note">
+        <span class="timeline-date">March 2026</span>
+        <p>
+          我购买域名 <strong>zaoanmeiya.com</strong>，像在报纸页眉上写下第一行署名；随后推进
+          ICP 备案，并搭起个人网页的首版版面，让线上空间拥有可被追溯的起点。
+        </p>
+      </div>
+
+      <!-- Project Card 1: ODD (visual left, text right) -->
+      <article class="project-card card-odd">
+        <div class="card-visual">
+          <div class="project-embed wechat-mockup" aria-label="WeChat Mini Program mockup">
+            <p class="embed-title">WeChat Mini Program Demo</p>
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="phone-header">Focus &amp; Milestone</div>
+                <div class="phone-line"></div>
+                <div class="phone-line short"></div>
+                <div id="wechat-card" class="phone-card">今日语录：真正的秩序，从自我观察开始。</div>
+                <p id="wechat-caption" class="phone-caption">Scene 1 / 3</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="project-date">April 2026</span>
+          <h2>Focus &amp; Milestone 小程序</h2>
+          <p>
+            这不是一款关于"效率"的应用，而是一次关于注意力的手工装订。
+            我用它记录哲学语录与日常反思，让每次输入都成为节律校准。
+            从灵感捕捉到里程碑追踪，它更像一本持续增订的思辨手账。
+          </p>
+        </div>
+      </article>
+
+      <!-- Timeline: Minor note -->
+      <div class="timeline-note">
+        <span class="timeline-date">April 2026</span>
+        <p>在项目迭代间隙完成"法语视频翻译网页"的交互雏形，用最少界面承接语言转换。</p>
+      </div>
+
+      <!-- Project Card 2: EVEN (text left, visual right) -->
+      <article class="project-card card-even">
+        <div class="card-visual">
+          <div class="project-embed translator-embed" aria-label="French translation interaction model">
+            <p class="embed-title">French Translation Console</p>
+            <label for="fr-input" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">法语输入</label>
+            <input id="fr-input" type="text" placeholder="Entrez une phrase française..." autocomplete="off" />
+            <button id="translate-button" type="button">Translate</button>
+            <p id="translation-output" class="translation-output">中文译文将显示在这里。</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="project-date">April 2026</span>
+          <h2>法语翻译工具（网页）</h2>
+          <p>
+            当视频成为语言学习入口，翻译就不再只是"结果"，而是一种观看方式。
+            我把字幕提取、短句对照与注释放在同一视野里，让理解这件事变得更慢，也更清晰。
+          </p>
+        </div>
+      </article>
+
+      <!-- Project Card 3: ODD (visual left, text right) -->
+      <article class="project-card card-odd">
+        <div class="card-visual">
+          <div class="project-embed map-embed" aria-label="Europe transportation map canvas">
+            <p class="embed-title">Europe Mobility Canvas</p>
+            <canvas id="eu-route-canvas" width="900" height="360" aria-label="Europe route canvas"></canvas>
+            <p class="canvas-caption">可替换为真实轨迹数据；当前为示意路径层。</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="project-date">May 2026</span>
+          <h2>欧洲旅行交通地图爬虫</h2>
+          <p>
+            为七月十五天的荷德法之行，我编写路线与交通信息工具，把城市间的换乘逻辑折叠为
+            可阅读、可比较的路径图。技术在此不只是准备工作，而是一种提前抵达的方式。
+          </p>
+        </div>
+      </article>
+
+    </div><!-- /.shell -->
+
+    <script>
+      /* ── Language switcher ── */
+      function setLanguage(lang) {
+        document.querySelectorAll('[data-zh][data-en][data-fr]').forEach(function(el) {
+          var v = el.getAttribute('data-' + lang);
+          if (v !== null) el.textContent = v;
+        });
+        ['zh','en','fr'].forEach(function(l) {
+          var b = document.getElementById('btn-' + l);
+          var m = document.getElementById('btn-' + l + '-m');
+          if (b) b.classList.toggle('active', l === lang);
+          if (m) m.classList.toggle('active', l === lang);
+        });
+        localStorage.setItem('lang', lang);
+      }
+
+      var savedLang = localStorage.getItem('lang') || 'zh';
+      setLanguage(savedLang);
+
+      ['zh','en','fr'].forEach(function(l) {
+        var b = document.getElementById('btn-' + l);
+        var m = document.getElementById('btn-' + l + '-m');
+        if (b) b.addEventListener('click', function() { setLanguage(l); });
+        if (m) m.addEventListener('click', function() { setLanguage(l); closeMobileNav(); });
+      });
+
+      /* ── Mobile nav ── */
+      var navToggle  = document.getElementById('nav-toggle');
+      var navClose   = document.getElementById('nav-close');
+      var navOverlay = document.getElementById('nav-overlay');
+      var navLinks   = document.querySelectorAll('#main-nav a');
+
+      function openMobileNav()  { document.body.classList.add('nav-open');    navToggle.setAttribute('aria-expanded','true');  navToggle.textContent = 'Close'; }
+      function closeMobileNav() { document.body.classList.remove('nav-open'); navToggle.setAttribute('aria-expanded','false'); navToggle.textContent = 'Menu'; }
+
+      navToggle  && navToggle.addEventListener('click', function() { document.body.classList.contains('nav-open') ? closeMobileNav() : openMobileNav(); });
+      navClose   && navClose.addEventListener('click', closeMobileNav);
+      navOverlay && navOverlay.addEventListener('click', closeMobileNav);
+      navLinks.forEach(function(link) { link.addEventListener('click', closeMobileNav); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMobileNav(); });
+      window.matchMedia('(min-width: 681px)').addEventListener('change', function(e) { if (e.matches) closeMobileNav(); });
+
+      /* ── Navbar scroll shrink ── */
+      var topbar = document.querySelector('.topbar');
+      window.addEventListener('scroll', function() {
+        topbar.classList.toggle('navbar-shrunk', window.scrollY > 50);
+      }, { passive: true });
+
+      /* ── WeChat card carousel ── */
+      var quotes = [
+        '今日语录：真正的秩序，从自我观察开始。',
+        '里程碑不是终点，而是节奏的标记。',
+        '每一次输入，都是对注意力的校准。'
+      ];
+      var idx = 0;
+      var card = document.getElementById('wechat-card');
+      var caption = document.getElementById('wechat-caption');
+      if (card) {
+        setInterval(function() {
+          idx = (idx + 1) % quotes.length;
+          card.style.opacity = '0';
+          setTimeout(function() {
+            card.textContent = quotes[idx];
+            caption.textContent = 'Scene ' + (idx + 1) + ' / ' + quotes.length;
+            card.style.opacity = '1';
+          }, 300);
+        }, 3000);
+        card.style.transition = 'opacity 0.3s ease';
+      }
+
+      /* ── Translation demo ── */
+      var dict = {
+        'bonjour': '你好', 'merci': '谢谢', 'au revoir': '再见',
+        'je t\'aime': '我爱你', 'paris': '巴黎', 'liberté': '自由',
+        'la vie': '生活', 'le temps': '时间', 'sérendipité': '意外发现美好之事的能力'
+      };
+      var btn = document.getElementById('translate-button');
+      var inp = document.getElementById('fr-input');
+      var out = document.getElementById('translation-output');
+      if (btn && inp && out) {
+        btn.addEventListener('click', function() {
+          var key = inp.value.trim().toLowerCase();
+          out.textContent = dict[key] || (key ? '（示意译文：' + key + '）' : '中文译文将显示在这里。');
+        });
+        inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') btn.click(); });
+      }
+
+      /* ── Europe route canvas ── */
+      var canvas = document.getElementById('eu-route-canvas');
+      if (canvas) {
+        var ctx = canvas.getContext('2d');
+        var W = canvas.width, H = canvas.height;
+
+        var cities = [
+          { name: 'Amsterdam', x: 0.25, y: 0.22 },
+          { name: 'Cologne',   x: 0.35, y: 0.38 },
+          { name: 'Frankfurt', x: 0.42, y: 0.44 },
+          { name: 'Strasbourg',x: 0.47, y: 0.52 },
+          { name: 'Paris',     x: 0.32, y: 0.62 },
+          { name: 'Lyon',      x: 0.40, y: 0.76 }
+        ];
+
+        ctx.fillStyle = '#FAFAF8';
+        ctx.fillRect(0, 0, W, H);
+
+        /* route line */
+        ctx.beginPath();
+        ctx.strokeStyle = '#BBBAB5';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        cities.forEach(function(c, i) {
+          i === 0 ? ctx.moveTo(c.x * W, c.y * H) : ctx.lineTo(c.x * W, c.y * H);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        /* dots + labels */
+        cities.forEach(function(c) {
+          ctx.beginPath();
+          ctx.arc(c.x * W, c.y * H, 5, 0, Math.PI * 2);
+          ctx.fillStyle = '#1A1A1A';
+          ctx.fill();
+
+          ctx.font = '11px Inter, sans-serif';
+          ctx.fillStyle = '#555';
+          ctx.fillText(c.name, c.x * W + 10, c.y * H + 4);
+        });
+      }
+    </script>
+  </body>
+</html>

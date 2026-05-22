@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News | Une vie pensée</title>
+  <meta name="description" content="新闻 | News. Une vie pensée." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #2b4c63;
+      --ink: #1f2428;
+      --muted: #5a667d;
+      --line: #cdd5db;
+      --ease: 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #F7F8F9;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      line-height: 1.7;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px 72px;
+      padding-top: 220px;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0;
+      border-bottom: none;
+      background: rgba(247, 248, 249, 0.97);
+      backdrop-filter: blur(8px);
+      box-shadow: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .topbar.navbar-shrunk {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 40px;
+      position: fixed;
+    }
+
+    .topbar.navbar-shrunk .logo-stack { display: none; }
+
+    .topbar.navbar-shrunk .nav {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      padding: 0;
+      margin: 0;
+      border-bottom: none;
+      float: none;
+      width: auto;
+      position: static;
+      left: auto;
+      transform: none;
+    }
+
+    .topbar.navbar-shrunk .topbar-nav-rule { display: none; }
+
+    .topbar.navbar-shrunk .topbar-header {
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0;
+      justify-content: flex-end;
+      z-index: 1001;
+    }
+
+    .topbar-header {
+      position: absolute;
+      top: 14px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1001;
+    }
+
+    .topbar-brand { display: none; }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      color: #1f2428;
+      font-family: "Playfair Display", serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .nav-close { display: none; }
+
+    .logo-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin: 60px 0;
+    }
+
+    .logo-stack .logo-top {
+      font-family: "Playfair Display", serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.8em;
+      text-transform: uppercase;
+      margin-bottom: -10px;
+      color: #000;
+    }
+
+    .logo-stack .logo-main {
+      font-family: "Playfair Display", serif;
+      font-weight: 900;
+      font-size: 100px;
+      text-transform: uppercase;
+      letter-spacing: -0.1em;
+      display: inline-block;
+      transform: scale(0.65, 1.4);
+      transform-origin: top center;
+      line-height: 1;
+      color: #000;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      gap: 30px;
+      padding: 16px 0;
+      border-bottom: none;
+    }
+
+    .topbar-nav-rule {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      border: none;
+      border-bottom: 4px double #1f2428;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      display: block;
+      clear: both;
+    }
+
+    .nav-overlay { display: none; }
+
+    .nav a,
+    .lang button {
+      text-decoration: none;
+      color: #1f2428;
+      border-radius: 0;
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 400;
+      font-family: "Playfair Display", serif;
+      background: transparent;
+      cursor: pointer;
+      transition: opacity var(--ease);
+      letter-spacing: 0.08em;
+      text-transform: capitalize;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.2;
+    }
+
+    .nav a span {
+      font-size: 11px;
+      color: #575757;
+      font-weight: 400;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+      text-transform: none;
+      display: inline;
+    }
+
+    .nav a:hover {
+      opacity: 1;
+      transform: none;
+      border: none;
+      background: transparent;
+      text-decoration: underline;
+    }
+
+    .lang button {
+      padding: 0;
+      font-size: 12px;
+      font-family: "Crimson Text", serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #444444;
+    }
+
+    .lang button:hover { color: #1f2428; background: transparent; }
+    .lang button.active { color: #1f2428; font-weight: 700; }
+
+    .lang-in-nav { display: none; }
+
+    .page-header {
+      text-align: center;
+      padding: 64px 0 48px;
+      border-bottom: 1px solid #EAEAEA;
+      margin-bottom: 0;
+    }
+
+    .page-header h1 {
+      margin: 0 0 12px;
+      font-family: "Playfair Display", serif;
+      font-size: 3rem;
+      font-weight: 900;
+      text-transform: none;
+      letter-spacing: 0.08em;
+      color: #1f2428;
+      line-height: 1.2;
+    }
+
+    .page-header .page-sub {
+      font-size: 12px;
+      color: #a8a8a8;
+      font-weight: 400;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+    }
+
+    .page-header .page-hero-subtitle {
+      font-family: "EB Garamond", "Crimson Text", serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #666;
+      letter-spacing: 0.04em;
+      margin-top: 18px;
+      line-height: 1.7;
+    }
+
+    /* ======== NEWS ARTICLE BODY ======== */
+    .article-body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 0 40px;
+      background: transparent;
+    }
+
+    .articles-list { display: flex; flex-direction: column; }
+
+    /* --- FEATURED (first item) --- */
+    .article-item.is-featured {
+      display: flex;
+      flex-direction: row;
+      gap: 52px;
+      align-items: flex-start;
+      margin-bottom: 60px;
+      padding: 40px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid #EAEAEA;
+      background: #F7F8F9;
+    }
+
+    .featured-text {
+      flex: 0 0 55%;
+      max-width: 55%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* subtlePulse — breathing scale animation */
+    @keyframes subtlePulse {
+      0%   { transform: scale(1)    translateY(0);       }
+      50%  { transform: scale(1.05) translateY(-4px);    }
+      100% { transform: scale(1)    translateY(0);       }
+    }
+
+    .featured-image {
+      flex: 0 0 calc(45% - 52px);
+      min-width: 0;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .featured-image figure {
+      margin: 0; padding: 0; border: none; background: none;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    /* Shared base for img & video inside .interactive-art */
+    .interactive-art {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+      border-radius: 4px;
+      /* subtle tonal blend with linen background */
+      filter: sepia(8%) contrast(1.02);
+      mix-blend-mode: multiply;
+      transition: filter 0.5s ease, transform 0.5s ease;
+      animation: subtlePulse 10s ease-in-out infinite;
+    }
+
+    /* hover: lift saturation & contrast slightly */
+    .article-item.is-featured:hover .interactive-art {
+      filter: sepia(0%) contrast(1.08) saturate(1.1);
+      animation-play-state: paused;
+    }
+
+    .featured-image figure figcaption {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px; color: #aaa; letter-spacing: 0.08em; margin-top: 6px;
+    }
+
+    /* --- CARD (items 1+) --- */
+    .article-item.is-card {
+      display: flex;
+      gap: 36px;
+      align-items: flex-start;
+      padding: 36px 0;
+      border-bottom: 1px solid #EAEAEA;
+    }
+    .article-item.is-card:last-child { border-bottom: none; }
+
+    .card-thumb { flex: 0 0 38%; max-width: 38%; }
+    .card-thumb img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .card-thumb-empty { flex: 0 0 38%; max-width: 38%; height: 220px; background: #ede9e2; }
+    .card-body { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
+
+    /* --- SHARED --- */
+    .news-meta {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px; color: #888; letter-spacing: 0.2em;
+      text-transform: uppercase; margin-bottom: 10px; line-height: 1.4;
+    }
+
+    .article-item h2 {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 1.65rem; font-weight: 400; line-height: 1.2;
+      color: #000; margin: 0 0 12px;
+    }
+    .article-item.is-featured .news-meta {
+      color: #bbb;
+      letter-spacing: 0.25em;
+    }
+
+    .article-item.is-featured h2 {
+      font-size: 2.2rem; line-height: 1.2; margin-bottom: 16px;
+    }
+
+    /* Two-line clamp summary */
+    .article-excerpt {
+      font-family: 'Crimson Text', 'Noto Serif SC', serif;
+      font-size: 16px; line-height: 1.72; color: #444;
+      margin: 0 0 20px;
+      display: -webkit-box; -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2; overflow: hidden;
+      flex: 1;
+    }
+    .article-item.is-featured .article-excerpt {
+      -webkit-line-clamp: 3; font-size: 17px;
+    }
+
+    /* READ FULL ARTICLE */
+    .read-more {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #1f2428;
+      text-decoration: none; transition: color 0.18s;
+      margin-top: 2rem; align-self: flex-start;
+    }
+    .read-more:hover { color: #888; }
+
+    /* --- 3-COL GRID (items 4+) --- */
+    .news-grid {
+      max-width: 900px; margin: 48px auto 0;
+      padding-top: 40px; border-top: 1px solid #EAEAEA;
+    }
+    .news-grid-label {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px; color: #888; letter-spacing: 0.2em;
+      text-transform: uppercase; margin-bottom: 28px;
+    }
+    .news-grid-list {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 36px; background: #F7F8F9; padding: 32px;
+    }
+    .grid-item h3 {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 1.1rem; font-weight: 400; line-height: 1.3;
+      color: #000; margin: 0 0 8px;
+    }
+    .grid-item-meta {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px; color: #888; letter-spacing: 0.15em; text-transform: uppercase;
+    }
+
+    .back-home { max-width: 900px; margin: 0 auto; padding: 0 0 48px; }
+    .back-home a {
+      color: #a8a8a8; text-decoration: none;
+      font-family: 'Crimson Text', serif; font-size: 0.95rem;
+      letter-spacing: 0.05em; display: inline-flex; align-items: center;
+      gap: 6px; transition: color 0.2s;
+    }
+    .back-home a:hover { color: #1f2428; }
+    .back-home a::before { content: "←"; font-size: 1rem; }
+
+    footer {
+      padding-top: 20px; border-top: 1px solid #EAEAEA;
+      text-align: center; color: #888;
+      font-size: 0.9rem; font-family: 'Crimson Text', serif;
+    }
+
+    /* ======== IMMERSIVE ARTICLE READER ======== */
+    .reader-close {
+      position: fixed;
+      top: 20px;
+      left: 24px;
+      z-index: 110;
+      display: none;
+      border: none;
+      background: transparent;
+      font-family: "Playfair Display", serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #1f2428;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+
+    body.reading-mode .reader-close { display: inline-block; }
+
+    .article-reader {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #fdfaf5;
+      overflow-y: auto;
+      opacity: 0;
+      transition: opacity 380ms ease;
+    }
+
+    .article-reader.is-open { opacity: 1; }
+
+    .reader-hero {
+      width: 100%;
+      max-height: 50vh;
+      overflow: hidden;
+    }
+
+    .reader-hero img,
+    .reader-hero video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .reader-shell {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .reader-meta {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px;
+      color: #888;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .reader-title {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #1f2428;
+      margin: 0 0 24px;
+    }
+
+    .reader-lede {
+      font-family: "Crimson Text", serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #555;
+      border-left: 3px solid #1f2428;
+      margin: 0 0 32px;
+      padding: 4px 0 4px 20px;
+      line-height: 1.7;
+    }
+
+    .reader-content p {
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: #1f2428;
+      margin: 0 0 1.4em;
+    }
+
+    .reader-source {
+      margin-top: 40px;
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px;
+      color: #aaa;
+      letter-spacing: 0.08em;
+    }
+
+    /* ======== NAVBAR SHRUNK STATE — handled above ======== */
+
+    /* ======== AUTHOR BIO ======== */
+    .author-bio-container {
+      background: #F2F3F4;
+      padding: 80px 0;
+      margin-top: 80px;
+    }
+
+    .author-bio-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .author-avatar {
+      width: 150px; height: 150px;
+      border-radius: 50%; object-fit: cover;
+      filter: grayscale(20%);
+      display: block; margin-bottom: 24px;
+    }
+
+    .author-avatar-fallback {
+      width: 150px; height: 150px;
+      border-radius: 50%; background: #ddd;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'EB Garamond', serif; font-size: 2.5rem;
+      color: #888; margin-bottom: 24px; flex-shrink: 0;
+    }
+
+    .author-name {
+      font-family: 'EB Garamond', serif; font-size: 28px;
+      font-weight: 400; color: #1A1A1A;
+      margin-bottom: 6px; display: block;
+    }
+
+    .author-role {
+      font-family: 'EB Garamond', serif; font-size: 18px;
+      font-style: italic; color: #444444;
+      margin-bottom: 16px; display: block;
+    }
+
+    .author-bio-text {
+      font-family: 'Crimson Text', serif; font-size: 1.05rem;
+      line-height: 1.8; color: #666; margin-bottom: 28px;
+    }
+
+    .social-matrix-layout {
+      display: flex; gap: 40px;
+      justify-content: center; align-items: flex-start;
+      padding-top: 24px; margin-top: 4px;
+      border-top: 1px solid #DCDCDC;
+      width: 100%; margin-bottom: 28px;
+    }
+
+    .social-matrix-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 6px;
+      color: #1A1A1A; text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .social-matrix-item:hover { opacity: 0.6; }
+
+    .social-matrix-item svg { width: 22px; height: 22px; fill: currentColor; }
+
+    .social-id-label {
+      font-family: 'Inter', sans-serif; font-size: 10px;
+      letter-spacing: 0.15em; color: #888;
+      text-transform: uppercase; margin-top: 5px;
+    }
+
+    .author-readmore {
+      font-family: 'Crimson Text', serif; font-size: 0.95rem;
+      letter-spacing: 0.08em; color: #888;
+      text-decoration: none; transition: color 0.2s;
+    }
+    .author-readmore:hover { color: #1f2428; }
+
+    @media (max-width: 960px) {
+      .article-body { padding: 48px 0; }
+      .news-grid-list { grid-template-columns: repeat(2, 1fr); }
+      .logo-stack .logo-top { font-size: 12px; letter-spacing: 0.8em; }
+      .logo-stack .logo-main { font-size: 80px; letter-spacing: -0.1em; transform: scale(0.65, 1.4); }
+    }
+
+    @media (max-width: 680px) {
+      .topbar { flex-direction: column; align-items: stretch; }
+      .topbar-header {
+        position: static;
+        justify-content: space-between;
+        padding: 10px 0;
+      }
+      .topbar-header .lang { display: none; }
+      .lang-in-nav {
+        display: flex;
+        gap: 16px;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #e8e4de;
+      }
+      .nav-toggle { display: inline-block; }
+      .logo-stack { padding: 14px 0; }
+      .logo-stack .logo-top { font-size: 11px; letter-spacing: 0.8em; }
+      .logo-stack .logo-main { font-size: 60px; letter-spacing: -0.1em; transform: scale(0.65, 1.4); }
+      .nav {
+        position: fixed;
+        top: 0; left: 0;
+        width: min(62vw, 260px); height: 100vh;
+        flex-direction: column; flex-wrap: nowrap;
+        align-items: flex-start; justify-content: flex-start;
+        gap: 12px; padding: 84px 14px 20px;
+        border-bottom: none;
+        border-right: 1px solid #1f2428;
+        background: #fcfaf6;
+        transform: translateX(-110%);
+        transition: transform 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+        z-index: 25;
+      }
+      .nav a { font-size: 14px; }
+      .nav a span { font-size: 12px; }
+      .nav-close {
+        display: inline-block;
+        border: none; background: transparent;
+        color: #1f2428; font-family: "Playfair Display", serif;
+        font-size: 12px; letter-spacing: 0.12em;
+        text-transform: uppercase; padding: 0;
+        margin-bottom: 8px; cursor: pointer;
+      }
+      body.nav-open .nav { transform: translateX(0); }
+      .nav-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.2); z-index: 20;
+      }
+      body.nav-open .nav-overlay { display: block; }
+      body.nav-open { overflow: hidden; }
+
+      .shell { padding-top: 80px; padding-left: 20px; padding-right: 20px; }
+      .page-header h1 { font-size: 32px; }
+      .article-item.is-featured { flex-direction: column; gap: 28px; padding: 24px; }
+      .featured-text, .featured-image { flex: none; max-width: 100%; width: 100%; }
+      .article-item.is-card { flex-direction: column; }
+      .card-thumb, .card-thumb-empty { flex: none; max-width: 100%; }
+      .card-thumb img, .card-thumb-empty { height: 200px; }
+      .news-grid-list { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== IMMERSIVE ARTICLE READER ===== -->
+  <button class="reader-close" id="reader-close-btn" aria-label="关闭阅读模式">← BACK</button>
+  <div id="article-reader" class="article-reader" role="dialog" aria-modal="true" aria-label="文章阅读">
+
+    <div class="reader-hero" id="reader-hero"></div>
+    <div class="reader-shell">
+      <div class="reader-layout">
+        <article class="reader-main">
+          <div class="reader-meta" id="reader-meta"></div>
+          <h1 class="reader-title" id="reader-title"></h1>
+          <blockquote class="reader-lede" id="reader-lede"></blockquote>
+          <div class="reader-content" id="reader-content"></div>
+          <div class="reader-source" id="reader-source"></div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="topbar">
+    <div class="topbar-header">
+      <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">Menu</button>
+      <div class="lang" aria-label="language switch">
+        <button id="btn-zh" class="active" type="button">ZH</button>
+        <button id="btn-en" type="button">EN</button>
+        <button id="btn-fr" type="button">FR</button>
+      </div>
+    </div>
+    <div class="logo-stack">
+      <span class="logo-top">Chez</span>
+      <span class="logo-main">Meiya</span>
+    </div>
+    <nav id="main-nav" class="nav" aria-label="main navigation">
+      <button id="nav-close" class="nav-close" type="button">Close</button>
+      <a href="news.html" data-zh="新闻" data-en="News" data-fr="News">News<span data-zh="新闻" data-en="News" data-fr="News">新闻</span></a>
+      <a href="travel.html" data-zh="旅行" data-en="Voyage" data-fr="Voyage">Voyage<span data-zh="旅行" data-en="Voyage" data-fr="Voyage">旅行</span></a>
+      <a href="reading.html" data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">Books & Culture<span data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">读书&文化</span></a>
+      <a href="social.html" data-zh="写作" data-en="Writing" data-fr="Writing">Writing<span data-zh="写作" data-en="Writing" data-fr="Writing">写作</span></a>
+      <a href="french.html" data-zh="语言" data-en="Français" data-fr="Français">Français<span data-zh="法语" data-en="Français" data-fr="Français">法语</span></a>
+      <a href="vibe.html" data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">Vibe Coding<span data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">AI编程</span></a>
+      <div class="lang lang-in-nav" aria-label="language switch">
+        <button id="btn-zh-m" type="button">ZH</button>
+        <button id="btn-en-m" type="button">EN</button>
+        <button id="btn-fr-m" type="button">FR</button>
+      </div>
+    </nav>
+    <div class="nav-overlay" id="nav-overlay"></div>
+    <div class="topbar-nav-rule" aria-hidden="true"></div>
+  </header>
+
+  <div class="shell">
+      <h1 id="page-title" data-zh="News" data-en="News" data-fr="News">News</h1>
+      <p class="page-sub" data-zh="近期文章" data-en="Recent articles" data-fr="Articles récents">近期文章</p>
+    </div>
+
+    <div class="article-body">
+      <main class="articles-list" id="news-list">
+        <p style="color:#8B8578;font-size:.95rem;letter-spacing:.05em;">正在加载…</p>
+      </main>
+    </div>
+    <div class="back-home">
+      <a href="index.html" data-zh="返回首页" data-en="Back to home" data-fr="Retour à l'accueil">返回首页</a>
+    </div>
+
+    <footer id="footer-text">© 2026 Une vie pensée. Chez Meiya.</footer>
+  </div>
+
+  <script>
+    // ── 日期格式化 ────────────────────────────────────────────
+    function fmtDate(dateStr, lang) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr + 'T00:00:00');
+      if (lang === 'zh') {
+        return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+      } else {
+        const months = ['January','February','March','April','May','June',
+          'July','August','September','October','November','December'];
+        const mfr = ['janvier','février','mars','avril','mai','juin',
+          'juillet','août','septembre','octobre','novembre','décembre'];
+        if (lang === 'fr') return `${d.getDate()} ${mfr[d.getMonth()]} ${d.getFullYear()}`;
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+      }
+    }
+
+    let currentLang = 'zh';
+    let newsData = [];
+
+    function renderNews(lang) {
+      const list = document.getElementById('news-list');
+      if (!newsData.length) {
+        list.innerHTML = '<p style="color:#8B8578;font-size:.95rem;letter-spacing:.05em;">暂无内容</p>';
+        return;
+      }
+
+      const mainItems = newsData.slice(0, 4);
+      const gridItems = newsData.slice(4);
+      const readLabel = lang === 'fr' ? "LIRE L'ARTICLE \u2192" : 'READ FULL ARTICLE \u2192';
+
+      const cardsHtml = mainItems.map((item, idx) => {
+        const isFirst = idx === 0;
+        const label = isFirst ? (lang === 'fr' ? '— À LA UNE · ' : '— 头条 · ') : '';
+        const meta = fmtDate(item.date, lang);
+        const rawText = (item.summary_cn || item.content_cn || '').replace(/\n+/g, ' ').trim();
+
+        if (isFirst) {
+          const label = lang === 'fr' ? 'À LA UNE · ' : '头条 · ';
+          const source = item.source ? `<span style="opacity:.6"> · ${item.source}</span>` : '';
+          const isVideo = item.image_path && /\.(mp4|webm|mov)$/i.test(item.image_path);
+          const imgBlock = item.image_path
+            ? `<div class="featured-image">
+                 <figure>
+                   ${isVideo
+                     ? `<video class="interactive-art" autoplay muted loop playsinline
+                            poster="${item.image_path.replace(/\.[^.]+$/, '.jpg')}">
+                          <source src="${item.image_path}" type="video/${item.image_path.split('.').pop()}">
+                        </video>`
+                     : `<img class="interactive-art" src="${item.image_path}" alt="${item.title}">`}
+                   ${item.image_caption ? `<figcaption>${item.image_caption}</figcaption>` : ''}
+                 </figure>
+               </div>`
+            : '';
+          return `<article id="news-${item.id}" class="article-item is-featured">
+            <div class="featured-text">
+              <div class="news-meta">${label}${meta}${source}</div>
+              <h2>${item.title}</h2>
+              <p class="article-excerpt">${rawText}</p>
+              <a class="read-more" href="javascript:void(0)" data-id="${item.id}">${readLabel}</a>
+            </div>
+            ${imgBlock}
+          </article>`;
+        }
+
+        const thumbHtml = item.image_path
+          ? `<div class="card-thumb"><img src="${item.image_path}" alt="${item.title}"></div>`
+          : `<div class="card-thumb-empty"></div>`;
+        return `<article id="news-${item.id}" class="article-item is-card">
+          ${thumbHtml}
+          <div class="card-body">
+            <div class="news-meta">${meta}</div>
+            <h2>${item.title}</h2>
+            <p class="article-excerpt">${rawText}</p>
+            <a class="read-more" href="javascript:void(0)" data-id="${item.id}">${readLabel}</a>
+          </div>
+        </article>`;
+      }).join('');
+
+      let gridHtml = '';
+      if (gridItems.length > 0) {
+        const gridLabel = lang === 'fr' ? "PLUS D'ARTICLES" : '更多文章';
+        gridHtml = `<section class="news-grid">
+          <div class="news-grid-label">${gridLabel}</div>
+          <div class="news-grid-list">
+            ${gridItems.map(it => `
+              <div class="grid-item" data-id="${it.id}" style="cursor:pointer;">
+                <h3>${it.title}</h3>
+                <div class="grid-item-meta">${fmtDate(it.date, lang)}</div>
+              </div>`).join('')}
+          </div>
+        </section>`;
+      }
+
+      list.innerHTML = cardsHtml + gridHtml;
+    }
+
+
+    // ===== IMMERSIVE ARTICLE READER =====
+    function openArticleModal(id) {
+      const item = newsData.find(n => String(n.id) === String(id));
+      if (!item) return;
+
+      const lang = currentLang;
+      const meta = fmtDate(item.date, lang);
+      const source = item.source || '';
+
+      // Hero image / video
+      const heroEl = document.getElementById('reader-hero');
+      if (item.image_path) {
+        const isVid = /\.(mp4|webm|mov)$/i.test(item.image_path);
+        heroEl.innerHTML = isVid
+          ? `<video autoplay muted loop playsinline poster="${item.image_path.replace(/\.[^.]+$/, '.jpg')}"><source src="${item.image_path}"></video>`
+          : `<img src="${item.image_path}" alt="${item.title}">`;
+      } else {
+        heroEl.innerHTML = '';
+      }
+
+      // Meta line
+      document.getElementById('reader-meta').textContent = [
+        lang === 'fr' ? 'À LA UNE' : '头条', meta, source
+      ].filter(Boolean).join(' · ');
+
+      // Title
+      document.getElementById('reader-title').textContent = item.title;
+
+      // Lede (italic intro) = summary
+      const ledeEl = document.getElementById('reader-lede');
+      ledeEl.textContent = item.summary_cn || '';
+
+      // Body paragraphs
+      const fullText = item.content_cn || item.summary_cn || '';
+      const paras = fullText.split(/\n+/).filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join('');
+      document.getElementById('reader-content').innerHTML = paras || `<p>${fullText}</p>`;
+
+      // Source
+      document.getElementById('reader-source').textContent = source ? `Source: ${source}` : '';
+
+
+      // Open: fade in reader, fade nav out
+      const reader = document.getElementById('article-reader');
+      reader.style.display = 'block';
+      reader.scrollTop = 0;
+      // force reflow so transition fires
+      reader.getBoundingClientRect();
+      reader.classList.add('is-open');
+      document.body.classList.add('reading-mode');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeArticleModal() {
+      const reader = document.getElementById('article-reader');
+      reader.classList.remove('is-open');
+      document.body.classList.remove('reading-mode');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        reader.style.display = 'none';
+        document.getElementById('reader-hero').innerHTML = '';
+      }, 420);
+    }
+
+    // reader-back removed; ESC key still closes reader
+    document.getElementById('reader-close-btn').addEventListener('click', closeArticleModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeArticleModal(); });
+
+    // Event delegation for .read-more and .grid-item
+    document.getElementById('news-list').addEventListener('click', function(e) {
+      const btn = e.target.closest('.read-more');
+      if (btn) { e.preventDefault(); openArticleModal(btn.dataset.id); return; }
+      const grid = e.target.closest('.grid-item[data-id]');
+      if (grid) { openArticleModal(grid.dataset.id); }
+    });
+
+    async function loadNews() {
+      try {
+        const res = await fetch('/api/news/public');
+        if (!res.ok) throw new Error('Failed to load');
+        newsData = await res.json();
+        renderNews(currentLang);
+      } catch (e) {
+        document.getElementById('news-list').innerHTML =
+          '<p style="color:#8B8578;font-size:.95rem;">暂时无法加载内容，请刷新页面。</p>';
+      }
+    }
+
+    // ── 语言切换 ──────────────────────────────────────────────
+    const languageStore = {
+      zh: { htmlLang: "zh-CN", pageTitle: "新闻", footer: "© 2026 Une vie pensée. Chez Meiya." },
+      en: { htmlLang: "en",    pageTitle: "News",  footer: "© 2026 Une vie pensée. Chez Meiya." },
+      fr: { htmlLang: "fr",    pageTitle: "News",  footer: "© 2026 Une vie pensée. Chez Meiya." }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const pack = languageStore[lang] || languageStore.zh;
+      document.documentElement.lang = pack.htmlLang;
+      document.getElementById("page-title").textContent = pack.pageTitle;
+      document.getElementById("footer-text").textContent = pack.footer;
+      document.querySelectorAll("[data-zh]").forEach(node => {
+        node.textContent = node.getAttribute("data-" + lang) || node.getAttribute("data-zh");
+      });
+      ['zh','en','fr'].forEach(l => {
+        const b = document.getElementById('btn-' + l);
+        const m = document.getElementById('btn-' + l + '-m');
+        if (b) b.classList.toggle('active', l === lang);
+        if (m) m.classList.toggle('active', l === lang);
+      });
+      localStorage.setItem("lang", lang);
+      renderNews(lang);
+    }
+
+    // ── Mobile nav ──────────────────────────────────────────
+    const navToggle = document.getElementById("nav-toggle");
+    const navClose = document.getElementById("nav-close");
+    const navOverlay = document.getElementById("nav-overlay");
+    const navLinks = document.querySelectorAll("#main-nav a");
+
+    function closeMobileNav() {
+      document.body.classList.remove("nav-open");
+      navToggle.setAttribute("aria-expanded", "false");
+      navToggle.textContent = "Menu";
+    }
+
+    function openMobileNav() {
+      document.body.classList.add("nav-open");
+      navToggle.setAttribute("aria-expanded", "true");
+      navToggle.textContent = "Close";
+    }
+
+    navToggle.addEventListener("click", () => {
+      if (document.body.classList.contains("nav-open")) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+
+    navOverlay.addEventListener("click", closeMobileNav);
+    navClose.addEventListener("click", closeMobileNav);
+    navLinks.forEach((link) => link.addEventListener("click", closeMobileNav));
+
+    document.addEventListener("click", (event) => {
+      if (!document.body.classList.contains("nav-open")) return;
+      if (event.target.closest("#main-nav") || event.target.closest("#nav-toggle")) return;
+      closeMobileNav();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMobileNav();
+    });
+
+    window.matchMedia("(min-width: 681px)").addEventListener("change", (event) => {
+      if (event.matches) closeMobileNav();
+    });
+
+    document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
+    document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+    ['zh','en','fr'].forEach(l => {
+      const m = document.getElementById('btn-' + l + '-m');
+      if (m) m.addEventListener('click', () => { setLanguage(l); closeMobileNav(); });
+    });
+
+    // ── Navbar scroll shrink ──
+    const topbar = document.querySelector('.topbar');
+    window.addEventListener('scroll', () => {
+      topbar.classList.toggle('navbar-shrunk', window.scrollY > 50);
+    }, { passive: true });
+
+    const savedLang = localStorage.getItem("lang") || "zh";
+    setLanguage(savedLang);
+
+    loadNews().then(() => {
+      // Auto-open article if ?id= is in URL
+      const urlId = new URLSearchParams(window.location.search).get('id');
+      if (urlId) openArticleModal(urlId);
+    });
+
+    // ── Branding API: social links + avatar ─────────────────
+    (async function loadBranding() {
+      try {
+        const res = await fetch('/api/branding');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.avatar_path) {
+          const img = document.getElementById('author-avatar-img');
+          if (img) img.src = data.avatar_path + '?t=' + Date.now();
+        }
+        if (data.bilibili_id) {
+          const el = document.getElementById('bili-id');
+          const link = document.getElementById('bili-link');
+          if (el) el.textContent = data.bilibili_id;
+          if (link) link.href = `https://space.bilibili.com/${data.bilibili_id}/upload/video`;
+        }
+        if (data.instagram_id) {
+          const el = document.getElementById('ig-id');
+          const link = document.getElementById('ig-link');
+          if (el) el.textContent = data.instagram_id;
+          if (link) link.href = `https://instagram.com/${data.instagram_id}`;
+        }
+        if (data.xiaohongshu_id) {
+          const el = document.getElementById('xhs-id');
+          if (el) el.textContent = data.xiaohongshu_id;
+        }
+      } catch (e) {}
+    })();
+  </script>
+</html>

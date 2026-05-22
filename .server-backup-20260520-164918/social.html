@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>每日日志 | Une vie pensée</title>
+  <meta name="description" content="每日日志 | Une vie pensée。克制、单栏、以日志记录日常的私人文学周刊。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: #1f2428;
+      background: #fcfaf6;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      line-height: 1.7;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px 72px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      background: rgba(252, 250, 246, 0.95);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 14px 0;
+      gap: 6px;
+    }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      color: #1f2428;
+      font-family: "Playfair Display", serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .nav-close {
+      display: none;
+    }
+
+    .logo-stack {
+      text-align: center;
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      line-height: 1.5;
+      letter-spacing: 0.15em;
+      color: #1f2428;
+      padding: 24px 0;
+      width: 100%;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 4px double #1f2428;
+    }
+
+    .nav-overlay {
+      display: none;
+    }
+
+    .nav a,
+    .lang button {
+      text-decoration: none;
+      color: #1f2428;
+      border: none;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 400;
+      font-family: "Playfair Display", serif;
+      background: transparent;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: capitalize;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.2;
+    }
+
+    .nav a span {
+      font-size: 11px;
+      color: #575757;
+      font-weight: 400;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .nav a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    .lang button {
+      font-size: 12px;
+      font-family: "Crimson Text", serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .lang button:hover { opacity: 0.6; }
+    .lang button.active { font-weight: 700; }
+
+    .nav a:focus-visible,
+    .lang button:focus-visible {
+      outline: 2px solid #2b4c63;
+      outline-offset: 2px;
+    }
+
+    .page-header {
+      text-align: center;
+      padding: 64px 0 48px;
+      border-bottom: 4px double #1f2428;
+    }
+
+    .page-header h1 {
+      margin: 0 0 10px;
+      font-family: "Playfair Display", serif;
+      font-size: 48px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #1f2428;
+      line-height: 1.2;
+    }
+
+    .page-header .page-sub {
+      font-size: 12px;
+      color: #a8a8a8;
+      font-family: "Crimson Text", serif;
+      letter-spacing: 0;
+    }
+
+    .article-body {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 56px 0;
+    }
+
+    .articles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 42px;
+    }
+
+    .article-item {
+      padding-bottom: 28px;
+      border-bottom: 1px solid #e8e4de;
+    }
+
+    .article-item:last-child {
+      border-bottom: none;
+    }
+
+    .log-date {
+      display: block;
+      margin-bottom: 18px;
+      padding: 4px 10px;
+      border: 1px solid #cfc8bd;
+      color: #8b8578;
+      font-size: 11px;
+      line-height: 1.5;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      font-family: "Crimson Text", serif;
+      max-width: 100%;
+      width: fit-content;
+    }
+
+    .article-item p {
+      margin: 0;
+      color: #1f2428;
+      font-family: "Crimson Text", "Noto Serif SC", serif;
+      font-size: 1.06rem;
+      line-height: 1.88;
+    }
+
+    .article-item p:first-of-type::first-letter {
+      float: left;
+      font-family: "Playfair Display", serif;
+      font-size: 3.9rem;
+      font-weight: 700;
+      line-height: 0.82;
+      margin: 6px 10px 0 0;
+      color: #1f2428;
+    }
+
+    .log-note {
+      max-width: 52ch;
+    }
+
+    .article-link {
+      display: inline-block;
+      color: #1f2428;
+      text-decoration: underline;
+      font-family: "Crimson Text", serif;
+      font-size: 1rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .article-link:hover { opacity: 0.7; }
+
+    .back-home {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 0 48px;
+    }
+
+    .back-home a {
+      color: #a8a8a8;
+      text-decoration: none;
+      font-family: "Crimson Text", serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .back-home a:hover { color: #1f2428; }
+    .back-home a::before { content: "←"; font-size: 1rem; }
+
+    footer {
+      padding-top: 20px;
+      border-top: 1px solid #1f2428;
+      text-align: center;
+      color: #1f2428;
+      font-size: 0.9rem;
+      font-family: "Crimson Text", serif;
+    }
+
+    @media (max-width: 960px) {
+      .logo-stack { font-size: 16px; }
+      .nav { gap: 12px; }
+      .article-body { padding: 40px 0; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar-header { justify-content: space-between; padding: 10px 0; }
+      .nav-toggle { display: inline-block; }
+      .logo-stack { font-size: 14px; padding: 16px 0; letter-spacing: 0.1em; }
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(62vw, 260px);
+        height: 100vh;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 84px 14px 20px;
+        border-bottom: none;
+        border-right: 1px solid #1f2428;
+        background: #fcfaf6;
+        transform: translateX(-110%);
+        transition: transform 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+        z-index: 25;
+      }
+      .nav a { font-size: 14px; }
+      .nav a span { font-size: 12px; }
+      .nav-close {
+        display: inline-block;
+        border: none;
+        background: transparent;
+        color: #1f2428;
+        font-family: "Playfair Display", serif;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0;
+        margin-bottom: 8px;
+        cursor: pointer;
+      }
+      body.nav-open .nav { transform: translateX(0); }
+      .nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 20;
+      }
+      body.nav-open .nav-overlay { display: block; }
+      body.nav-open { overflow: hidden; }
+      .page-header h1 { font-size: 32px; }
+      .article-item p { font-size: 1.02rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-header">
+        <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">Menu</button>
+        <div class="lang" aria-label="language switch">
+          <button id="btn-zh" class="active" type="button">ZH</button>
+          <button id="btn-en" type="button">EN</button>
+          <button id="btn-fr" type="button">FR</button>
+        </div>
+      </div>
+      <div class="logo-stack" data-zh="人们厌倦一切，除了懂得。" data-en="One grows weary of everything except knowing." data-fr="On se lasse de tout excepté de connaître.">On se lasse de tout excepté de connaître.</div>
+      <nav id="main-nav" class="nav" aria-label="main navigation">
+        <button id="nav-close" class="nav-close" type="button">Close</button>
+        <a href="news.html" data-zh="新闻" data-en="News" data-fr="News">News<span data-zh="新闻" data-en="News" data-fr="News">新闻</span></a>
+        <a href="travel.html" data-zh="旅行" data-en="Voyage" data-fr="Voyage">Voyage<span data-zh="旅行" data-en="Voyage" data-fr="Voyage">旅行</span></a>
+        <a href="reading.html" data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">Books & Culture<span data-zh="读书&文化" data-en="Books & Culture" data-fr="Books & Culture">读书&文化</span></a>
+        <a href="social.html" data-zh="写作" data-en="Writing" data-fr="Writing">Writing<span data-zh="写作" data-en="Writing" data-fr="Writing">写作</span></a>
+        <a href="french.html" data-zh="语言" data-en="Français" data-fr="Français">Français<span data-zh="法语" data-en="Français" data-fr="Français">法语</span></a>
+        <a href="vibe.html" data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">Vibe Coding<span data-zh="AI编程" data-en="Vibe Coding" data-fr="Vibe Coding">AI编程</span></a>
+      </nav>
+      <div class="nav-overlay" id="nav-overlay"></div>
+    </header>
+
+    <div class="page-header">
+      <h1 id="page-title" data-zh="DAILY LOG" data-en="DAILY LOG" data-fr="DAILY LOG">DAILY LOG</h1>
+      <p class="page-sub" data-zh="思考碎片" data-en="Thought Fragments" data-fr="Fragments de pensée">思考碎片</p>
+    </div>
+
+    <div class="article-body">
+      <main class="articles-list" id="daily-log-list">
+        <article class="article-item">
+          <div class="log-date">Loading...</div>
+          <p class="log-note">日志加载中...</p>
+        </article>
+      </main>
+    </div>
+    <div class="back-home">
+      <a href="index.html" data-zh="返回首页" data-en="Back to home" data-fr="Retour à l'accueil">返回首页</a>
+    </div>
+
+    <footer id="footer-text">© 2026 Une vie pensée. Chez Meiya.</footer>
+  </div>
+
+  <script>
+    function escHtml(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    const pinnedDailyLogs = [
+      {
+        posted_at: "2025-05-13T12:59:00",
+        posted_display: "2025.05.13 12:59 美芽【并非“对欲望让步”，而是“在欲望上让步”】",
+        author: "美芽",
+        title: "并非“对欲望让步”，而是“在欲望上让步”",
+        content: "真正关切的问题不是是否幸福，而是“是否忠于自己的欲望”。并不克制欲望，就可以解决罪恶感的问题。罪恶感不是被欲望奴役，而是在看见欲望的路上“半途而废”，才产生罪恶感。"
+      },
+      {
+        posted_at: "2026-05-14T09:32:00",
+        posted_display: "2026.05.14 09:32 美芽《交流欲让人着迷》",
+        author: "美芽",
+        title: "交流欲让人着迷",
+        content: "在咖啡店，在路上，在湖边，去说完整的句子，去描述自己的感受，去拥抱真实的内心，同时允许对方表达，不打断不忽视不评判。目光落在彼此脸上，语速不急不慢，自然，松弛，始终发生，交流不是为了达成共识，而是让彼此更靠近一点点。"
+      }
+    ];
+
+    function normalizeLogKey(item) {
+      return [item.posted_at || '', item.posted_display || '', item.author || '', item.title || '', item.content || ''].join('||');
+    }
+
+    function mergeLogs(primary, secondary) {
+      const seen = new Set();
+      return [...primary, ...secondary].filter((item) => {
+        const key = normalizeLogKey(item);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function renderDailyLogs(items) {
+      const host = document.getElementById("daily-log-list");
+      if (!host) return;
+
+      if (!Array.isArray(items) || items.length === 0) {
+        host.innerHTML = `<article class="article-item"><div class="log-date">暂无日志</div><p class="log-note">还没有可展示的日志内容。</p></article>`;
+        return;
+      }
+
+      host.innerHTML = items.map((item) => {
+        const rawContent = String(item.content || "").trim();
+        const contentHtml = rawContent
+          ? `<p>${escHtml(rawContent).replace(/\n/g, '<br>')}</p>`
+          : "<p>(空)</p>";
+        const dateDisplay = escHtml(item.posted_display || item.posted_at || item.date || "");
+        return `<article class="article-item"><div class="log-date">${dateDisplay}</div><div class="log-note">${contentHtml}</div></article>`;
+      }).join("");
+    }
+
+    async function loadDailyLogs() {
+      renderDailyLogs(pinnedDailyLogs);
+      try {
+        const resp = await fetch('/api/public/daily-logs?limit=200');
+        if (!resp.ok) throw new Error('request failed');
+        const data = await resp.json();
+        if (Array.isArray(data) && data.length) {
+          renderDailyLogs(mergeLogs(pinnedDailyLogs, data));
+        }
+      } catch (err) {
+        // Keep pinned logs visible when the API is unavailable.
+      }
+    }
+
+    const languageStore = {
+      zh: { htmlLang: "zh-CN", pageTitle: "DAILY LOG", footer: "© 2026 Une vie pensée. Chez Meiya." },
+      en: { htmlLang: "en", pageTitle: "DAILY LOG", footer: "© 2026 Une vie pensée. Chez Meiya." },
+      fr: { htmlLang: "fr", pageTitle: "DAILY LOG", footer: "© 2026 Une vie pensée. Chez Meiya." }
+    };
+
+    function setLanguage(lang) {
+      const pack = languageStore[lang];
+      document.documentElement.lang = pack.htmlLang;
+      document.title = `${pack.pageTitle} | Une vie pensée`;
+      document.getElementById("page-title").textContent = pack.pageTitle;
+      document.getElementById("footer-text").textContent = pack.footer;
+      
+      document.querySelectorAll("[data-zh][data-en][data-fr]").forEach((node) => {
+        node.textContent = node.getAttribute(`data-${lang}`);
+      });
+
+      document.getElementById("btn-zh").classList.toggle("active", lang === "zh");
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+      document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
+    }
+
+    const navToggle = document.getElementById("nav-toggle");
+    const navClose = document.getElementById("nav-close");
+    const navOverlay = document.getElementById("nav-overlay");
+    const navLinks = document.querySelectorAll("#main-nav a");
+
+    function closeMobileNav() {
+      document.body.classList.remove("nav-open");
+      navToggle.setAttribute("aria-expanded", "false");
+      navToggle.textContent = "Menu";
+    }
+
+    function openMobileNav() {
+      document.body.classList.add("nav-open");
+      navToggle.setAttribute("aria-expanded", "true");
+      navToggle.textContent = "Close";
+    }
+
+    navToggle.addEventListener("click", () => {
+      if (document.body.classList.contains("nav-open")) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+
+    navOverlay.addEventListener("click", closeMobileNav);
+    navClose.addEventListener("click", closeMobileNav);
+    navLinks.forEach((link) => link.addEventListener("click", closeMobileNav));
+
+    document.addEventListener("click", (event) => {
+      if (!document.body.classList.contains("nav-open")) {
+        return;
+      }
+      if (event.target.closest("#main-nav") || event.target.closest("#nav-toggle")) {
+        return;
+      }
+      closeMobileNav();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMobileNav();
+      }
+    });
+
+    window.matchMedia("(min-width: 681px)").addEventListener("change", (event) => {
+      if (event.matches) {
+        closeMobileNav();
+      }
+    });
+
+    document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
+    document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+
+    loadDailyLogs();
+  </script>
+</body>
+</html>
