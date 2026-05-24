@@ -1,13 +1,74 @@
 #!/usr/bin/env bash
+# =============================================================
+# deploy.sh — 部署 Flask 后台到阿里云服务器
+# 用法：
+#   SERVER_HOST=47.98.235.65 SERVER_USER=root ./deploy.sh
+# 可选：
+#   SERVER_PORT=22（默认22）
+#   SSH_KEY_PATH=~/.ssh/id_rsa
+# =============================================================
 set -euo pipefail
 
-# Manual deploy helper for static personal site
-# Usage:
-#   SERVER_HOST=47.98.235.65 SERVER_USER=root SERVER_WEB_ROOT=/usr/share/nginx/html ./deploy.sh
-# Optional:
-#   SERVER_PORT=22
-#   MILESTONE_WEBHOOK_URL=https://api.example.com/api/milestones/travel-sync
-#   MILESTONE_WEBHOOK_TOKEN=your_token
+# ── 配置项（可通过环境变量覆盖）──────────────────────────────
+SERVER_HOST="${SERVER_HOST:-47.98.235.65}"
+SERVER_USER="${SERVER_USER:-root}"
+SERVER_PORT="${SERVER_PORT:-22}"
+SSH_KEY_PATH="${SSH_KEY_PATH:-}"
+BACKEND_DIR="${BACKEND_DIR:-/root/ilovemeiyawebsite/backend}"
+ADMIN_PORT="${ADMIN_PORT:-8001}"
+
+# ── SSH / SCP 参数拼装 ────────────────────────────────────────
+SSH_OPTS=(-p "$SERVER_PORT" -o StrictHostKeyChecking=no)
+if [[ -n "$SSH_KEY_PATH" ]]; then
+  SSH_OPTS+=(-i "$SSH_KEY_PATH")
+fi
+
+echo "🚀  开始部署到 $SERVER_USER@$SERVER_HOST ..."
+
+# ── 在服务器上远程执行部署逻辑 ────────────────────────────────
+ssh "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_HOST" bash -s << REMOTE
+set -euo pipefail
+
+# 1. 进入项目后台目录
+echo "📂  进入 $BACKEND_DIR ..."
+cd "$BACKEND_DIR"
+
+# 2. 拉取最新代码
+echo "📥  git pull ..."
+git pull
+
+# 3. 安装/更新依赖
+echo "📦  pip install ..."
+pip3 install -q -r requirements.txt
+
+# 4. 检查并清理旧进程（占用 $ADMIN_PORT 端口）
+OLD_PID=\$(lsof -ti :$ADMIN_PORT 2>/dev/null || true)
+if [[ -n "\$OLD_PID" ]]; then
+  echo "🔪  终止旧进程 PID \$OLD_PID ..."
+  kill -9 \$OLD_PID
+  sleep 1
+fi
+
+# 5. 后台重新启动服务
+echo "▶️   启动 admin_app.py ..."
+nohup python3 admin_app.py > admin_app.log 2>&1 &
+NEW_PID=\$!
+sleep 2
+
+# 验证启动成功
+if kill -0 \$NEW_PID 2>/dev/null; then
+  echo "✅  服务已启动，PID=\$NEW_PID，端口 $ADMIN_PORT"
+  echo "📄  日志：$BACKEND_DIR/admin_app.log"
+else
+  echo "❌  启动失败，请查看日志："
+  tail -20 admin_app.log
+  exit 1
+fi
+REMOTE
+
+echo ""
+echo "🎉  部署完成！后台地址：http://$SERVER_HOST:$ADMIN_PORT/une-vie-admin/login"
+
 
 SERVER_HOST="${SERVER_HOST:-}"
 SERVER_USER="${SERVER_USER:-deploy}"
