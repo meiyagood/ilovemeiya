@@ -113,6 +113,14 @@
 
     .topbar-brand { display: none; }
 
+    /* 桌面端向下滚动时隐藏导航栏 */
+    @media (min-width: 681px) {
+      .topbar.nav-hidden {
+        transform: translateY(-100%);
+        box-shadow: none;
+      }
+    }
+
     .nav-toggle {
       display: none;
       border: none;
@@ -1116,6 +1124,27 @@
           if (el) el.textContent = data.xiaohongshu_id;
         }
       } catch (e) {}
+    })();
+
+    // ── 桌面端滚动自动隐藏/显示导航栏 ────────────────────────
+    (function initScrollNav() {
+      const topbar = document.querySelector('.topbar');
+      let lastScrollY = window.scrollY;
+
+      window.addEventListener('scroll', () => {
+        // 仅在桌面端（宽度 > 680px）生效，移动端由汉堡菜单控制
+        if (window.innerWidth <= 680) return;
+
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY && currentScrollY > 60) {
+          // 向下滚动 → 隐藏导航栏
+          topbar.classList.add('nav-hidden');
+        } else {
+          // 向上滚动 → 显示导航栏
+          topbar.classList.remove('nav-hidden');
+        }
+        lastScrollY = currentScrollY;
+      }, { passive: true });
     })();
   </script>
 </html>

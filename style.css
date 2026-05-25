@@ -1,68 +1,84 @@
-@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=EB+Garamond:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap");
 
 :root {
-  /* New Yorker-like editorial palette */
+  /* 《纽约客》风格核心调色盘 */
   --color-paper: #F7F8F9;
   --color-title: #111111;
-  --color-ink: #1f1f1f;
+  --color-ink: #222222;
   --color-muted: #575757;
+  --color-rule-soft: #eaeaea;
 
-  /* Rule and border system */
-  --color-rule: #1a1a1a;
-  --color-rule-soft: #b9b3a8;
+  /* 线条与边框系统 */
+  --color-rule: #1A1A1A;
   --rule-thin: 1px;
   --rule-thick: 2px;
 
-  /* Signature double-rule style */
-  --border-double-width: 3px;
+  /* 标志性的双实线（双通栏线）样式 */
+  --border-double-width: 4px;
   --border-double-style: double;
   --border-double-color: var(--color-rule);
   --border-double: var(--border-double-width) var(--border-double-style) var(--border-double-color);
 
-  /* Type system */
+  /* 排版排线系统 */
   --font-body: "Crimson Text", "Times New Roman", Georgia, serif;
   --font-title: "Playfair Display", "Times New Roman", Georgia, serif;
+  --font-editorial: "EB Garamond", serif;
 
-  /* Rhythms */
+  /* 节奏律动 */
   --text-body-size: 1.0625rem;
-  --text-body-line-height: 1.72;
-  --text-title-line-height: 1.2;
+  --text-body-line-height: 1.75;
+  --text-title-line-height: 1.1;
+  --ease: 220ms cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+
+/* ======== 全局基础样式 ======== */
+* { 
+  box-sizing: border-box; 
+}
+
+html { 
+  scroll-behavior: smooth; 
+  background-color: var(--color-paper) !important;
 }
 
 body {
-  background-color: var(--color-paper);
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-paper) !important;
   color: var(--color-ink);
   font-family: var(--font-body);
   font-size: var(--text-body-size);
   line-height: var(--text-body-line-height);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* ======== 标题层级（统一使用 EB Garamond，展现老派人文质感） ======== */
+h1, h2, h3, h4, h5, h6,
+.site-title,
+.article-title {
   color: var(--color-title);
-  font-family: var(--font-title);
+  font-family: var(--font-editorial);
+  font-weight: 500;
   line-height: var(--text-title-line-height);
+  margin-top: 0;
+  margin-bottom: 0.5em;
 }
 
-/* Reusable double-rule helpers */
-.double-rule-top {
-  border-top: var(--border-double);
+/* ======== 纽约客式经典双线（Double-Rule）通用件 ======== */
+.double-rule-top    { border-top: var(--border-double); }
+.double-rule-bottom { border-bottom: var(--border-double); }
+.double-rule-y      { border-top: var(--border-double); border-bottom: var(--border-double); }
+
+/* ======== 极简无衬线分类标签（视觉跳跃点） ======== */
+.category-label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 12px;
+  color: #cc0000;
+  display: block;
 }
 
-.double-rule-bottom {
-  border-bottom: var(--border-double);
-}
-
-.double-rule-y {
-  border-top: var(--border-double);
-  border-bottom: var(--border-double);
-}
-
-/* Drop cap for first paragraph - New Yorker style */
+/* ======== 优雅的文学首字下沉（Drop Cap） ======== */
 .article-content p:first-of-type::first-letter {
   float: left;
   font-family: var(--font-title);
@@ -72,11 +88,10 @@ h6 {
   margin-right: 10px;
   margin-top: -2px;
   color: var(--color-title);
-  /* Approximately 3 lines of text */
   height: 3.1em;
 }
 
-/* Responsive article layout - centered content with side whitespace */
+/* ======== 响应式文章详情页格网（居中防扩散布局） ======== */
 .article-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -89,12 +104,6 @@ h6 {
   padding: 0 32px;
 }
 
-.article-content {
-  font-size: var(--text-body-size);
-  line-height: var(--text-body-line-height);
-  color: var(--color-ink);
-}
-
 .article-content p {
   margin: 0 0 1.5em;
 }
@@ -104,7 +113,7 @@ h6 {
   margin: 1.8em 0 0.8em;
 }
 
-/* Article subtitle with thin divider line */
+/* 带有极细分割线的文章小标题 */
 .article-subtitle {
   margin: 0 0 16px;
   padding-bottom: 16px;
@@ -115,7 +124,7 @@ h6 {
   line-height: 1.5;
 }
 
-/* Newspaper end-of-article symbol (small black square) */
+/* 经典杂志结尾：叙事结束的小黑方块标志 */
 article::after {
   content: "";
   display: block;
@@ -125,113 +134,36 @@ article::after {
   margin: 32px 0 0;
 }
 
-/* Tablet responsive adjustment */
-@media (max-width: 1024px) {
-  .article-grid {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  .article-main {
-    grid-column: 1 / 4;
-    padding: 0 24px;
-  }
-}
-
-/* Mobile responsive - full width */
-@media (max-width: 768px) {
-  .article-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .article-main {
-    grid-column: 1;
-    padding: 0 16px;
-  }
-
-  .article-content {
-    font-size: 1rem;
-  }
-
-  .article-content p {
-    margin: 0 0 1.2em;
-  }
-}
-
-/* Simulate New Yorker paper texture and type hierarchy */
-body {
-  background-color: #F7F8F9;
-  color: #1a1a1a;
-  font-family: "EB Garamond", serif;
-  line-height: 1.7;
-  padding: 5% 10%;
-}
-
-/* IPA annotation style for French learning content */
+/* ======== 法语学习专属：国际音标（IPA）标注样式 ======== */
 .ipa-text {
-  font-family: Arial, sans-serif;
-  color: #666;
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  color: #666666;
   font-size: 0.9rem;
   letter-spacing: 0.05em;
-  border-bottom: 1px dotted #ccc;
+  border-bottom: 1px dotted #cccccc;
 }
 
-/* Illustration block with subtle vintage tone and hover motion */
+.french-entry-title {
+  font-family: var(--font-editorial);
+  font-size: 2.2rem;
+  font-style: italic;
+  border-bottom: 1px solid var(--color-rule-soft);
+  padding-bottom: 10px;
+}
+
+/* ======== 复古质感插图容器（带有呼吸感的轻微悬浮动画） ======== */
 .illustration-container {
   max-width: 600px;
   margin: 40px auto;
   filter: sepia(10%);
-  transition: transform 0.5s ease;
+  transition: transform 0.5s cubic-bezier(0.2, 0.75, 0.3, 1);
 }
 
 .illustration-container:hover {
   transform: scale(1.02);
 }
 
-/* 引入 Google Fonts（如果本地没有字体） */
-/* 全局默认：保持 Crimson Text */
-body {
-  background-color: #F7F8F9;
-  color: #222222;
-  font-family: "Crimson Text", serif;
-  font-size: 18px;
-  line-height: 1.75;
-  margin: 0;
-  padding: 0;
-}
-
-/* 标题区：专用 EB Garamond */
-/* 这里包括了主标题、二级标题以及特定的动态图标题 */
-h1,
-h2,
-h3,
-.site-title,
-.article-title {
-  font-family: "EB Garamond", serif;
-  font-weight: 500;
-  line-height: 1.1;
-  color: #000000;
-  margin-bottom: 0.5em;
-}
-
-/* 针对 french.html 的特殊排版 */
-.french-entry-title {
-  font-family: "EB Garamond", serif;
-  font-size: 2.2rem;
-  font-style: italic;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-}
-
-/* 分类标签：保持极简无衬线，作为视觉跳跃 */
-.category-label {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 12px;
-  color: #cc0000;
-}
-
-/* New Yorker-inspired asymmetric page rhythm */
+/* ======== 纽约客非对称韵律排版（Asymmetric Page Rhythm） ======== */
 .page-spread {
   display: flex;
   flex-direction: column;
@@ -240,6 +172,7 @@ h3,
 
 .page-block {
   max-width: 760px;
+  width: 100%;
 }
 
 .page-block--lead {
@@ -260,30 +193,17 @@ h3,
   padding-right: 24px;
 }
 
-@media (max-width: 768px) {
-  .page-block,
-  .page-block--lead,
-  .page-block--offset,
-  .page-block--balanced {
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
-  }
+/* ======== 社交/写作页面的无内联封装样式 ======== */
+.social-links-wrap {
+  margin-top: 8px;
 }
 
-/* Site-wide visual unification */
-html,
-body {
-  background-color: #F7F8F9 !important;
-}
-
+/* ======== 全站视觉大一统（全局强制穿透，消除多余背景与阴影，实现极致留白） ======== */
 .topbar,
 .nav,
-  .navbar,
-  .site-header { /* 修正了这里多余的 } */
-  background: #F7F8F9 !important; /* 仅设置背景色，不影响定位和显示 */
+.navbar,
+.site-header {
+  background-color: var(--color-paper) !important;
 }
 
 .container,
@@ -306,7 +226,48 @@ body {
   border: none !important;
 }
 
-/* Replaces inline style in social page */
-.social-links-wrap {
-  margin-top: 8px;
+/* ======== 移动端响应式断点控制 ======== */
+@media (max-width: 1024px) {
+  .article-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .article-main {
+    grid-column: 1 / 4;
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 4% 6%; /* 缩减移动端的全边距，让长文更易读 */
+  }
+
+  .article-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .article-main {
+    grid-column: 1;
+    padding: 0 16px;
+  }
+
+  .article-content {
+    font-size: 1rem;
+  }
+
+  .article-content p {
+    margin: 0 0 1.2em;
+  }
+
+  .page-block,
+  .page-block--lead,
+  .page-block--offset,
+  .page-block--balanced {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
