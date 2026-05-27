@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>书籍管理 · 后台</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --ink: #1A1A1A; --mid: #555; --muted: #999; --rule: #E8E8E8; --bg: #F9F8F6; --white: #fff; }
+    body { background: var(--bg); color: var(--ink); font-family: "Crimson Text", Georgia, serif; font-size: 17px; line-height: 1.65; padding: 2rem; }
+    h1 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    a { color: var(--ink); }
+    .back { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; display: inline-block; }
+    table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 6px; overflow: hidden; }
+    th, td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--rule); text-align: left; }
+    th { font-family: "Inter", sans-serif; font-size: 0.78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    tr:last-child td { border-bottom: none; }
+    .actions a, .actions button { margin-right: .5rem; font-size: 0.9rem; font-family: "Inter", sans-serif; background: none; border: none; cursor: pointer; color: #555; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; text-decoration: none; }
+    .actions button.del { color: #c00; border-color: #fbb; }
+    .add-form { margin-bottom: 1.5rem; display: flex; gap: .75rem; flex-wrap: wrap; background: var(--white); padding: 1rem 1.2rem; border-radius: 6px; border: 1px solid var(--rule); }
+    .add-form input { flex: 1; min-width: 150px; padding: .4rem .7rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: inherit; }
+    .add-form button { padding: .4rem 1.2rem; background: var(--ink); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-family: "Inter", sans-serif; font-size: 0.9rem; }
+    .flash { padding: .6rem 1rem; border-radius: 4px; margin-bottom: 1rem; font-size: .95rem; }
+    .flash.success { background: #e6f4ea; color: #2d6a4f; }
+    .flash.error   { background: #fdecea; color: #9b1c1c; }
+    .empty { color: var(--muted); padding: 1.5rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/une-vie-admin">← 返回后台主页</a>
+  <h1>📚 书籍管理</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="flash {{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <!-- 新建书籍 -->
+  <form class="add-form" method="POST" action="/une-vie-admin/books/create">
+    <input type="text" name="title" placeholder="书名（必填）" required />
+    <input type="text" name="author" placeholder="作者（可选）" />
+    <button type="submit">＋ 新建书籍</button>
+  </form>
+
+  <!-- 书籍列表 -->
+  {% if books %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>书名</th>
+        <th>作者</th>
+        <th>书评</th>
+        <th>摘录数</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td>{{ book.id }}</td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author or '—' }}</td>
+        <td>{{ '✓ 已填写' if book.review_content else '—' }}</td>
+        <td>{{ book.excerpts | length }}</td>
+        <td class="actions">
+          <a href="/une-vie-admin/book/{{ book.id }}/review">编辑书评</a>
+          <a href="/une-vie-admin/book/{{ book.id }}/excerpts">管理摘录</a>
+          <form style="display:inline" method="POST" action="/une-vie-admin/books/{{ book.id }}/delete"
+                onsubmit="return confirm('确认删除《{{ book.title }}》及其所有摘录？')">
+            <button class="del" type="submit">删除</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">暂无书籍，请先新建一本。</p>
+  {% endif %}
+</body>
+</html>

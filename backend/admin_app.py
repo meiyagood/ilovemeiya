@@ -35,7 +35,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
 
 from app.database import SessionLocal, engine
-from app.models import Base, Quote
+from app.models import Base, Book, Excerpt, Quote
 
 # 确保表存在（仅建新表，不删旧表）
 Base.metadata.create_all(bind=engine, checkfirst=True)
@@ -330,6 +330,48 @@ def miniapp_save():
     return redirect(url_for("admin_dashboard") + "#miniapp")
 
 
+@app.route("/api/book/<int:book_id>")
+def api_book(book_id: int):
+    """返回书籍详情（含书评与摘录），供前台静态页面 JS fetch 调用。"""
+    db = SessionLocal()
+    try:
+        book = db.query(Book).filter(Book.id == book_id).first()
+        if not book:
+            return jsonify({"error": "not found"}), 404
+        excerpts = (
+            db.query(Excerpt)
+            .filter(Excerpt.book_id == book_id)
+            .order_by(Excerpt.page_number.asc().nullslast(), Excerpt.id.asc())
+            .all()
+        )
+        return jsonify({
+            **book.to_dict(),
+            "excerpts": [e.to_dict() for e in excerpts],
+        })
+    finally:
+        db.close()
+
+
+@app.route("/book/<int:book_id>")
+def book_detail(book_id: int):
+    """服务端渲染的书籍详情页（纽约客风格）。"""
+    db = SessionLocal()
+    try:
+        book = db.query(Book).filter(Book.id == book_id).first()
+        if not book:
+            flash("书籍不存在。", "error")
+            return redirect("/reading.html")
+        excerpts = (
+            db.query(Excerpt)
+            .filter(Excerpt.book_id == book_id)
+            .order_by(Excerpt.page_number.asc().nullslast(), Excerpt.id.asc())
+            .all()
+        )
+        return render_template("book_detail.html", book=book, excerpts=excerpts)
+    finally:
+        db.close()
+
+
 @app.route("/api/posts")
 def api_posts():
     """返回已发布动态列表（JSON），供前台 vibe.html 动态加载。"""
@@ -346,6 +388,151 @@ def api_posts():
         return jsonify([l.to_dict() for l in logs])
     finally:
         db.close()
+
+
+# ──────────────────────────────────────────────────────────
+# Book 路由：书评与摘录管理
+# ──────────────────────────────────────────────────────────
+
+@app.route("/une-vie-admin/books")
+@login_required
+def admin_books():
+    """书籍列表页。"""
+    db = SessionLocal()
+    try:
+        books = db.query(Book).order_by(Book.id.desc()).all()
+    finally:
+        db.close()
+    return render_template("admin_books.html", books=books)
+
+
+@app.route("/une-vie-admin/books/create", methods=["POST"])
+@login_required
+def book_create():
+    """新建书籍（标题 + 作者）。"""
+    title = request.form.get("title", "").strip()
+    author = request.form.get("author", "").strip()
+    if not title:
+        flash("书名不能为空。", "error")
+        return redirect(url_for("admin_books"))
+    db = SessionLocal()
+    try:
+        book = Book(title=title, author=author)
+        db.add(book)
+        db.commit()
+        flash(f"《{title}》已创建。", "success")
+    except Exception as e:
+        db.rollback()
+        flash(f"创建失败：{e}", "error")
+    finally:
+        db.close()
+    return redirect(url_for("admin_books"))
+
+
+@app.route("/une-vie-admin/books/<int:book_id>/delete", methods=["POST"])
+@login_required
+def book_delete(book_id: int):
+    """删除书籍及其所有摘录（cascade）。"""
+    db = SessionLocal()
+    try:
+        book = db.query(Book).filter(Book.id == book_id).first()
+        if book:
+            db.delete(book)
+            db.commit()
+            flash("书籍及其摘录已删除。", "success")
+        else:
+            flash("书籍不存在。", "error")
+    except Exception as e:
+        db.rollback()
+        flash(f"删除失败：{e}", "error")
+    finally:
+        db.close()
+    return redirect(url_for("admin_books"))
+
+
+@app.route("/une-vie-admin/book/<int:book_id>/review", methods=["GET", "POST"])
+@login_required
+def book_review(book_id: int):
+    """查看 / 保存某本书的主书评。"""
+    db = SessionLocal()
+    try:
+        book = db.query(Book).filter(Book.id == book_id).first()
+        if not book:
+            flash("书籍不存在。", "error")
+            return redirect(url_for("admin_books"))
+
+        if request.method == "POST":
+            book.review_content = request.form.get("review_content", "").strip()
+            db.commit()
+            flash("书评已保存。", "success")
+            return redirect(url_for("book_review", book_id=book_id))
+
+        return render_template("admin_book_review.html", book=book)
+    finally:
+        db.close()
+
+
+@app.route("/une-vie-admin/book/<int:book_id>/excerpts", methods=["GET", "POST"])
+@login_required
+def book_excerpts(book_id: int):
+    """查看 / 添加某本书的摘录列表。POST 用于新增一条摘录。"""
+    db = SessionLocal()
+    try:
+        book = db.query(Book).filter(Book.id == book_id).first()
+        if not book:
+            flash("书籍不存在。", "error")
+            return redirect(url_for("admin_books"))
+
+        if request.method == "POST":
+            content = request.form.get("content", "").strip()
+            page_raw = request.form.get("page_number", "").strip()
+            page_number = int(page_raw) if page_raw.isdigit() else None
+            if not content:
+                flash("摘录内容不能为空。", "error")
+            else:
+                try:
+                    excerpt = Excerpt(book_id=book_id, content=content, page_number=page_number)
+                    db.add(excerpt)
+                    db.commit()
+                    flash("摘录已添加。", "success")
+                except Exception as e:
+                    db.rollback()
+                    flash(f"添加失败：{e}", "error")
+            return redirect(url_for("book_excerpts", book_id=book_id))
+
+        excerpts = (
+            db.query(Excerpt)
+            .filter(Excerpt.book_id == book_id)
+            .order_by(Excerpt.page_number.asc().nullslast(), Excerpt.id.asc())
+            .all()
+        )
+        return render_template("admin_book_excerpts.html", book=book, excerpts=excerpts)
+    finally:
+        db.close()
+
+
+@app.route("/une-vie-admin/excerpt/<int:excerpt_id>/delete", methods=["POST"])
+@login_required
+def excerpt_delete(excerpt_id: int):
+    """删除指定摘录，删除后返回该书摘录页。"""
+    db = SessionLocal()
+    try:
+        excerpt = db.query(Excerpt).filter(Excerpt.id == excerpt_id).first()
+        if excerpt:
+            book_id = excerpt.book_id
+            db.delete(excerpt)
+            db.commit()
+            flash("摘录已删除。", "success")
+        else:
+            flash("摘录不存在。", "error")
+            book_id = request.form.get("book_id", "")
+    except Exception as e:
+        db.rollback()
+        flash(f"删除失败：{e}", "error")
+        book_id = request.form.get("book_id", "")
+    finally:
+        db.close()
+    return redirect(url_for("book_excerpts", book_id=book_id))
 
 
 # ──────────────────────────────────────────────────────────

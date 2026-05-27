@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>摘录管理 · {{ book.title }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --ink: #1A1A1A; --mid: #555; --muted: #999; --rule: #E8E8E8; --bg: #F9F8F6; --white: #fff; }
+    body { background: var(--bg); color: var(--ink); font-family: "Crimson Text", Georgia, serif; font-size: 17px; line-height: 1.65; padding: 2rem; max-width: 800px; }
+    h1 { font-size: 1.6rem; margin-bottom: .3rem; }
+    .sub { color: var(--muted); font-size: 1rem; margin-bottom: 1.5rem; }
+    .back { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; display: inline-block; }
+    .nav-links { margin-bottom: 1.5rem; font-size: .9rem; font-family: "Inter", sans-serif; }
+    .nav-links a { color: var(--ink); margin-right: 1rem; border-bottom: 1px solid #ccc; padding-bottom: 1px; text-decoration: none; }
+    .add-form { background: var(--white); border: 1px solid var(--rule); border-radius: 6px; padding: 1.2rem; margin-bottom: 2rem; }
+    .add-form h2 { font-size: 1rem; font-family: "Inter", sans-serif; margin-bottom: .8rem; }
+    .add-form textarea { width: 100%; min-height: 120px; padding: .6rem .8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: "Crimson Text", Georgia, serif; line-height: 1.65; resize: vertical; }
+    .add-form .row { display: flex; gap: .75rem; align-items: flex-end; margin-top: .75rem; }
+    .add-form input[type="number"] { width: 120px; padding: .4rem .7rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: inherit; }
+    .add-form button { padding: .45rem 1.4rem; background: var(--ink); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-family: "Inter", sans-serif; font-size: .9rem; }
+    .excerpt-list { list-style: none; }
+    .excerpt-item { background: var(--white); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.2rem; margin-bottom: .75rem; display: flex; gap: 1rem; align-items: flex-start; }
+    .excerpt-body { flex: 1; }
+    .excerpt-meta { font-size: .8rem; color: var(--muted); font-family: "Inter", sans-serif; margin-top: .35rem; }
+    .excerpt-actions form { display: inline; }
+    .del-btn { background: none; border: 1px solid #fbb; color: #c00; border-radius: 3px; padding: 2px 8px; cursor: pointer; font-size: .85rem; font-family: "Inter", sans-serif; }
+    .flash { padding: .6rem 1rem; border-radius: 4px; margin-bottom: 1rem; font-size: .95rem; }
+    .flash.success { background: #e6f4ea; color: #2d6a4f; }
+    .flash.error   { background: #fdecea; color: #9b1c1c; }
+    .empty { color: var(--muted); font-style: italic; }
+    label { font-size: .88rem; font-family: "Inter", sans-serif; color: var(--mid); }
+  </style>
+</head>
+<body>
+  <a class="back" href="/une-vie-admin/books">← 返回书籍列表</a>
+  <h1>{{ book.title }}</h1>
+  <div class="sub">{{ book.author or '作者未填写' }} · 摘录管理</div>
+
+  <div class="nav-links">
+    <a href="/une-vie-admin/book/{{ book.id }}/review">📝 书评</a>
+    <a href="/une-vie-admin/book/{{ book.id }}/excerpts">✂️ 摘录（{{ excerpts | length }}）</a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="flash {{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <!-- 添加摘录 -->
+  <div class="add-form">
+    <h2>＋ 添加新摘录</h2>
+    <form method="POST">
+      <textarea name="content" placeholder="粘贴摘录原文…" required></textarea>
+      <div class="row">
+        <div>
+          <label>页码（可选）</label><br/>
+          <input type="number" name="page_number" placeholder="如 42" min="1" />
+        </div>
+        <button type="submit">添加摘录</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 摘录列表 -->
+  {% if excerpts %}
+  <ul class="excerpt-list">
+    {% for e in excerpts %}
+    <li class="excerpt-item">
+      <div class="excerpt-body">
+        <div>{{ e.content }}</div>
+        <div class="excerpt-meta">
+          #{{ e.id }}
+          {% if e.page_number %} · p. {{ e.page_number }}{% endif %}
+          · {{ e.created_at.strftime('%Y-%m-%d') if e.created_at else '' }}
+        </div>
+      </div>
+      <div class="excerpt-actions">
+        <form method="POST" action="/une-vie-admin/excerpt/{{ e.id }}/delete"
+              onsubmit="return confirm('确认删除这条摘录？')">
+          <input type="hidden" name="book_id" value="{{ book.id }}" />
+          <button class="del-btn" type="submit">删除</button>
+        </form>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty">暂无摘录，请在上方添加。</p>
+  {% endif %}
+</body>
+</html>

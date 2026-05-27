@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ book.title }} – Une vie pensée</title>
+  <meta name="description" content="{{ book.author }} · {{ book.review_content[:120] | replace('\n', ' ') if book.review_content else '' }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+SC:wght@400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════════
+       BASE
+    ══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:   #fbfaf8;
+      --ink:     #1a1a1a;
+      --mid:     #3f3a33;
+      --muted:   #777;
+      --rule:    #e5e2dc;
+      --rule-dk: #c8c3bb;
+      --accent:  #111;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Lora", "Noto Serif SC", "Source Serif Pro", serif;
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════════════════════════════════════════════
+       SHELL / TOPBAR
+    ══════════════════════════════════════════════ */
+    .shell {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 22px 80px;
+    }
+
+    .topbar {
+      border-bottom: 0.5px solid var(--rule-dk);
+      padding: 18px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-family: "Playfair Display", serif;
+      font-size: 13px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .breadcrumb {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: .04em;
+      font-style: italic;
+    }
+
+    /* ══════════════════════════════════════════════
+       HERO / BOOK HEADER
+    ══════════════════════════════════════════════ */
+    .book-header {
+      max-width: 680px;
+      margin: 56px auto 52px;
+      text-align: center;
+    }
+
+    .kicker {
+      font-family: "Playfair Display", serif;
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .book-title {
+      font-family: "Playfair Display", "Noto Serif SC", serif;
+      font-size: clamp(30px, 5.5vw, 50px);
+      font-weight: 900;
+      line-height: 1.15;
+      color: #000;
+      letter-spacing: .01em;
+      margin-bottom: 14px;
+    }
+
+    .book-author {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+      letter-spacing: .05em;
+    }
+
+    /* Thin centered rule below header */
+    .book-header-rule {
+      width: 48px;
+      border: none;
+      border-top: 1px solid var(--rule-dk);
+      margin: 24px auto 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       READING CONTAINER (single column)
+    ══════════════════════════════════════════════ */
+    .reading-container {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: justify;
+    }
+
+    /* ══════════════════════════════════════════════
+       1. 书评区
+    ══════════════════════════════════════════════ */
+    .review-section {
+      font-size: 19px;
+      line-height: 1.85;
+      color: #292929;
+      letter-spacing: .015em;
+      margin-bottom: 72px;
+    }
+
+    /* Drop-cap on the very first letter */
+    .review-section p:first-of-type::first-letter {
+      float: left;
+      font-size: 5rem;
+      line-height: .82;
+      padding-top: 5px;
+      padding-right: 10px;
+      font-weight: 700;
+      font-family: "Playfair Display", serif;
+      color: #000;
+    }
+
+    .review-section p {
+      margin-bottom: 1.45em;
+    }
+
+    /* Treat <strong> inside review as section labels */
+    .review-section strong {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ══════════════════════════════════════════════
+       Divider
+    ══════════════════════════════════════════════ */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 0 0 56px;
+    }
+
+    /* ══════════════════════════════════════════════
+       2. 摘录区
+    ══════════════════════════════════════════════ */
+    .excerpts-section {
+      margin-bottom: 60px;
+    }
+
+    .excerpts-heading {
+      font-family: "Lora", serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .28em;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .excerpt-item {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 42px;
+      border-left: 1px solid #d3cfc5;
+    }
+
+    .excerpt-content {
+      font-size: 17px;
+      line-height: 1.78;
+      color: #333;
+      white-space: pre-line;
+    }
+
+    .excerpt-page {
+      display: block;
+      text-align: right;
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 8px;
+      letter-spacing: .02em;
+    }
+
+    /* ══════════════════════════════════════════════
+       PAGER / BACK
+    ══════════════════════════════════════════════ */
+    .pager {
+      display: flex;
+      justify-content: space-between;
+      max-width: 680px;
+      margin: 0 auto 28px;
+      font-size: 13px;
+      font-family: "Playfair Display", serif;
+      letter-spacing: .04em;
+    }
+
+    .pager a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 180ms;
+    }
+
+    .pager a:hover { border-color: var(--muted); }
+
+    .back-link {
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: 12px;
+      font-family: "Playfair Display", serif;
+      letter-spacing: .06em;
+    }
+
+    .back-link a { color: var(--muted); text-decoration: none; }
+    .back-link a:hover { text-decoration: underline; }
+
+    /* ══════════════════════════════════════════════
+       EMPTY STATE
+    ══════════════════════════════════════════════ */
+    .empty-review {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 1rem;
+      text-align: center;
+      padding: 3rem 0;
+      border: 1px dashed var(--rule);
+      border-radius: 4px;
+      margin-bottom: 72px;
+    }
+
+    /* ══════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════ */
+    @media (max-width: 680px) {
+      .review-section { font-size: 1.05rem; }
+      .review-section p:first-of-type::first-letter { font-size: 3.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <!-- Top navigation bar -->
+    <header class="topbar">
+      <a class="brand" href="/reading.html">Books &amp; Culture</a>
+      <span class="breadcrumb">阅读 / 深度书评</span>
+    </header>
+
+    <!-- Book header -->
+    <div class="book-header">
+      <p class="kicker">深度书评</p>
+      <h1 class="book-title">{{ book.title }}</h1>
+      {% if book.author %}
+        <p class="book-author">By {{ book.author }}</p>
+      {% endif %}
+      <hr class="book-header-rule" />
+    </div>
+
+    <div class="reading-container">
+
+      <!-- ① 书评区 -->
+      {% if book.review_content %}
+        <section class="review-section">
+          {# Split on blank lines to generate <p> tags #}
+          {% for para in book.review_content.split('\n\n') %}
+            {% if para.strip() %}
+              <p>{{ para.strip() | safe }}</p>
+            {% endif %}
+          {% endfor %}
+        </section>
+      {% else %}
+        <div class="empty-review">书评尚未填写。请前往后台 → 编辑书评。</div>
+      {% endif %}
+
+      <!-- ② 摘录区 -->
+      {% if excerpts %}
+        <hr class="section-divider" />
+        <section class="excerpts-section">
+          <h2 class="excerpts-heading">Excerpts</h2>
+
+          {% for excerpt in excerpts %}
+            <div class="excerpt-item">
+              <div class="excerpt-content">{{ excerpt.content }}</div>
+              {% if excerpt.page_number %}
+                <span class="excerpt-page">— p.&nbsp;{{ excerpt.page_number }}</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </section>
+      {% endif %}
+
+      <!-- Pager -->
+      <nav class="pager" aria-label="article navigation">
+        <span></span><!-- expand as needed -->
+        <span></span>
+      </nav>
+
+      <div class="back-link">
+        <a href="/reading.html">← 返回 Books &amp; Culture</a>
+      </div>
+
+    </div><!-- /.reading-container -->
+  </div><!-- /.shell -->
+</body>
+</html>

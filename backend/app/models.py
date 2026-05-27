@@ -317,6 +317,71 @@ class Photo(Base):
 
 
 # ──────────────────────────────────────────────────────────
+# 书评与摘录
+# ──────────────────────────────────────────────────────────
+
+class Book(Base):
+    """书籍模型 —— 每本书有一篇书评和多条摘录"""
+    __tablename__ = "books"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    title: Mapped[str] = mapped_column(String(300), nullable=False)
+    author: Mapped[str] = mapped_column(String(200), default="")
+    review_content: Mapped[str] = mapped_column(Text, default="")  # 主书评（Markdown）
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+
+    # 一对多：一本书对应多条摘录
+    excerpts: Mapped[list["Excerpt"]] = relationship(
+        "Excerpt",
+        back_populates="book",
+        cascade="all, delete-orphan",
+        order_by="Excerpt.page_number",
+    )
+
+    def to_dict(self, include_excerpts: bool = False) -> dict:
+        data = {
+            "id": self.id,
+            "title": self.title,
+            "author": self.author,
+            "review_content": self.review_content,
+            "excerpt_count": len(self.excerpts) if self.excerpts else 0,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+        if include_excerpts:
+            data["excerpts"] = [e.to_dict() for e in self.excerpts]
+        return data
+
+
+class Excerpt(Base):
+    """摘录模型 —— 属于某本书的一段原文摘录"""
+    __tablename__ = "excerpts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    book_id: Mapped[int] = mapped_column(ForeignKey("books.id"), nullable=False, index=True)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    page_number: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)  # 页码（可选）
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    # 关系
+    book: Mapped[Book] = relationship("Book", back_populates="excerpts")
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "book_id": self.book_id,
+            "content": self.content,
+            "page_number": self.page_number,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+# ──────────────────────────────────────────────────────────
 # Focus & Milestone 小程序
 # ──────────────────────────────────────────────────────────
 

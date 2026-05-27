@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>编辑书评 · {{ book.title }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --ink: #1A1A1A; --mid: #555; --muted: #999; --rule: #E8E8E8; --bg: #F9F8F6; --white: #fff; }
+    body { background: var(--bg); color: var(--ink); font-family: "Crimson Text", Georgia, serif; font-size: 17px; line-height: 1.65; padding: 2rem; max-width: 760px; }
+    h1 { font-size: 1.6rem; margin-bottom: .3rem; }
+    .sub { color: var(--muted); font-size: 1rem; margin-bottom: 1.5rem; }
+    .back { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; display: inline-block; }
+    .nav-links { margin-bottom: 1.5rem; font-size: .9rem; font-family: "Inter", sans-serif; }
+    .nav-links a { color: var(--ink); margin-right: 1rem; border-bottom: 1px solid #ccc; padding-bottom: 1px; text-decoration: none; }
+    textarea { width: 100%; min-height: 320px; padding: .75rem 1rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; font-family: "Crimson Text", Georgia, serif; line-height: 1.7; resize: vertical; background: var(--white); }
+    textarea:focus { outline: none; border-color: #999; }
+    .hint { font-size: .85rem; color: var(--muted); margin: .4rem 0 1rem; font-family: "Inter", sans-serif; }
+    button[type="submit"] { padding: .5rem 1.6rem; background: var(--ink); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-family: "Inter", sans-serif; font-size: .95rem; }
+    .flash { padding: .6rem 1rem; border-radius: 4px; margin-bottom: 1rem; font-size: .95rem; }
+    .flash.success { background: #e6f4ea; color: #2d6a4f; }
+    .flash.error   { background: #fdecea; color: #9b1c1c; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/une-vie-admin/books">← 返回书籍列表</a>
+  <h1>{{ book.title }}</h1>
+  <div class="sub">{{ book.author or '作者未填写' }} · 编辑书评</div>
+
+  <div class="nav-links">
+    <a href="/une-vie-admin/book/{{ book.id }}/review">📝 书评</a>
+    <a href="/une-vie-admin/book/{{ book.id }}/excerpts">✂️ 摘录（{{ book.excerpts | length }}）</a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="flash {{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <form method="POST">
+    <textarea name="review_content" placeholder="在此撰写书评（支持 Markdown）…">{{ book.review_content or '' }}</textarea>
+    <p class="hint">支持 Markdown 格式。保存后不会自动发布，需在前台页面调用对应 API。</p>
+    <button type="submit">保存书评</button>
+  </form>
+</body>
+</html>

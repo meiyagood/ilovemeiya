@@ -155,6 +155,110 @@
       color: #7a756d;
     }
 
+    /* ── Dynamic review & excerpts injected by JS ── */
+
+    /* 书评区：大字号沉浸式阅读 */
+    #review-section {
+      max-width: 700px;
+      margin: 36px auto 0;
+      padding: 60px 20px 40px;
+      background-color: #fbfaf8;
+      color: #292929;
+      font-family: "Source Serif 4", "Noto Serif SC", serif;
+      font-size: 19px;
+      line-height: 1.85;
+      text-align: justify;
+      letter-spacing: 0.015em;
+    }
+
+    #review-section p { margin: 0 0 1.45em; }
+
+    /* 首字下沉 —— 同时覆盖 #review-section 直接的 <p> 和 JS 注入的 .ny-review-text p */
+    #review-section p:first-of-type::first-letter,
+    .ny-review-text p:first-of-type::first-letter {
+      float: left;
+      font-family: "Playfair Display", "STSong", "Songti SC", "Noto Serif SC", serif;
+      font-size: 4.8rem;
+      line-height: 0.85;
+      padding-top: 4px;
+      padding-right: 12px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    /* .ny-review-text：JS 动态注入书评时的容器排版 */
+    .ny-review-text {
+      font-family: "Playfair Display", "Lora", "Noto Serif SC", serif;
+      font-size: 19px;
+      line-height: 1.85;
+      color: #242424;
+      text-align: justify;
+    }
+
+    .ny-review-text p { margin: 0 0 1.45em; }
+
+    /* 摘录区分隔 */
+    .excerpts-divider {
+      border: none;
+      border-top: 1px solid #e5e2dc;
+      max-width: 700px;
+      margin: 48px auto 0;
+    }
+
+    /* 摘录区标题 */
+    .excerpts-heading {
+      font-family: "Playfair Display", serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .28em;
+      color: #111;
+      text-align: center;
+      margin: 48px 0 40px;
+    }
+
+    /* 摘录容器 */
+    #excerpts-section {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    /* 单条摘录 */
+    .excerpt-item {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 42px;
+      border-left: 1px solid #d3cfc5;
+    }
+
+    .excerpt-content {
+      font-family: "Source Serif 4", "Noto Serif SC", serif;
+      font-size: 17px;
+      line-height: 1.78;
+      color: #333;
+      white-space: pre-line;
+    }
+
+    .excerpt-page {
+      display: block;
+      text-align: right;
+      font-size: 13px;
+      color: #777;
+      font-style: italic;
+      margin-top: 8px;
+      letter-spacing: .02em;
+    }
+
+    /* 加载占位 */
+    .loading-placeholder {
+      color: #aaa;
+      font-style: italic;
+      font-size: 0.95rem;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
     .article,
     .article-container {
       max-width: 700px;
@@ -297,23 +401,14 @@
       </figure>
     </section>
 
-    <article class="article article-container">
-      <blockquote class="pullquote excerpt-text">如果"世界成了我们欲望的一个巨大客体——一个巨大的苹果、一个巨大的奶瓶、一个硕大的乳房"，而我们则成了"吸吮者，永远在渴求，永远在希望，却永远感到失望"，那么，"尽管每个人都试图尽可能接近他人，但实际上每个人都身处彻底的孤独之中，始终被那种深刻的不安全感、焦虑和负罪感所笼罩，而这些情绪正是人与人之间的隔阂无法被克服的必然结果"。<div class="quote-source" data-zh="摘自 齐格蒙特·鲍曼" data-en="FROM ZYGMUNT BAUMAN" data-fr="EXTRAIT DE ZYGMUNT BAUMAN">摘自 齐格蒙特·鲍曼</div></blockquote>
+    <!-- ① 书评区：由 JS 从 API 动态注入 (book_id=1) -->
+    <section id="review-section">
+      <p class="loading-placeholder">正在加载书评…</p>
+    </section>
 
-      <p><strong>2026.05.05 23:00</strong><br>鲍曼在书中提到，阿尔伯特·赫希曼在《欲望与利益》中的观点——人们把"逐利的激情"视为武器，旨在驯服、消解并无害化其他被指责导致人类的共同生活混乱无序的激情。</p>
-
-      <p>理解这句话，我们要打破现代人"逐利是贪婪、是不道德"的固有印象，回到17、18世纪的语境中。当时的思想家们正试图解决一个紧迫的问题："如何防止社会在狂热的激情中走向自我毁灭？"</p>
-
-      <p><strong>1. 混乱的源头：破坏性的"激情"</strong><br>在启蒙运动早期，人们普遍认为人类被几种强大的、非理性的激情（荣誉感与虚荣心、权力欲、宗教狂热）所驱动。这些激情极具破坏力，往往导致战争、宗教冲突和政治动荡，被认为是"无序"的，因为它们难以预测，且往往追求的是"零和博弈"。</p>
-
-      <p><strong>2. 驯服的策略：以毒攻毒</strong><br>面对这些狂暴的激情，道德说教和单纯的镇压都失败了。于是，思想家们提出了一种巧妙的方案——"用一种激情去对抗另一种激情。"这种被选中的、用来"冲抵"其他激情的武器，就是"逐利的激情"（即贪婪或对物质财富的追求）。</p>
-
-      <p><strong>3. 为什么是"利"？（逐利的无害化特征）</strong><br>人们发现，追求经济利益虽然在道德上谈不上崇高，但它具有几个让政治家感到"安心"的特征：可预测性（Predictability）——追求利益的人通常是理性的；持久性与平淡性——逐利是一项长期的、重复的琐事，它要求人保持冷静、守时和谨慎，这种平淡的特质正好中和了英雄主义式的狂热；和平的相互依赖——贸易需要对方生存，而非毁灭对方。</p>
-
-      <p><strong>4. 从"贪婪"到"利益"的华丽转身</strong><br>在这个过程中，"贪婪"（Avarice）这一贬义词被转化成了中性甚至略带褒义的"利益"（Interest）。既然我们无法让所有人变成圣人，那么让大家去"做生意"总比让他们去"打仗"要好。人们通过鼓励大众追求财富，将原本可能投入到权力争夺或暴力冲突中的精力，引导到了商贸活动中。这就是所谓的"消解并无害化"：激情的火焰没有熄灭，但它被引进了工厂的锅炉里，变成了推动社会运转的温和动力。</p>
-
-      <p>现代资本主义文明的一个政治基础：商业精神并非仅仅是为了致富，它在最初被构想时，其实是一剂"镇静剂"。它通过一种相对"庸俗"但稳定的欲望（赚钱），去驯服那些更危险、更致命的欲望（如复仇、狂热和征服）。这就是赫希曼所说的"温柔的商业"（doux commerce）理论——人们忙着算账时，就没时间去砍对方的头了。</p>
-    </article>
+    <!-- ② 摘录区：由 JS 从 API 动态注入（含标题和分隔线） -->
+    <hr class="excerpts-divider" id="excerpts-divider" style="display:none" />
+    <section id="excerpts-section" style="display:none"></section>
 
     <nav class="pager" aria-label="article navigation">
       <a class="prev" href="book-human-condition.html" data-zh="← 上一篇：人的境况" data-en="← Previous: The Human Condition" data-fr="← Precedent : La Condition de l'homme moderne">← 上一篇：人的境况</a>
@@ -324,6 +419,7 @@
   </div>
 
   <script>
+    /* ── 语言切换 ── */
     function setLanguage(lang) {
       document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
       document.querySelectorAll("[data-zh][data-en][data-fr]").forEach((node) => {
@@ -333,10 +429,63 @@
       document.getElementById("btn-en").classList.toggle("active", lang === "en");
       document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
     }
-
     document.getElementById("btn-zh").addEventListener("click", () => setLanguage("zh"));
     document.getElementById("btn-en").addEventListener("click", () => setLanguage("en"));
     document.getElementById("btn-fr").addEventListener("click", () => setLanguage("fr"));
+
+    /* ── 书评与摘录动态加载 ── */
+    document.addEventListener("DOMContentLoaded", function () {
+      // 换书只需改这一行
+      const BOOK_ID = 1;
+      loadBookContent(BOOK_ID);
+    });
+
+    async function loadBookContent(bookId) {
+      const reviewContainer   = document.getElementById("review-section");
+      const excerptsContainer = document.getElementById("excerpts-section");
+      const divider           = document.getElementById("excerpts-divider");
+
+      try {
+        const response = await fetch(`/api/book/${bookId}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        /* ── 书评 ── */
+        if (data.review_content && data.review_content.trim()) {
+          reviewContainer.innerHTML = `<div class="ny-review-text">${data.review_content}</div>`;
+        } else {
+          reviewContainer.innerHTML = `<p style="color:#999;font-style:italic;">暂无书评内容。</p>`;
+        }
+
+        /* ── 摘录 ── */
+        if (data.excerpts && data.excerpts.length > 0) {
+          let html = `<h2 class="excerpts-heading">EXCERPTS</h2>`;
+          data.excerpts.forEach(item => {
+            html += `
+              <div class="excerpt-item">
+                <div class="excerpt-content">${escHtml(item.content)}</div>
+                ${item.page_number ? `<span class="excerpt-page">— p. ${item.page_number}</span>` : ""}
+              </div>`;
+          });
+          excerptsContainer.innerHTML = html;
+          excerptsContainer.style.display = "block";
+          divider.style.display = "";
+        } else {
+          excerptsContainer.style.display = "none";
+          divider.style.display = "none";
+        }
+
+      } catch (error) {
+        console.error("Failed to load book content, running silent degradation:", error);
+        reviewContainer.innerHTML = `<p style="color:#999;text-align:center;padding:40px 0;">《思维在阅读中苏醒》的篇章正在书架上整理中…</p>`;
+        excerptsContainer.style.display = "none";
+        divider.style.display = "none";
+      }
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
   </script>
 </body>
 </html>
