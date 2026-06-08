@@ -216,7 +216,7 @@
     }
 
     /* ── Book Grid ── */
-    .reading-list {
+    .reading-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 28px;
@@ -226,11 +226,14 @@
     .book-card {
       display: flex;
       flex-direction: column;
-      align-items: center;
       text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
 
-    .book-cover-wrap {
+    .book-card:hover { transform: translateY(-3px); }
+
+    .cover-wrapper {
       width: 100%;
       aspect-ratio: 2 / 3;
       overflow: hidden;
@@ -240,88 +243,100 @@
       background: #e8e4de;
     }
 
-    .book-cover {
+    .cover-wrapper img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .book-title {
+    /* 无封面时的大字占位 */
+    .cover-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Playfair Display", "Crimson Text", serif;
+      font-size: 5rem;
+      font-weight: 900;
+      color: rgba(31, 36, 40, 0.12);
+      background: #ece9e3;
+      user-select: none;
+    }
+
+    .book-info {
+      position: relative;
+      padding: 8px 4px 4px;
+      overflow: hidden;
+    }
+
+    /* 大字底色装饰 */
+    .bg-large-char {
+      position: absolute;
+      top: -4px;
+      right: 4px;
+      font-family: "Playfair Display", serif;
+      font-size: 4.5rem;
+      font-weight: 900;
+      color: rgba(31, 36, 40, 0.06);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .title-block {
+      position: relative;
+      z-index: 1;
+      text-align: left;
+    }
+
+    .title-block .subtitle {
+      margin: 0 0 4px;
+      font-size: 0.8rem;
+      color: #9a9a9a;
+      font-family: "Crimson Text", serif;
+      font-style: italic;
+      letter-spacing: 0.03em;
+    }
+
+    .title-block .book-title {
       margin: 0 0 4px;
       font-family: "Crimson Text", "Noto Serif SC", serif;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: #1f2428;
       line-height: 1.4;
     }
 
-    .author {
-      margin: 0 0 14px;
-      font-size: 0.9rem;
-      color: #9a9a9a;
+    .title-block .author {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #aaa;
       font-family: "Crimson Text", serif;
       font-style: italic;
-    }
-
-    .thoughts-section {
-      width: 100%;
-      background: #f9f9f9;
-      border-left: 3px solid #d0ccc5;
-      border-radius: 2px;
-      padding: 12px 14px;
-      text-align: left;
-    }
-
-    .thoughts-title {
-      margin: 0 0 10px;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #999;
-      font-weight: 600;
-      font-family: "Crimson Text", serif;
-    }
-
-    .excerpt {
-      width: 100%;
-      margin: 0 0 10px;
-      font-family: "Crimson Text", "Noto Serif SC", serif;
-      font-size: 0.95rem;
-      color: #555;
-      line-height: 1.75;
-      text-align: left;
-      font-style: italic;
-    }
-
-    .review {
-      font-family: "Crimson Text", "Noto Serif SC", serif;
-      font-size: 0.92rem;
-      color: #636363;
-      line-height: 1.75;
-      text-align: left;
     }
 
     .book-entry-link {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 10px;
-      color: #1f2428;
+      gap: 5px;
+      margin-top: 8px;
+      color: #555;
       text-decoration: underline;
       font-family: "Crimson Text", serif;
-      font-size: 0.94rem;
-      line-height: 1.4;
+      font-size: 0.88rem;
       transition: opacity 0.2s ease;
     }
 
-    .book-entry-link:hover {
-      opacity: 0.65;
-    }
+    .book-entry-link:hover { opacity: 0.6; }
+    .book-entry-link::after { content: "↗"; font-size: 0.85rem; }
 
-    .book-entry-link::after {
-      content: "↗";
-      font-size: 0.9rem;
+    .reading-grid-loading {
+      color: #9a9a9a;
+      font-size: 0.95rem;
+      font-style: italic;
+      padding: 16px 0;
     }
 
     .cms-reading {
@@ -368,11 +383,11 @@
     }
 
     @media (max-width: 760px) {
-      .reading-list { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .reading-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
     }
 
     @media (max-width: 480px) {
-      .reading-list { grid-template-columns: 1fr; }
+      .reading-grid { grid-template-columns: 1fr; }
     }
 
     .article-item p:first-of-type::first-letter {
@@ -553,51 +568,9 @@
           <h2 data-zh="在读书单" data-en="Currently Reading" data-fr="En cours de lecture">在读书单</h2>
           <div class="article-meta" data-zh="每周更新" data-en="Updated weekly" data-fr="Mise à jour hebdomadaire">每周更新</div>
 
-          <section class="reading-list">
-
-            <div class="book-card">
-              <div class="book-cover-wrap">
-                <img src="images/cover-sartre.jpg" alt="我们如何理解这个世界" class="book-cover" loading="lazy" />
-              </div>
-              <p class="book-title">我们如何理解这个世界</p>
-              <p class="author">齐格蒙特·鲍曼</p>
-              <div class="thoughts-section">
-                <h4 class="thoughts-title">摘录与书评</h4>
-                <blockquote class="excerpt">如果世界成为欲望的巨大客体，人就会在永恒渴求中加深孤独。</blockquote>
-                <div class="review">关于现代性焦虑、关系隔阂与不安全感的一次深描。</div>
-                <a class="book-entry-link" href="book-world-understanding.html">进入专页</a>
-              </div>
-            </div>
-
-            <div class="book-card">
-              <div class="book-cover-wrap">
-                <img src="images/cover-petit-prince.jpg" alt="伊比利亚饮食史" class="book-cover" loading="lazy" />
-              </div>
-              <p class="book-title">伊比利亚饮食史</p>
-              <p class="author">玛利亚·何塞·塞维利亚</p>
-              <div class="thoughts-section">
-                <h4 class="thoughts-title">摘录与书评</h4>
-                <blockquote class="excerpt">饮食史不是菜谱史，而是贸易、宗教与阶层互动的历史。</blockquote>
-                <div class="review">一部从厨房走向帝国版图的伊比利亚文明叙事。</div>
-                <a class="book-entry-link" href="book-iberian-food-history.html">进入专页</a>
-              </div>
-            </div>
-
-            <div class="book-card">
-              <div class="book-cover-wrap">
-                <img src="images/cover-cien-anos.jpg" alt="人的境况" class="book-cover" loading="lazy" />
-              </div>
-              <p class="book-title">人的境况</p>
-              <p class="author">汉娜·阿伦特</p>
-              <div class="thoughts-section">
-                <h4 class="thoughts-title">摘录与书评</h4>
-                <blockquote class="excerpt">劳动、工作与行动的区分，让“公共生活”重新被看见。</blockquote>
-                <div class="review">当行动进入公共空间，人才能真正显现为政治性的存在。</div>
-                <a class="book-entry-link" href="book-human-condition.html">进入专页</a>
-              </div>
-            </div>
-
-          </section>
+          <div id="reading-books-grid" class="reading-grid">
+            <p class="reading-grid-loading">书单加载中...</p>
+          </div>
         </article>
 
         <section class="cms-reading" aria-label="reading articles from cms">
@@ -719,11 +692,60 @@
           </article>
         `).join("");
       } catch (error) {
-        holder.innerHTML = `<p class=\"muted\">Could not load CMS articles (${error.message}).</p>`;
+        holder.innerHTML = `<p class="muted">Could not load CMS articles (${error.message}).</p>`;
+      }
+    }
+
+    async function loadReadingBooks() {
+      const grid = document.getElementById("reading-books-grid");
+      if (!grid) return;
+
+      try {
+        const res = await fetch("/api/reading-books");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const books = await res.json();
+
+        if (!books.length) {
+          grid.innerHTML = `<p class="reading-grid-loading" style="font-style:italic;color:#aaa;">书架正在整理中…</p>`;
+          return;
+        }
+
+        grid.innerHTML = books.map(b => {
+          const coverHtml = b.cover_image
+            ? `<img src="${b.cover_image}" alt="${b.title}" loading="lazy" />`
+            : `<div class="cover-placeholder">${b.first_char}</div>`;
+
+          const linkOpen  = b.book_link ? `<a href="${b.book_link}" style="text-decoration:none;color:inherit;">` : `<div>`;
+          const linkClose = b.book_link ? `</a>` : `</div>`;
+          const entryLink = b.book_link
+            ? `<a class="book-entry-link" href="${b.book_link}">进入专页</a>`
+            : "";
+
+          return `
+          ${linkOpen}
+          <div class="book-card">
+            <div class="cover-wrapper">${coverHtml}</div>
+            <div class="book-info">
+              <span class="bg-large-char">${b.first_char}</span>
+              <div class="title-block">
+                ${b.subtitle ? `<p class="subtitle">${b.subtitle}</p>` : ""}
+                <h3 class="book-title">${b.title}</h3>
+                ${b.author ? `<p class="author">${b.author}</p>` : ""}
+                ${entryLink}
+              </div>
+            </div>
+          </div>
+          ${linkClose}`;
+        }).join("");
+
+      } catch (err) {
+        console.error("Failed to load reading books:", err);
+        grid.innerHTML = `<p class="reading-grid-loading">书单暂时无法加载，请稍后再试。</p>`;
       }
     }
 
     loadReadingArticles();
+    loadReadingBooks();
   </script>
 </body>
 </html>

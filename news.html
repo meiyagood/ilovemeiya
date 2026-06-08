@@ -551,6 +551,26 @@
       margin: 0 0 1.4em;
     }
 
+    /* Inline images within article body (from Markdown ![alt](url)) */
+    .reader-content .reader-inline-figure {
+      margin: 2em 0;
+      text-align: center;
+    }
+    .reader-content .reader-inline-figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 2px;
+      display: block;
+      margin: 0 auto;
+    }
+    .reader-content .reader-inline-figure figcaption {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      font-size: 0.82rem;
+      color: #999;
+      letter-spacing: 0.04em;
+      margin-top: 8px;
+    }
+
     .reader-source {
       margin-top: 40px;
       font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -924,6 +944,14 @@
 
 
     // ===== IMMERSIVE ARTICLE READER =====
+    // Simple Markdown image renderer: ![alt](url) → <figure><img ...><figcaption>alt</figcaption></figure>
+    function renderMarkdownImages(html) {
+      return html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
+        const safeAlt = alt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return `<figure class="reader-inline-figure"><img src="${url}" alt="${safeAlt}" loading="lazy"><figcaption>${safeAlt}</figcaption></figure>`;
+      });
+    }
+
     function openArticleModal(id) {
       const item = newsData.find(n => String(n.id) === String(id));
       if (!item) return;
@@ -955,10 +983,10 @@
       const ledeEl = document.getElementById('reader-lede');
       ledeEl.textContent = item.summary_cn || '';
 
-      // Body paragraphs
+      // Body paragraphs (with Markdown image support)
       const fullText = item.content_cn || item.summary_cn || '';
-      const paras = fullText.split(/\n+/).filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join('');
-      document.getElementById('reader-content').innerHTML = paras || `<p>${fullText}</p>`;
+      const rawParas = fullText.split(/\n+/).filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join('');
+      document.getElementById('reader-content').innerHTML = renderMarkdownImages(rawParas || `<p>${fullText}</p>`);
 
       // Source
       document.getElementById('reader-source').textContent = source ? `Source: ${source}` : '';
