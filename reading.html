@@ -815,11 +815,10 @@
             status: "reading",
           },
         ];
+        const requestedTitles = new Set(requestedBooks.map((book) => book.title));
         const books = [
-          ...apiBooks,
-          ...requestedBooks.filter(
-            (requested) => !apiBooks.some((book) => book.title === requested.title)
-          ),
+          ...requestedBooks,
+          ...apiBooks.filter((book) => !requestedTitles.has(book.title)),
         ];
 
         if (!books.length) {
