@@ -339,6 +339,32 @@
       padding: 16px 0;
     }
 
+    .reading-section {
+      margin-top: 36px;
+    }
+
+    .reading-section:first-child {
+      margin-top: 0;
+    }
+
+    .reading-section-title {
+      margin: 0 0 4px;
+      font-family: "Playfair Display", serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1f2428;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid #e8e4de;
+      padding-bottom: 10px;
+    }
+
+    .reading-section .section-sub {
+      margin: 0 0 20px;
+      color: #a8a8a8;
+      font-size: 0.88rem;
+      font-family: "Crimson Text", serif;
+    }
+
     .cms-reading {
       margin-top: 36px;
       padding-top: 26px;
@@ -565,11 +591,21 @@
     <div class="article-body">
       <main class="articles-list">
         <article class="article-item">
-          <h2 data-zh="在读书单" data-en="Currently Reading" data-fr="En cours de lecture">在读书单</h2>
+          <h2 data-zh="书单" data-en="Reading List" data-fr="Liste de lecture">书单</h2>
           <div class="article-meta" data-zh="每周更新" data-en="Updated weekly" data-fr="Mise à jour hebdomadaire">每周更新</div>
 
-          <div id="reading-books-grid" class="reading-grid">
-            <p class="reading-grid-loading">书单加载中...</p>
+          <div class="reading-section">
+            <h3 class="reading-section-title" data-zh="正在阅读" data-en="Currently Reading" data-fr="En cours de lecture">正在阅读</h3>
+            <p class="section-sub" data-zh="此刻翻开的书" data-en="What I'm reading right now" data-fr="Ce que je lis en ce moment">此刻翻开的书</p>
+            <div id="reading-books-grid" class="reading-grid">
+              <p class="reading-grid-loading">书单加载中...</p>
+            </div>
+          </div>
+
+          <div class="reading-section" id="finished-section" style="display:none;">
+            <h3 class="reading-section-title" data-zh="已读完" data-en="Finished" data-fr="Terminé">已读完</h3>
+            <p class="section-sub" data-zh="读过的书，留下的痕迹" data-en="Books read, traces left" data-fr="Livres lus, traces laissées">读过的书，留下的痕迹</p>
+            <div id="finished-books-grid" class="reading-grid"></div>
           </div>
         </article>
 
@@ -696,51 +732,122 @@
       }
     }
 
+    function renderBookCard(b) {
+      const coverHtml = b.cover_image
+        ? `<img src="${b.cover_image}" alt="${b.title}" loading="lazy" />`
+        : `<div class="cover-placeholder">${b.first_char}</div>`;
+      const linkOpen  = b.book_link ? `<a href="${b.book_link}" style="text-decoration:none;color:inherit;">` : `<div>`;
+      const linkClose = b.book_link ? `</a>` : `</div>`;
+      const entryLink = b.book_link
+        ? `<a class="book-entry-link" href="${b.book_link}">进入专页</a>`
+        : "";
+      return `
+      ${linkOpen}
+      <div class="book-card">
+        <div class="cover-wrapper">${coverHtml}</div>
+        <div class="book-info">
+          <span class="bg-large-char">${b.first_char}</span>
+          <div class="title-block">
+            ${b.subtitle ? `<p class="subtitle">${b.subtitle}</p>` : ""}
+            <h3 class="book-title">${b.title}</h3>
+            ${b.author ? `<p class="author">${b.author}</p>` : ""}
+            ${entryLink}
+          </div>
+        </div>
+      </div>
+      ${linkClose}`;
+    }
+
     async function loadReadingBooks() {
-      const grid = document.getElementById("reading-books-grid");
-      if (!grid) return;
+      const readingGrid = document.getElementById("reading-books-grid");
+      const finishedGrid = document.getElementById("finished-books-grid");
+      const finishedSection = document.getElementById("finished-section");
+      if (!readingGrid) return;
 
       try {
         const res = await fetch("/api/reading-books");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const books = await res.json();
+        const apiBooks = await res.json();
+        const requestedBooks = [
+          {
+            title: "我不想知道的事",
+            subtitle: "论女性写作",
+            author: "[英] 德博拉·利维",
+            cover_image: "/uploads/1b8c352e-7693-4765-a6d8-e2ce4e559560.jpg",
+            first_char: "我",
+            book_link: "",
+            status: "finished",
+          },
+          {
+            title: "生活的代价",
+            subtitle: "论女性与家庭生活",
+            author: "[英] 德博拉·利维",
+            cover_image: "/uploads/a2cf5a38-7ef0-451b-8f46-d0c530a7c614.jpg",
+            first_char: "生",
+            book_link: "",
+            status: "finished",
+          },
+          {
+            title: "自己的房子",
+            subtitle: "论女性与私人财产",
+            author: "[英] 德博拉·利维",
+            cover_image: "/uploads/7764f4e6-efca-4d1d-b9ee-abe18370c7d5.jpg",
+            first_char: "自",
+            book_link: "",
+            status: "finished",
+          },
+          {
+            title: "美丽的夏天",
+            subtitle: "",
+            author: "[意] 切萨雷·帕维塞",
+            cover_image: "/uploads/9f538c36-ebfc-410f-b60d-2014b2e00d4f.jpg",
+            first_char: "美",
+            book_link: "",
+            status: "finished",
+          },
+          {
+            title: "La honte",
+            subtitle: "",
+            author: "Annie Ernaux",
+            cover_image: "/uploads/fdc24ecb-a90b-4be3-809d-fbe8c6941095.jpg",
+            first_char: "L",
+            book_link: "",
+            status: "reading",
+          },
+        ];
+        const books = [
+          ...apiBooks,
+          ...requestedBooks.filter(
+            (requested) => !apiBooks.some((book) => book.title === requested.title)
+          ),
+        ];
 
         if (!books.length) {
-          grid.innerHTML = `<p class="reading-grid-loading" style="font-style:italic;color:#aaa;">书架正在整理中…</p>`;
+          readingGrid.innerHTML = `<p class="reading-grid-loading" style="font-style:italic;color:#aaa;">书架正在整理中…</p>`;
           return;
         }
 
-        grid.innerHTML = books.map(b => {
-          const coverHtml = b.cover_image
-            ? `<img src="${b.cover_image}" alt="${b.title}" loading="lazy" />`
-            : `<div class="cover-placeholder">${b.first_char}</div>`;
+        const readingBooks = books.filter(b => b.status === "reading");
+        const finishedBooks = books.filter(b => b.status === "finished");
 
-          const linkOpen  = b.book_link ? `<a href="${b.book_link}" style="text-decoration:none;color:inherit;">` : `<div>`;
-          const linkClose = b.book_link ? `</a>` : `</div>`;
-          const entryLink = b.book_link
-            ? `<a class="book-entry-link" href="${b.book_link}">进入专页</a>`
-            : "";
+        // 正在阅读
+        if (readingBooks.length) {
+          readingGrid.innerHTML = readingBooks.map(b => renderBookCard(b)).join("");
+        } else {
+          readingGrid.innerHTML = `<p class="reading-grid-loading" style="font-style:italic;color:#aaa;">暂无正在阅读的书</p>`;
+        }
 
-          return `
-          ${linkOpen}
-          <div class="book-card">
-            <div class="cover-wrapper">${coverHtml}</div>
-            <div class="book-info">
-              <span class="bg-large-char">${b.first_char}</span>
-              <div class="title-block">
-                ${b.subtitle ? `<p class="subtitle">${b.subtitle}</p>` : ""}
-                <h3 class="book-title">${b.title}</h3>
-                ${b.author ? `<p class="author">${b.author}</p>` : ""}
-                ${entryLink}
-              </div>
-            </div>
-          </div>
-          ${linkClose}`;
-        }).join("");
+        // 已读完
+        if (finishedBooks.length) {
+          finishedSection.style.display = "";
+          finishedGrid.innerHTML = finishedBooks.map(b => renderBookCard(b)).join("");
+        } else {
+          finishedSection.style.display = "none";
+        }
 
       } catch (err) {
         console.error("Failed to load reading books:", err);
-        grid.innerHTML = `<p class="reading-grid-loading">书单暂时无法加载，请稍后再试。</p>`;
+        readingGrid.innerHTML = `<p class="reading-grid-loading">书单暂时无法加载，请稍后再试。</p>`;
       }
     }
 
